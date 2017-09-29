@@ -59,7 +59,6 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
     auto mixed = r * l + (1 - r) * s;
     cv::Mat block;
     cv::threshold(mixed, block, 90, 255, cv::THRESH_BINARY);
-    cv::imshow("block", block);
     typedef std::vector<cv::Point> contour_t;
     std::vector<contour_t> contours;
     cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
@@ -99,6 +98,22 @@ int main(int argc, const char * argv[]) {
             cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
         }
         cv::imshow("block contour", m);
+        int const BLOCK_SIZE = 51;
+        {
+            int minp = 0xFFFF;
+            int maxp = -1;
+            for(auto p : blockContour){
+                if(p.y < minp) minp = p.y;
+                if(maxp < p.y) maxp = p.y;
+            }
+            std::cout << (maxp - minp)/11 << std::endl;
+        }
+        {
+            cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
+            std::vector<std::vector<cv::Point>> contours = { blockContour };
+            cv::drawContours(bin, contours, 0, 255, CV_FILLED);
+            cv::imshow("block", bin);
+        }
         {
             std::cout << "[colors]" << std::endl;
             int x = m.cols / 2;
