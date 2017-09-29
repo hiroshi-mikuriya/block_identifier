@@ -17,12 +17,17 @@ Color const colors[] = {
     { "yellow", {139, 152, 50} },
 };
 
+cv::Vec3b conv(cv::Vec3b v, int code)
+{
+    cv::Mat m(1, 1, CV_8UC3);
+    m.at<cv::Vec3b>(0) = v;
+    cv::cvtColor(m, m, code);
+    return m.at<cv::Vec3b>(0);
+}
+
 std::string getColor(cv::Vec3b rgb)
 {
-    cv::Mat m(1,1,CV_8UC3);
-    m.at<cv::Vec3b>(0) = rgb;
-    cv::cvtColor(m, m, CV_BGR2YCrCb);
-    cv::Vec3b ycc = m.at<cv::Vec3b>(0);
+    auto ycc = conv(rgb, CV_BGR2YCrCb);
     double len2 = 100000;
     std::string dst;
     auto calcLen2 = [](cv::Vec3b v0, cv::Vec3b v1){
@@ -73,6 +78,28 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
         }
     }
     return cach;
+}
+
+/*!
+ テスト画像を作る。
+ カメラがなくても開発をするため。
+ @param[in] rows ブロック段数
+ @return テスト画像
+ */
+cv::Mat createTestImage(int rows)
+{
+    cv::Mat dst = cv::Mat::zeros(720, 1280, CV_8UC3);
+    int const BLOCK_SIZE = 51;
+    for(int row = 0; row < rows; ++row){
+        int y = dst.rows - BLOCK_SIZE * (row + 2);
+        int x = dst.cols / 2 - BLOCK_SIZE + (rand() % BLOCK_SIZE);
+        cv::Rect rc(x, y, BLOCK_SIZE, BLOCK_SIZE);
+        auto ycc = colors[rand() % 6].ycc;
+        auto bgr = conv(ycc, CV_YCrCb2BGR);
+        cv::Scalar s(bgr[0], bgr[1], bgr[2]);
+        cv::rectangle(dst, rc, s, CV_FILLED);
+    }
+    return dst;
 }
 
 int main(int argc, const char * argv[]) {
