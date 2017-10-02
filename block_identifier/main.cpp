@@ -2,6 +2,15 @@
 #include <opencv2/opencv.hpp>
 #include <cassert>
 
+/// カメラ横サイズ
+const int CAMERA_WIDTH = 720;
+/// カメラ縦サイズ
+const int CAMERA_HEIGHT = 1280;
+/// 画像縮尺率
+const double IMAGE_RATIO = 0.5;
+/// IMAGE_RATIOをかけたあとのブロックサイズ（高さ）
+const int BLOCK_SIZE = 51;
+
 struct Color
 {
     std::string name;
@@ -60,8 +69,7 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
     cv::split(hls, v);
     auto l = v[1];
     auto s = v[2];
-    double r = 0.5;
-    auto mixed = r * l + (1 - r) * s;
+	auto mixed = IMAGE_RATIO * l + (1 - IMAGE_RATIO) * s;
     cv::Mat block;
     cv::threshold(mixed, block, 90, 255, cv::THRESH_BINARY);
     typedef std::vector<cv::Point> contour_t;
@@ -88,8 +96,7 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
  */
 cv::Mat createTestImage(int rows)
 {
-    cv::Mat dst = cv::Mat::zeros(640, 360, CV_8UC3);
-    int const BLOCK_SIZE = 51;
+    cv::Mat dst = cv::Mat::zeros(CAMERA_HEIGHT * IMAGE_RATIO, CAMERA_WIDTH * IMAGE_RATIO, CV_8UC3);
     for(int row = 0; row < rows; ++row){
         int y = dst.rows - BLOCK_SIZE * (row + 2);
         int x = dst.cols / 2 - BLOCK_SIZE + (rand() % BLOCK_SIZE);
@@ -99,6 +106,10 @@ cv::Mat createTestImage(int rows)
         cv::Scalar s(bgr[0], bgr[1], bgr[2]);
         cv::rectangle(dst, rc, s, CV_FILLED);
     }
+	for (int i = 0; i < dst.size().area() / 100; ++i){
+		cv::Point pt = { rand() % dst.cols, rand() % dst.rows };
+		dst.at<cv::Vec3b>(pt) = { (uchar)(rand() % 256), (uchar)(rand() % 256), (uchar)(rand() % 256) };
+	}
     return dst;
 }
 
@@ -110,7 +121,6 @@ cv::Mat createTestImage(int rows)
 void proc(cv::Mat m)
 {
 	assert(3 == m.channels());
-	cv::imshow("src", m);
 	auto blockContour = getBlockContour(m);
 	for (size_t i = 0; i < blockContour.size(); ++i){
 		auto pt0 = blockContour[i];
@@ -118,7 +128,6 @@ void proc(cv::Mat m)
 		cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
 	}
 	cv::imshow("block contour", m);
-	int const BLOCK_SIZE = 51;
 	{
 		int minp = 0xFFFF;
 		int maxp = -1;
@@ -128,12 +137,13 @@ void proc(cv::Mat m)
 		}
 		std::cout << (maxp - minp) / 11 << std::endl;
 	}
-	{
+	auto bin = [&](){
 		cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
 		std::vector<std::vector<cv::Point>> contours = { blockContour };
 		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
-		cv::imshow("block", bin);
-	}
+		return bin;
+	}();
+	cv::imshow("block", bin);
 	{
 		std::cout << "[colors]" << std::endl;
 		int x = m.cols / 2;
@@ -160,13 +170,12 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     // CV_CAP_PROP_GAIN
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
     while(1){
         cv::Mat m;
         cap >> m;
-		double r = 0.5;
-		cv::resize(m, m, cv::Size(), r, r);
+		cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
 		cv::flip(m.t(), m, 0);
 		proc(m);
 		cv::waitKey(1);
