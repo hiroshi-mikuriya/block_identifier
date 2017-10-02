@@ -88,7 +88,7 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
  */
 cv::Mat createTestImage(int rows)
 {
-    cv::Mat dst = cv::Mat::zeros(720, 1280, CV_8UC3);
+    cv::Mat dst = cv::Mat::zeros(640, 360, CV_8UC3);
     int const BLOCK_SIZE = 51;
     for(int row = 0; row < rows; ++row){
         int y = dst.rows - BLOCK_SIZE * (row + 2);
@@ -102,7 +102,58 @@ cv::Mat createTestImage(int rows)
     return dst;
 }
 
+/*!
+カメラ画像取得後のメイン処理
+デバッグの都合でメイン関数に書くのやめた
+@param[in] m
+*/
+void proc(cv::Mat m)
+{
+	assert(3 == m.channels());
+	cv::imshow("src", m);
+	auto blockContour = getBlockContour(m);
+	for (size_t i = 0; i < blockContour.size(); ++i){
+		auto pt0 = blockContour[i];
+		auto pt1 = blockContour[(i + 1) % blockContour.size()];
+		cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
+	}
+	cv::imshow("block contour", m);
+	int const BLOCK_SIZE = 51;
+	{
+		int minp = 0xFFFF;
+		int maxp = -1;
+		for (auto p : blockContour){
+			if (p.y < minp) minp = p.y;
+			if (maxp < p.y) maxp = p.y;
+		}
+		std::cout << (maxp - minp) / 11 << std::endl;
+	}
+	{
+		cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
+		std::vector<std::vector<cv::Point>> contours = { blockContour };
+		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
+		cv::imshow("block", bin);
+	}
+	{
+		std::cout << "[colors]" << std::endl;
+		int x = m.cols / 2;
+		for (int block = 0; block < 11; ++block){
+			int y = m.rows * block / 11 + 50;
+			auto v = m.at<cv::Vec3b>(y, x);
+			std::cout << getColor(v) << std::endl;
+		}
+	}
+}
+
 int main(int argc, const char * argv[]) {
+#ifdef _DEBUG
+	srand(0);
+	for(;;){
+		cv::Mat m = createTestImage(1 + (rand() % 11));
+		proc(m);
+		cv::waitKey();
+	}
+#else
     cv::VideoCapture cap(1);
     if(!cap.isOpened()){
         std::cerr << "failed to open camera device." << std::endl;
@@ -114,43 +165,12 @@ int main(int argc, const char * argv[]) {
     while(1){
         cv::Mat m;
         cap >> m;
-        double r = 0.5;
-        cv::resize(m, m, cv::Size(), r, r);
-        cv::flip(m.t(), m, 0);
-        cv::imshow("src", m);
-        auto blockContour = getBlockContour(m);
-        for(size_t i = 0; i < blockContour.size(); ++i){
-            auto pt0 = blockContour[i];
-            auto pt1 = blockContour[(i + 1) % blockContour.size()];
-            cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
-        }
-        cv::imshow("block contour", m);
-        int const BLOCK_SIZE = 51;
-        {
-            int minp = 0xFFFF;
-            int maxp = -1;
-            for(auto p : blockContour){
-                if(p.y < minp) minp = p.y;
-                if(maxp < p.y) maxp = p.y;
-            }
-            std::cout << (maxp - minp)/11 << std::endl;
-        }
-        {
-            cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
-            std::vector<std::vector<cv::Point>> contours = { blockContour };
-            cv::drawContours(bin, contours, 0, 255, CV_FILLED);
-            cv::imshow("block", bin);
-        }
-        {
-            std::cout << "[colors]" << std::endl;
-            int x = m.cols / 2;
-            for(int block = 0; block < 11; ++block){
-                int y = m.rows * block / 11 + 50;
-                auto v = m.at<cv::Vec3b>(y, x);
-                std::cout << getColor(v) << std::endl;
-            }
-        }
-        cv::waitKey(1);
-    }
+		double r = 0.5;
+		cv::resize(m, m, cv::Size(), r, r);
+		cv::flip(m.t(), m, 0);
+		proc(m);
+		cv::waitKey(1);
+	}
+#endif // _DEBUG
     return 0;
 }
