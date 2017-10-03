@@ -104,10 +104,11 @@ cv::Mat createTestImage(int rows)
 {
     cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
 	dst += cv::Scalar::all(10);
+	int SIZES[] = { 1, 1, 1, 1, 2, 2, 3 };
     for(int row = 0; row < rows; ++row){
         int y = dst.rows - BLOCK_SIZE * (row + 2);
-        int x = dst.cols / 2 - BLOCK_SIZE + (rand() % BLOCK_SIZE);
-        cv::Rect rc(x, y, BLOCK_SIZE, BLOCK_SIZE);
+        int x = dst.cols / 2 - (rand() % BLOCK_SIZE) / 2;
+        cv::Rect rc(x, y, BLOCK_SIZE * SIZES[rand() % 7], BLOCK_SIZE);
         auto ycc = colors[rand() % 6].ycc;
         auto bgr = conv(ycc, CV_YCrCb2BGR);
         cv::Scalar s(bgr[0], bgr[1], bgr[2]);
@@ -207,6 +208,7 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		BlockInfo info;
 		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
 		info.color = getColor(getAveBgr(m(info.rc * 0.5)));
+		info.type = (right - left + BLOCK_SIZE / 2) / BLOCK_SIZE;
 		dst.push_back(info);
 	}
 	return dst;
@@ -228,9 +230,11 @@ void proc(cv::Mat m)
 	}
 	auto blockInfo = getBlockInfo(m, blockContour);
 	for (auto info : blockInfo){
-		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 3);
+		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 1);
 		auto v = conv(info.color.ycc, CV_YCrCb2BGR);
-		cv::putText(m, info.color.name, cv::Point(0, info.rc.y + info.rc.height), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]), 2, CV_AA, false);
+		std::stringstream ss;
+		ss << info.type << info.color.name;
+		cv::putText(m, ss.str(), cv::Point(0, info.rc.y + info.rc.height), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]), 2, CV_AA, false);
 	}
 	cv::imshow("block contour", m);
 }
