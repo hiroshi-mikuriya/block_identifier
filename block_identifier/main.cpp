@@ -74,14 +74,14 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
     cv::split(hls, v);
     auto l = v[1];
     auto s = v[2];
-    double r = 0.5;
-	auto mixed = r * l + (1 - r) * s;
+    double slratio = 0.5;
+	auto mixed = slratio * l + (1 - slratio) * s;
     cv::Mat block;
     cv::threshold(mixed, block, 80, 255, cv::THRESH_BINARY);
     typedef std::vector<cv::Point> contour_t;
     std::vector<contour_t> contours;
     cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    // 一番面積の広い領域がブロックと判断する。ただし画像サイズなみの面積だった場合は除外
+    // 一番面積の広い領域がブロックと判断する。ただし画像サイズ並みの面積だった場合は除外
     contour_t cach;
     double maxArea = -1;
     for(auto points:contours){
@@ -103,6 +103,7 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
 cv::Mat createTestImage(int rows)
 {
     cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
+	dst += cv::Scalar::all(10);
     for(int row = 0; row < rows; ++row){
         int y = dst.rows - BLOCK_SIZE * (row + 2);
         int x = dst.cols / 2 - BLOCK_SIZE + (rand() % BLOCK_SIZE);
@@ -112,7 +113,7 @@ cv::Mat createTestImage(int rows)
         cv::Scalar s(bgr[0], bgr[1], bgr[2]);
         cv::rectangle(dst, rc, s, CV_FILLED);
     }
-	for (int i = 0; i < dst.size().area() / 100; ++i){
+	for (int i = 0; i < dst.size().area() / 50; ++i){
 		cv::Point pt = { rand() % dst.cols, rand() % dst.rows };
 		dst.at<cv::Vec3b>(pt) = { (uchar)(rand() % 256), (uchar)(rand() % 256), (uchar)(rand() % 256) };
 	}
@@ -150,8 +151,9 @@ TopBottom getTopBottom(std::vector<cv::Point> const & points)
 */
 struct BlockInfo
 {
-	Color color; //< ブロックの色
-	cv::Rect rc; //< ブロックの矩形
+	Color color; ///< ブロックの色
+	cv::Rect rc; ///< ブロックの矩形
+	int type; ///< 横幅: 1, 2, 3
 };
 
 /*!
@@ -170,10 +172,16 @@ cv::Rect operator*(cv::Rect const & rc, double r)
 		);
 }
 
+/*!
+画像内の指定した矩形の全ブロック情報を取得する
+@param[in] m 画像
+@param[in] points ブロックの矩形
+@return ブロック情報
+*/
 std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> const & points)
 {
 	std::vector<BlockInfo> dst;
-	auto bin = [&m, &points](){
+	auto const bin = [&m, &points](){
 		cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
 		std::vector<std::vector<cv::Point>> contours = { points };
 		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
@@ -186,7 +194,7 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		return tmp.at<cv::Vec3b>(0);
 	};
 	auto tb = getTopBottom(points);
-	int blockCount = (tb.bottom.y - tb.top.y + 1) / BLOCK_SIZE;
+	int blockCount = (tb.bottom.y - tb.top.y + BLOCK_SIZE / 2) / BLOCK_SIZE;
 	for (int i = 0; i < blockCount; ++i){
 		int y = (tb.top.y * (blockCount - i) + tb.bottom.y * i) / blockCount;
 		cv::Mat ary;
@@ -195,7 +203,7 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		for (; ary.at<uchar>(0, left) < 100 && left < ary.cols; ++left);
 		int right = bin.cols - 1;
 		for (; ary.at<uchar>(0, right) < 100 && 0 <= right; --right);
-		if (right <= left) continue;
+		if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
 		BlockInfo info;
 		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
 		info.color = getColor(getAveBgr(m(info.rc * 0.5)));
@@ -227,6 +235,9 @@ void proc(cv::Mat m)
 	cv::imshow("block contour", m);
 }
 
+/*!
+main
+*/
 int main(int argc, const char * argv[]) {
 #ifdef _DEBUG
 	srand(0);
