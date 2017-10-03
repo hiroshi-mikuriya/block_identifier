@@ -23,4 +23,4 @@
 
 ## 使い方
 
-<div style="font-color=red;">そのうち書く</div>
+<div style="font-color:red;">そのうち書く</div>
