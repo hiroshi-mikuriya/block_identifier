@@ -34,6 +34,13 @@ Color const Colors[] = {
     { "yellow", {139, 152, 50} },
 };
 
+/*!
+ Vec3bの色空間を変換する
+ 例：BGR -> YCrCb : conv(v, CV_BGR2YCrCb);
+ @param[in] v 変換対象の色
+ @param[in] code 変換方法
+ @return 変換後の色
+ */
 cv::Vec3b conv(cv::Vec3b v, int code)
 {
     cv::Mat m(1, 1, CV_8UC3);
@@ -296,3 +303,4 @@ int main(int argc, const char * argv[]) {
 #endif // _DEBUG
     return 0;
 }
+
