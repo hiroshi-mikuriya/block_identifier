@@ -156,6 +156,7 @@ struct BlockInfo
 {
 	Color color; ///< ブロックの色
 	cv::Rect rc; ///< ブロックの矩形
+    cv::Rect color_area; ///< ブロック色判定領域
 	int type; ///< 横幅: 1, 2, 3
 };
 
@@ -208,8 +209,9 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		for (; ary.at<uchar>(0, right) < 200 && 0 <= right; --right);
 		if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
 		BlockInfo info;
-		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE) * 0.95;
-		info.color = getColor(getAveBgr(m(info.rc * 0.3)));
+		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
+        info.color_area = info.rc * 0.2;
+		info.color = getColor(getAveBgr(m(info.color_area)));
 		info.type = (right - left + BLOCK_SIZE_WIDTH / 2) / BLOCK_SIZE_WIDTH;
 		dst.push_back(info);
 	}
@@ -227,7 +229,8 @@ void proc(cv::Mat m)
 	auto const contour = getBlockContour(m);
 	auto const blockInfo = getBlockInfo(m, contour);
 	for (auto info : blockInfo){
-		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 1);
+        cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 1);
+        cv::rectangle(m, info.color_area, cv::Scalar(0, 0, 255), 1);
 		auto v = conv(info.color.ycc, CV_YCrCb2BGR);
 		std::stringstream ss;
 		ss << info.type << info.color.name;
