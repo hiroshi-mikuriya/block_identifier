@@ -115,20 +115,65 @@ cv::Mat createTestImage(int rows)
 }
 
 /*!
- top: second
- bottom: first
- */
-std::pair<cv::Point, cv::Point> getTopBottom(std::vector<cv::Point> const & points)
+上端、下端
+*/
+struct TopBottom
 {
-    // top: second  bottom: first
-    std::pair<cv::Point, cv::Point> dst;
-    dst.first.y = -1;
-    dst.second.y = 0xFFFF;
+	cv::Point top;
+	cv::Point bottom;
+};
+
+/*!
+輪郭の上端、下端を返す
+@param[in] points 輪郭
+@return 上端、下端
+*/
+TopBottom getTopBottom(std::vector<cv::Point> const & points)
+{
+	TopBottom dst;
+    dst.bottom.y = -1;
+    dst.top.y = 0xFFFF;
     for(auto pt : points){
-        if(dst.first.y < pt.y) dst.first = pt;
-        if(pt.y < dst.second.y) dst.second = pt;
+        if(dst.bottom.y < pt.y) dst.bottom = pt;
+        if(pt.y < dst.top.y) dst.top = pt;
     }
     return dst;
+}
+
+/*!
+ブロック情報
+*/
+struct BlockInfo
+{
+	Color color; ///< ブロックの色
+	cv::Rect rc; ///< ブロックの矩形
+};
+
+std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> const & points)
+{
+	std::vector<BlockInfo> dst;
+	auto bin = [&m, &points](){
+		cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
+		std::vector<std::vector<cv::Point>> contours = { points };
+		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
+		return bin;
+	}();
+	auto tb = getTopBottom(points);
+	int blockCount = (tb.bottom.y - tb.top.y + 1) / BLOCK_SIZE;
+	for (int i = 0; i < blockCount; ++i){
+		int y = (tb.top.y * (blockCount - i) + tb.bottom.y * i) / blockCount;
+		cv::Mat ary;
+		cv::reduce(bin(cv::Rect(0, y, m.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
+		int left = 0;
+		for (; ary.at<uchar>(0, left) < 100 && left < ary.cols; ++left);
+		int right = bin.cols - 1;
+		for (; ary.at<uchar>(0, right) < 100 && 0 <= right; --right);
+		if (right <= left) continue;
+		BlockInfo info;
+		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
+		dst.push_back(info);
+	}
+	return dst;
 }
 
 /*!
@@ -145,27 +190,12 @@ void proc(cv::Mat m)
 		auto pt1 = blockContour[(i + 1) % blockContour.size()];
 		cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
 	}
-    {
-        auto tb = getTopBottom(blockContour);
-        int blockCount = (tb.first.y - tb.second.y) / BLOCK_SIZE;
-        std::cout << blockCount << std::endl;
-        for(int i = 0; i <= blockCount; ++i){
-            int y = (tb.second.y * i + tb.first.y * (blockCount - i)) / blockCount;
-            cv::Point pt0(0, y);
-            cv::Point pt1(m.cols, y);
-            cv::line(m, pt0, pt1, cv::Scalar(0, 0, 0xFF), 2);
-        }
-    }
+	auto blockInfo = getBlockInfo(m, blockContour);
+	for (auto info : blockInfo){
+		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 3);
+	}
 	cv::imshow("block contour", m);
-    {
-        auto bin = [&](){
-            cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
-            std::vector<std::vector<cv::Point>> contours = { blockContour };
-            cv::drawContours(bin, contours, 0, 255, CV_FILLED);
-            return bin;
-        }();
-        cv::imshow("block", bin);
-    }
+	return;
 	{
 		std::cout << "[colors]" << std::endl;
 		int x = m.cols / 2;
