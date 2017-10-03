@@ -3,13 +3,13 @@
 #include <cassert>
 
 /// カメラ横サイズ
-const int CAMERA_WIDTH = 720;
+const int CAMERA_WIDTH = 1280;
 /// カメラ縦サイズ
-const int CAMERA_HEIGHT = 1280;
+const int CAMERA_HEIGHT = 720;
 /// 画像縮尺率
-const double IMAGE_RATIO = 0.5;
+const double IMAGE_RATIO = 0.3;
 /// IMAGE_RATIOをかけたあとのブロックサイズ（高さ）
-const int BLOCK_SIZE = 51;
+const int BLOCK_SIZE = static_cast<int>(102 * IMAGE_RATIO);
 
 struct Color
 {
@@ -69,9 +69,10 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
     cv::split(hls, v);
     auto l = v[1];
     auto s = v[2];
-	auto mixed = IMAGE_RATIO * l + (1 - IMAGE_RATIO) * s;
+    double r = 0.5;
+	auto mixed = r * l + (1 - r) * s;
     cv::Mat block;
-    cv::threshold(mixed, block, 90, 255, cv::THRESH_BINARY);
+    cv::threshold(mixed, block, 80, 255, cv::THRESH_BINARY);
     typedef std::vector<cv::Point> contour_t;
     std::vector<contour_t> contours;
     cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
@@ -96,7 +97,7 @@ std::vector<cv::Point> getBlockContour(cv::Mat const & m)
  */
 cv::Mat createTestImage(int rows)
 {
-    cv::Mat dst = cv::Mat::zeros(CAMERA_HEIGHT * IMAGE_RATIO, CAMERA_WIDTH * IMAGE_RATIO, CV_8UC3);
+    cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
     for(int row = 0; row < rows; ++row){
         int y = dst.rows - BLOCK_SIZE * (row + 2);
         int x = dst.cols / 2 - BLOCK_SIZE + (rand() % BLOCK_SIZE);
@@ -114,6 +115,23 @@ cv::Mat createTestImage(int rows)
 }
 
 /*!
+ top: second
+ bottom: first
+ */
+std::pair<cv::Point, cv::Point> getTopBottom(std::vector<cv::Point> const & points)
+{
+    // top: second  bottom: first
+    std::pair<cv::Point, cv::Point> dst;
+    dst.first.y = -1;
+    dst.second.y = 0xFFFF;
+    for(auto pt : points){
+        if(dst.first.y < pt.y) dst.first = pt;
+        if(pt.y < dst.second.y) dst.second = pt;
+    }
+    return dst;
+}
+
+/*!
 カメラ画像取得後のメイン処理
 デバッグの都合でメイン関数に書くのやめた
 @param[in] m
@@ -127,23 +145,27 @@ void proc(cv::Mat m)
 		auto pt1 = blockContour[(i + 1) % blockContour.size()];
 		cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
 	}
+    {
+        auto tb = getTopBottom(blockContour);
+        int blockCount = (tb.first.y - tb.second.y) / BLOCK_SIZE;
+        std::cout << blockCount << std::endl;
+        for(int i = 0; i <= blockCount; ++i){
+            int y = (tb.second.y * i + tb.first.y * (blockCount - i)) / blockCount;
+            cv::Point pt0(0, y);
+            cv::Point pt1(m.cols, y);
+            cv::line(m, pt0, pt1, cv::Scalar(0, 0, 0xFF), 2);
+        }
+    }
 	cv::imshow("block contour", m);
-	{
-		int minp = 0xFFFF;
-		int maxp = -1;
-		for (auto p : blockContour){
-			if (p.y < minp) minp = p.y;
-			if (maxp < p.y) maxp = p.y;
-		}
-		std::cout << (maxp - minp) / 11 << std::endl;
-	}
-	auto bin = [&](){
-		cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
-		std::vector<std::vector<cv::Point>> contours = { blockContour };
-		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
-		return bin;
-	}();
-	cv::imshow("block", bin);
+    {
+        auto bin = [&](){
+            cv::Mat bin = cv::Mat::zeros(m.size(), CV_8UC1);
+            std::vector<std::vector<cv::Point>> contours = { blockContour };
+            cv::drawContours(bin, contours, 0, 255, CV_FILLED);
+            return bin;
+        }();
+        cv::imshow("block", bin);
+    }
 	{
 		std::cout << "[colors]" << std::endl;
 		int x = m.cols / 2;
