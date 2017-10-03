@@ -34,11 +34,16 @@ cv::Vec3b conv(cv::Vec3b v, int code)
     return m.at<cv::Vec3b>(0);
 }
 
-std::string getColor(cv::Vec3b rgb)
+/*!
+このプログラムが認識する色の中で最も近い色を返す
+@param[in] bgr BGR値
+@return 最も近い色
+*/
+Color getColor(cv::Vec3b bgr)
 {
-    auto ycc = conv(rgb, CV_BGR2YCrCb);
+	auto ycc = conv(bgr, CV_BGR2YCrCb);
     double len2 = 100000;
-    std::string dst;
+	Color dst;
     auto calcLen2 = [](cv::Vec3b v0, cv::Vec3b v1){
         double d = 0;
         for(int i = 0; i < 3; ++i){
@@ -50,7 +55,7 @@ std::string getColor(cv::Vec3b rgb)
         auto len = calcLen2(ycc, c.ycc);
         if(len < len2){
             len2 = len;
-            dst = c.name;
+            dst = c;
         }
     }
     return dst;
@@ -145,9 +150,25 @@ TopBottom getTopBottom(std::vector<cv::Point> const & points)
 */
 struct BlockInfo
 {
-	Color color; ///< ブロックの色
-	cv::Rect rc; ///< ブロックの矩形
+	Color color; //< ブロックの色
+	cv::Rect rc; //< ブロックの矩形
 };
+
+/*!
+矩形を縮尺率を変換する。中心は保つ。
+@param[in] rc 矩形
+@param[in] r 縮尺率
+@return 変換された矩形
+*/
+cv::Rect operator*(cv::Rect const & rc, double r)
+{
+	return cv::Rect(
+		static_cast<int>(rc.x + rc.width * (1 - r) / 2), 
+		static_cast<int>(rc.y + rc.height * (1 - r) / 2), 
+		static_cast<int>(rc.width * r), 
+		static_cast<int>(rc.height * r)
+		);
+}
 
 std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> const & points)
 {
@@ -158,6 +179,12 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		cv::drawContours(bin, contours, 0, 255, CV_FILLED);
 		return bin;
 	}();
+	auto getAveBgr = [](cv::Mat const & src){
+		cv::Mat tmp;
+		cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
+		cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
+		return tmp.at<cv::Vec3b>(0);
+	};
 	auto tb = getTopBottom(points);
 	int blockCount = (tb.bottom.y - tb.top.y + 1) / BLOCK_SIZE;
 	for (int i = 0; i < blockCount; ++i){
@@ -171,6 +198,7 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		if (right <= left) continue;
 		BlockInfo info;
 		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
+		info.color = getColor(getAveBgr(m(info.rc * 0.5)));
 		dst.push_back(info);
 	}
 	return dst;
@@ -193,18 +221,10 @@ void proc(cv::Mat m)
 	auto blockInfo = getBlockInfo(m, blockContour);
 	for (auto info : blockInfo){
 		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 3);
+		auto v = conv(info.color.ycc, CV_YCrCb2BGR);
+		cv::putText(m, info.color.name, cv::Point(0, info.rc.y + info.rc.height), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]), 2, CV_AA, false);
 	}
 	cv::imshow("block contour", m);
-	return;
-	{
-		std::cout << "[colors]" << std::endl;
-		int x = m.cols / 2;
-		for (int block = 0; block < 11; ++block){
-			int y = m.rows * block / 11 + 50;
-			auto v = m.at<cv::Vec3b>(y, x);
-			std::cout << getColor(v) << std::endl;
-		}
-	}
 }
 
 int main(int argc, const char * argv[]) {
