@@ -10,6 +10,8 @@ const int CAMERA_HEIGHT = 720;
 const double IMAGE_RATIO = 0.3;
 /// IMAGE_RATIOをかけたあとのブロックサイズ（高さ）
 const int BLOCK_SIZE = static_cast<int>(102 * IMAGE_RATIO);
+/// IMAGE_RATIOをかけたあとのブロックサイズ（幅）
+const int BLOCK_SIZE_WIDTH = static_cast<int>(150 * IMAGE_RATIO);
 
 struct Color
 {
@@ -201,14 +203,14 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 		cv::Mat ary;
 		cv::reduce(bin(cv::Rect(0, y, m.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
 		int left = 0;
-		for (; ary.at<uchar>(0, left) < 100 && left < ary.cols; ++left);
+		for (; ary.at<uchar>(0, left) < 200 && left < ary.cols; ++left);
 		int right = bin.cols - 1;
-		for (; ary.at<uchar>(0, right) < 100 && 0 <= right; --right);
+		for (; ary.at<uchar>(0, right) < 200 && 0 <= right; --right);
 		if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
 		BlockInfo info;
-		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
-		info.color = getColor(getAveBgr(m(info.rc * 0.5)));
-		info.type = (right - left + BLOCK_SIZE / 2) / BLOCK_SIZE;
+		info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE) * 0.95;
+		info.color = getColor(getAveBgr(m(info.rc * 0.3)));
+		info.type = (right - left + BLOCK_SIZE_WIDTH / 2) / BLOCK_SIZE_WIDTH;
 		dst.push_back(info);
 	}
 	return dst;
@@ -217,31 +219,24 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
 /*!
 カメラ画像取得後のメイン処理
 デバッグの都合でメイン関数に書くのやめた
-@param[in] m
+@param[in] m カメラ画像 or デバッグ画像
 */
 void proc(cv::Mat m)
 {
 	assert(3 == m.channels());
-	auto blockContour = getBlockContour(m);
-	for (size_t i = 0; i < blockContour.size(); ++i){
-		auto pt0 = blockContour[i];
-		auto pt1 = blockContour[(i + 1) % blockContour.size()];
-		cv::line(m, pt0, pt1, cv::Scalar(0, 255, 0), 4);
-	}
-	auto blockInfo = getBlockInfo(m, blockContour);
+	auto const contour = getBlockContour(m);
+	auto const blockInfo = getBlockInfo(m, contour);
 	for (auto info : blockInfo){
 		cv::rectangle(m, info.rc, cv::Scalar(0, 255, 0), 1);
 		auto v = conv(info.color.ycc, CV_YCrCb2BGR);
 		std::stringstream ss;
 		ss << info.type << info.color.name;
-		cv::putText(m, ss.str(), cv::Point(0, info.rc.y + info.rc.height), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]), 2, CV_AA, false);
+		cv::putText(m, ss.str(), cv::Point(0, info.rc.y + info.rc.height), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
 	}
-	cv::imshow("block contour", m);
+	cv::imshow("blocks", m);
 }
 
-/*!
-main
-*/
+/*! main */
 int main(int argc, const char * argv[]) {
 #ifdef _DEBUG
 	srand(0);
