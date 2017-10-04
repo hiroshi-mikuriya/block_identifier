@@ -211,10 +211,11 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
         cv::drawContours(bin, contours, 0, 255, CV_FILLED);
         return bin;
     }();
+    cv::imshow("bin", bin);
     auto getAveBgr = [](cv::Mat const & src){
         cv::Mat tmp;
         cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
-        cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
+        cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG); // TODO: クラッシュすることがある。原因不明
         return tmp.at<cv::Vec3b>(0);
     };
     auto tb = getTopBottom(bin);
@@ -228,9 +229,10 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
         cv::Mat ary;
         cv::reduce(bin(cv::Rect(0, y, m.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
         int left = 0;
-        for (; ary.data[left] < 200 && left < ary.cols; ++left);
+        const int th = 220;
+        for (; ary.data[left] < th && left < ary.cols; ++left);
         int right = bin.cols - 1;
-        for (; ary.data[right] < 200 && 0 <= right; --right);
+        for (; ary.data[right] < th && 0 <= right; --right);
         if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
         BlockInfo info;
         info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
