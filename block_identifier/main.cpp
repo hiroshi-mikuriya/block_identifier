@@ -192,8 +192,8 @@ cv::Rect operator*(cv::Rect const & rc, double r)
     return cv::Rect(
                     static_cast<int>(rc.x + rc.width * (1 - r) / 2),
                     static_cast<int>(rc.y + rc.height * (1 - r) / 2),
-                    static_cast<int>(rc.width * r),
-                    static_cast<int>(rc.height * r)
+                    std::max(1, static_cast<int>(rc.width * r)),
+                    std::max(1, static_cast<int>(rc.height * r))
                     );
 }
 
@@ -211,11 +211,10 @@ std::vector<BlockInfo> getBlockInfo(cv::Mat const & m, std::vector<cv::Point> co
         cv::drawContours(bin, contours, 0, 255, CV_FILLED);
         return bin;
     }();
-    cv::imshow("bin", bin);
     auto getAveBgr = [](cv::Mat const & src){
         cv::Mat tmp;
         cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
-        cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG); // TODO: クラッシュすることがある。原因不明
+        cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
         return tmp.at<cv::Vec3b>(0);
     };
     auto tb = getTopBottom(bin);
@@ -283,7 +282,7 @@ int main(int argc, const char * argv[]) {
         cv::waitKey();
     }
 #else
-    cv::VideoCapture cap(1);
+    cv::VideoCapture cap(0);
     if(!cap.isOpened()){
         std::cerr << "failed to open camera device." << std::endl;
         return -1;
