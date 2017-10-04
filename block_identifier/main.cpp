@@ -19,19 +19,19 @@ const int BLOCK_SIZE_WIDTH = static_cast<int>(150 * IMAGE_RATIO);
 struct Color
 {
     std::string name; ///< 色名
-    cv::Vec3b ycc; ///< YCrCb値
+    cv::Vec3b bgr; ///< RGB値
 };
 
 /*!
  プログラムが扱う色種
  */
 Color const Colors[] = {
-    { "red", {56, 184, 104} },
-    { "green", {110, 102, 106} },
-    { "white", {182, 130, 121} },
-    { "blue", {76, 108, 171} },
-    { "aqua", {115, 110, 153} },
-    { "yellow", {139, 152, 50} },
+    { "red", {0x00, 0x00, 0xFF} },
+    { "green", {0x00, 0xFF, 0x00} },
+    { "white", {0xFC, 0xFC, 0xFC} },
+    { "blue", {0xFF, 0x00, 0x00} },
+    { "aqua", {0xFF, 0x80, 0x80} },
+    { "yellow", {0x00, 0xFF, 0xFF} },
 };
 
 /*!
@@ -56,7 +56,6 @@ cv::Vec3b conv(cv::Vec3b v, int code)
  */
 Color getColor(cv::Vec3b bgr)
 {
-    auto ycc = conv(bgr, CV_BGR2YCrCb);
     double len2 = 100000;
     Color dst;
     auto calcLen2 = [](cv::Vec3b v0, cv::Vec3b v1){
@@ -67,7 +66,7 @@ Color getColor(cv::Vec3b bgr)
         return d;
     };
     for(auto c : Colors){
-        auto len = calcLen2(ycc, c.ycc);
+        auto len = calcLen2(bgr, c.bgr);
         if(len < len2){
             len2 = len;
             dst = c;
@@ -125,8 +124,7 @@ cv::Mat createTestImage(int rows)
         int x = dst.cols / 2 - (rand() % BLOCK_SIZE) / 2;
         int type = SIZES[rand() % 7];
         cv::Rect rc(x, y, BLOCK_SIZE_WIDTH * type, BLOCK_SIZE);
-        auto ycc = Colors[rand() % 6].ycc;
-        auto bgr = conv(ycc, CV_YCrCb2BGR);
+        auto bgr = Colors[rand() % 6].bgr;
         cv::Scalar s(bgr[0], bgr[1], bgr[2]);
         cv::rectangle(dst, rc, s, CV_FILLED);
         if(rows - 1 <= row){
@@ -164,7 +162,6 @@ TopBottom getTopBottom(cv::Mat const & bin)
     cv::Mat m;
     cv::reduce(bin, m, 1, CV_REDUCE_AVG);
     m = m.t();
-    cv::imshow("m", m);
     TopBottom dst;
     const int th = 40; // TODO: ちゃんと計算しろ
     for(dst.top = 0; m.data[dst.top] < th; dst.top++);
@@ -261,9 +258,9 @@ void proc(cv::Mat const & m)
     for (auto info : blockInfo){
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
-        auto v = conv(info.color.ycc, CV_YCrCb2BGR);
+        auto v = info.color.bgr;
         std::stringstream ss;
-        ss << info.type << ":" << info.color.name;
+        ss << info.type << ":" << info.color.name << " " << std::hex << (int)info.ave[2] << (int)info.ave[1] << (int)info.ave[0];
         cv::putText(canvas, ss.str(), cv::Point(m.cols * 1.1, info.rc.y + info.rc.height * 0.7), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);
@@ -276,7 +273,7 @@ void proc(cv::Mat const & m)
  @return exit code
  */
 int main(int argc, const char * argv[]) {
-#ifndef _DEBUG
+#ifdef _DEBUG
     srand(0);
     for(;;){
         cv::Mat m = createTestImage(1 + (rand() % 11));
