@@ -14,6 +14,18 @@ const int BLOCK_SIZE = static_cast<int>(102 * IMAGE_RATIO);
 const int BLOCK_SIZE_WIDTH = static_cast<int>(150 * IMAGE_RATIO);
 
 /*!
+ ブロック情報
+ */
+struct BlockInfo
+{
+    Color color; ///< ブロックの色
+    cv::Rect rc; ///< ブロックの矩形
+    cv::Rect color_area; ///< ブロック色判定領域
+    cv::Vec3b ave; ///< 平均色
+    int type; ///< 横幅: 1, 2, 3
+};
+
+/*!
  上端、下端
  */
 struct TopBottom
