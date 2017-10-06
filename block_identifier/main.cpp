@@ -13,8 +13,6 @@ const int BLOCK_SIZE = static_cast<int>(102 * IMAGE_RATIO);
 /// IMAGE_RATIOをかけたあとのブロックサイズ（幅）
 const int BLOCK_SIZE_WIDTH = static_cast<int>(150 * IMAGE_RATIO);
 
-
-
 /*!
  上端、下端
  */
@@ -28,12 +26,12 @@ struct TopBottom
  プログラムが扱う色種
  */
 Color const Colors[] = {
-    { "red", "object-skewed-cube", {0x80, 0x80, 0xFF} },
-    { "green", "object-skewed-sphere", {0x80, 0xFF, 0x80} },
-    { "white", "object-repbang", {0xFC, 0xFC, 0xFC} },
-    { "blue", "object-fireworks", {0xFF, 0x80, 0x80} },
-    { "aqua", "object-cube", {0xFF, 0xE0, 0xC0} },
-    { "yellow", "object-sphere", {0x80, 0xFF, 0xFF} },
+    { "red", {0x80, 0x80, 0xFF} },
+    { "green", {0x80, 0xFF, 0x80} },
+    { "white", {0xFC, 0xFC, 0xFC} },
+    { "blue", {0xFF, 0x80, 0x80} },
+    { "aqua", {0xFF, 0xE0, 0xC0} },
+    { "yellow", {0x80, 0xFF, 0xFF} },
 };
 
 /*!

@@ -10,7 +10,6 @@
 struct Color
 {
     std::string name; ///< 色名
-    std::string order_id; ///< 命令
     cv::Vec3b bgr; ///< RGB値
 };
 
@@ -40,7 +39,6 @@ namespace boost {
         void serialize(Archive& ar, Color & v, const unsigned int version)
         {
             ar & BOOST_SERIALIZATION_NVP(v.name);
-            ar & BOOST_SERIALIZATION_NVP(v.order_id);
             ar & BOOST_SERIALIZATION_NVP(v.bgr);
         }
         
