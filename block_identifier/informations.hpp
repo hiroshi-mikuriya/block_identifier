@@ -25,6 +25,15 @@ struct BlockInfo
     int type; ///< 横幅: 1, 2, 3
 };
 
+/*!
+ 命令と色の組み
+ */
+struct Order
+{
+    Color color;
+    std::string order_id;
+};
+
 namespace boost {
     namespace serialization {
         template <class Archive>
@@ -59,6 +68,13 @@ namespace boost {
             ar & BOOST_SERIALIZATION_NVP(v.color_area);
             ar & BOOST_SERIALIZATION_NVP(v.ave);
             ar & BOOST_SERIALIZATION_NVP(v.type);
+        }
+
+        template <class Archive>
+        void serialize(Archive& ar, Order & v, const unsigned int version)
+        {
+            ar & BOOST_SERIALIZATION_NVP(v.color);
+            ar & BOOST_SERIALIZATION_NVP(v.order_id);
         }
     }
 }
