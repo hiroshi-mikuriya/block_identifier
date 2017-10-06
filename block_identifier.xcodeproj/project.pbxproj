@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07699A4A1F87A228006757FB /* informations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = informations.hpp; sourceTree = "<group>"; };
 		285092AB1F7E0759003FAA98 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../usr/local/lib/libopencv_core.dylib; sourceTree = "<group>"; };
 		285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = ../../../../usr/local/lib/libopencv_highgui.dylib; sourceTree = "<group>"; };
 		285092AD1F7E0759003FAA98 /* libopencv_imgproc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.dylib; path = ../../../../usr/local/lib/libopencv_imgproc.dylib; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		28A3E0E61F7E060500340A17 /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
+				07699A4A1F87A228006757FB /* informations.hpp */,
 				28A3E0E71F7E060500340A17 /* main.cpp */,
 			);
 			path = block_identifier;
