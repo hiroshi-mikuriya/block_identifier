@@ -1,5 +1,5 @@
+#include "informations.hpp"
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <cassert>
 
 /// カメラ横サイズ
@@ -13,25 +13,27 @@ const int BLOCK_SIZE = static_cast<int>(102 * IMAGE_RATIO);
 /// IMAGE_RATIOをかけたあとのブロックサイズ（幅）
 const int BLOCK_SIZE_WIDTH = static_cast<int>(150 * IMAGE_RATIO);
 
+
+
 /*!
- 色情報
+ 上端、下端
  */
-struct Color
+struct TopBottom
 {
-    std::string name; ///< 色名
-    cv::Vec3b bgr; ///< RGB値
+    int top;
+    int bottom;
 };
 
 /*!
  プログラムが扱う色種
  */
 Color const Colors[] = {
-    { "red", {0x80, 0x80, 0xFF} },
-    { "green", {0x80, 0xFF, 0x80} },
-    { "white", {0xFC, 0xFC, 0xFC} },
-    { "blue", {0xFF, 0x80, 0x80} },
-    { "aqua", {0xFF, 0xE0, 0xC0} },
-    { "yellow", {0x80, 0xFF, 0xFF} },
+    { "red", "object-skewed-cube", {0x80, 0x80, 0xFF} },
+    { "green", "object-skewed-sphere", {0x80, 0xFF, 0x80} },
+    { "white", "object-repbang", {0xFC, 0xFC, 0xFC} },
+    { "blue", "object-fireworks", {0xFF, 0x80, 0x80} },
+    { "aqua", "object-cube", {0xFF, 0xE0, 0xC0} },
+    { "yellow", "object-sphere", {0x80, 0xFF, 0xFF} },
 };
 
 /*!
@@ -127,12 +129,10 @@ cv::Mat createTestImage(int rows)
         auto bgr = Colors[rand() % 6].bgr;
         cv::Scalar s(bgr[0], bgr[1], bgr[2]);
         cv::rectangle(dst, rc, s, CV_FILLED);
-        if(rows - 1 <= row){
-            int b = rc.height / 5;
-            for(int i = 0; i < type; ++i){
-                cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * i + b, rc.y - b, b, b), s, CV_FILLED);
-                cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * (i + 1) - 2 * b, rc.y - b, b, b), s, CV_FILLED);
-            }
+        int b = rc.height / 5;
+        for(int i = 0; i < type; ++i){
+            cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * i + b, rc.y - b, b, b), s, CV_FILLED);
+            cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * (i + 1) - 2 * b, rc.y - b, b, b), s, CV_FILLED);
         }
     }
     for (int i = 0; i < dst.size().area() / 50; ++i){
@@ -141,15 +141,6 @@ cv::Mat createTestImage(int rows)
     }
     return dst;
 }
-
-/*!
- 上端、下端
- */
-struct TopBottom
-{
-    int top;
-    int bottom;
-};
 
 /*!
  輪郭2値画像の上端、下端を返す
@@ -168,18 +159,6 @@ TopBottom getTopBottom(cv::Mat const & bin)
     for(dst.bottom = m.cols - 1; m.data[dst.bottom] < th; dst.bottom--);
     return dst;
 }
-
-/*!
- ブロック情報
- */
-struct BlockInfo
-{
-    Color color; ///< ブロックの色
-    cv::Rect rc; ///< ブロックの矩形
-    cv::Rect color_area; ///< ブロック色判定領域
-    cv::Vec3b ave; ///< 平均色
-    int type; ///< 横幅: 1, 2, 3
-};
 
 /*!
  矩形を縮尺率を変換する。中心は保つ。
@@ -261,7 +240,10 @@ void proc(cv::Mat const & m)
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
         auto v = info.color.bgr;
         std::stringstream ss;
-        ss << info.type << ":" << info.color.name << " " << std::hex << (int)info.ave[2] << (int)info.ave[1] << (int)info.ave[0];
+        ss << info.type << ":" << info.color.name << " ";
+        ss.width(2);
+        ss.fill('0');
+        ss << std::hex << (int)info.ave[2] << (int)info.ave[1] << (int)info.ave[0];
         cv::putText(canvas, ss.str(), cv::Point(m.cols * 1.1, info.rc.y + info.rc.height * 0.7), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);
@@ -274,7 +256,7 @@ void proc(cv::Mat const & m)
  @return exit code
  */
 int main(int argc, const char * argv[]) {
-#ifdef _DEBUG
+#ifndef _DEBUG
     srand(0);
     for(;;){
         cv::Mat m = createTestImage(1 + (rand() % 11));
