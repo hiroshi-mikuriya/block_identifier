@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0753ED0E1F8D05BF00D5EE41 /* identify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0753ED0C1F8D05BE00D5EE41 /* identify.cpp */; };
 		285092AE1F7E0759003FAA98 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AB1F7E0759003FAA98 /* libopencv_core.dylib */; };
 		285092AF1F7E0759003FAA98 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */; };
 		285092B01F7E0759003FAA98 /* libopencv_imgproc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AD1F7E0759003FAA98 /* libopencv_imgproc.dylib */; };
@@ -26,6 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0753ED0C1F8D05BE00D5EE41 /* identify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = identify.cpp; sourceTree = "<group>"; };
+		0753ED0D1F8D05BF00D5EE41 /* identify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = identify.h; sourceTree = "<group>"; };
+		0753ED0F1F8D063F00D5EE41 /* define.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
 		07699A4A1F87A228006757FB /* informations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = informations.hpp; sourceTree = "<group>"; };
 		285092AB1F7E0759003FAA98 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../usr/local/lib/libopencv_core.dylib; sourceTree = "<group>"; };
 		285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = ../../../../usr/local/lib/libopencv_highgui.dylib; sourceTree = "<group>"; };
@@ -78,6 +82,9 @@
 		28A3E0E61F7E060500340A17 /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
+				0753ED0F1F8D063F00D5EE41 /* define.h */,
+				0753ED0C1F8D05BE00D5EE41 /* identify.cpp */,
+				0753ED0D1F8D05BF00D5EE41 /* identify.h */,
 				07699A4A1F87A228006757FB /* informations.hpp */,
 				28A3E0E71F7E060500340A17 /* main.cpp */,
 			);
@@ -142,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28A3E0E81F7E060500340A17 /* main.cpp in Sources */,
+				0753ED0E1F8D05BF00D5EE41 /* identify.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
