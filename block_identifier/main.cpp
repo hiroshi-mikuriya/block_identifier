@@ -1,52 +1,51 @@
 #include "identify.h"
 #include "define.h"
-#include <iostream>
-#include <cassert>
 
-
-/*!
- プログラムが扱う色種
- TODO: xmlから読み込む
- */
-std::vector<Color> const Colors = {
-    { "red", {0x80, 0x80, 0xFF} },
-    { "green", {0x80, 0xFF, 0x80} },
-    { "white", {0xFC, 0xFC, 0xFC} },
-    { "blue", {0xFF, 0x80, 0x80} },
-    { "aqua", {0xFF, 0xE0, 0xC0} },
-    { "yellow", {0x80, 0xFF, 0xFF} },
-};
-
-/*!
- テスト画像を作る。
- カメラがなくても開発をするため。
- @param[in] rows ブロック段数
- @return テスト画像
- */
-cv::Mat createTestImage(int rows, std::vector<Color> const & colors)
-{
-    cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
-    dst += cv::Scalar::all(10);
-    int SIZES[] = { 1, 1, 1, 1, 2, 2, 3 };
-    for(int row = 0; row < rows; ++row){
-        int y = dst.rows - BLOCK_SIZE * (row + 2);
-        int x = dst.cols / 2 - (rand() % BLOCK_SIZE) / 2;
-        int type = SIZES[rand() % 7];
-        cv::Rect rc(x, y, BLOCK_SIZE_WIDTH * type, BLOCK_SIZE);
-        auto bgr = colors[rand() % colors.size()].bgr;
-        cv::Scalar s(bgr[0], bgr[1], bgr[2]);
-        cv::rectangle(dst, rc, s, CV_FILLED);
-        int b = rc.height / 5;
-        for(int i = 0; i < type; ++i){
-            cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * i + b, rc.y - b, b, b), s, CV_FILLED);
-            cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * (i + 1) - 2 * b, rc.y - b, b, b), s, CV_FILLED);
+namespace {
+    /*!
+     プログラムが扱う色種
+     TODO: xmlから読み込む
+     */
+    std::vector<Color> const Colors = {
+        { "red", {0x80, 0x80, 0xFF} },
+        { "green", {0x80, 0xFF, 0x80} },
+        { "white", {0xFC, 0xFC, 0xFC} },
+        { "blue", {0xFF, 0x80, 0x80} },
+        { "aqua", {0xFF, 0xE0, 0xC0} },
+        { "yellow", {0x80, 0xFF, 0xFF} },
+    };
+    
+    /*!
+     テスト画像を作る。
+     カメラがなくても開発をするため。
+     @param[in] rows ブロック段数
+     @return テスト画像
+     */
+    cv::Mat createTestImage(int rows, std::vector<Color> const & colors)
+    {
+        cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
+        dst += cv::Scalar::all(10);
+        int SIZES[] = { 1, 1, 1, 1, 2, 2, 3 };
+        for(int row = 0; row < rows; ++row){
+            int y = dst.rows - BLOCK_SIZE * (row + 2);
+            int x = dst.cols / 2 - (rand() % BLOCK_SIZE) / 2;
+            int type = SIZES[rand() % 7];
+            cv::Rect rc(x, y, BLOCK_SIZE_WIDTH * type, BLOCK_SIZE);
+            auto bgr = colors[rand() % colors.size()].bgr;
+            cv::Scalar s(bgr[0], bgr[1], bgr[2]);
+            cv::rectangle(dst, rc, s, CV_FILLED);
+            int b = rc.height / 5;
+            for(int i = 0; i < type; ++i){
+                cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * i + b, rc.y - b, b, b), s, CV_FILLED);
+                cv::rectangle(dst, cv::Rect(rc.x + BLOCK_SIZE_WIDTH * (i + 1) - 2 * b, rc.y - b, b, b), s, CV_FILLED);
+            }
         }
+        for (int i = 0; i < dst.size().area() / 50; ++i){
+            cv::Point pt = { rand() % dst.cols, rand() % dst.rows };
+            dst.at<cv::Vec3b>(pt) = { (uchar)(rand() % 256), (uchar)(rand() % 256), (uchar)(rand() % 256) };
+        }
+        return dst;
     }
-    for (int i = 0; i < dst.size().area() / 50; ++i){
-        cv::Point pt = { rand() % dst.cols, rand() % dst.rows };
-        dst.at<cv::Vec3b>(pt) = { (uchar)(rand() % 256), (uchar)(rand() % 256), (uchar)(rand() % 256) };
-    }
-    return dst;
 }
 
 /*!
