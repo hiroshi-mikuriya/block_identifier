@@ -46,8 +46,8 @@ colorタグ、instuctionタグの中身を修正する。（色名、色基準�
 
 ## コマンドラインオプション
 
-  -h [ --help ]            show help  
-  -v [ --version ]         print sarry lib version  
+  -h [ --help ]            Show help  
+  -v [ --version ]         Print software version  
   -g [ --generate ]        Generate option file  
   -o [ --option ] arg      Option file path  
   -d [ --device ] arg (=0) Camera device number if PC has multiple camera devices  

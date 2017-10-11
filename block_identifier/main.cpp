@@ -115,8 +115,8 @@ int main(int argc, const char * argv[]) {
 		namespace po = boost::program_options;
 		po::options_description desc("options");
 		desc.add_options()
-			("help,h", "show help")
-			("version,v", "print sarry lib version")
+			("help,h", "Show help")
+			("version,v", "Print software version")
 			("generate,g", "Generate option file")
 			("option,o", po::value<std::string>(), "Option file path")
 			("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
