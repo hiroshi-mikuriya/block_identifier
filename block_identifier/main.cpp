@@ -5,6 +5,8 @@
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <fstream>
+#include <mutex>
+#include <thread>
 
 namespace {
     /*!
@@ -40,15 +42,66 @@ namespace {
     }
 
 	/*!
+	ブロック情報を送信する
+	@param[in] opt オプション
+	@param[in] blockInfo ブロック情報
+	@param[in] address 送信先
+	@param[in] port ポート番号
 	*/
-	int main_proc(Option const & opt, int device_id)
+	void send(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
+	{
+		try{
+			std::stringstream json;
+			json << "show:{\"orders\":[";
+			for (size_t i = 0; i < blockInfo.size(); ++i){
+				json << "{\"id\":\"" << opt.clr2inst.at(blockInfo[i].color.name) << "\",\"lifetime\":3,\"param\":{}}";
+				if (i < blockInfo.size() - 1){
+					json << ",";
+				}
+			}
+			json << "]}\n";
+			std::cout << json.str() << std::endl;
+		}
+		catch (std::exception const & e) {
+			std::cerr << e.what() << std::endl;
+		}
+	}
+
+	/*!
+	メイン処理
+	@param[in] opt オプション
+	@param[in] device_id カメラデバイスID
+	@param[in] address PythonプロセスのIPアドレス
+	@param[in] port Pythonプロセスのポート番号
+	*/
+	int main_proc(Option const & opt, int device_id, std::string const & address, int port)
 	{
 		std::vector<BlockInfo> blockInfo;
-#ifndef _DEBUG
+		std::mutex mutex;
+		if(!address.empty()){
+			std::thread th([&]{
+				for (;;){
+					std::cout << "Type any KEY and ENTER." << std::endl;
+					std::string tmp;
+					std::cin >> tmp;
+					std::vector<BlockInfo> copy;
+					{
+						std::unique_lock<std::mutex> lock(mutex);
+						copy = blockInfo;
+					}
+					send(opt, copy, address, port);
+				}
+			});
+			th.detach();
+		}
+#ifdef _DEBUG
 		srand(0);
 		for (;;){
 			cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
-			identifyBlock(m, opt.colors, blockInfo);
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				identifyBlock(m, opt.colors, blockInfo);
+			}
 			cv::waitKey();
 		}
 #else
@@ -61,11 +114,14 @@ namespace {
 		cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
 		cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
 		while (1){
-			cv::Mat m;
-			cap >> m;
-			cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
-			cv::flip(m.t(), m, 0);
-			identifyBlock(m, opt.colors, blockInfo);
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				cv::Mat m;
+				cap >> m;
+				cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
+				cv::flip(m.t(), m, 0);
+				identifyBlock(m, opt.colors, blockInfo);
+			}
 			cv::waitKey(1);
 		}
 #endif // _DEBUG
@@ -86,7 +142,7 @@ int main(int argc, const char * argv[]) {
 		desc.add_options()
 			("version,v", "print sarry lib version")
 			("generate,g", "Generate option file")
-			("option,o", po::value<std::string>(), "Option file path")
+			("option,o", po::value<std::string>(), "Option fkile path")
 			("camera,c", po::value<int>()->default_value(0), "Camera number if PC has multiple camera devices")
 			("address,a", po::value<std::string>(), "Python process IP address")
 			("port,p", po::value<int>()->default_value(80), "Python process port number");
@@ -115,7 +171,10 @@ int main(int argc, const char * argv[]) {
 				boost::archive::xml_iarchive ia(ifs);
 				ia >> boost::serialization::make_nvp("option", opt);
 			}
-			main_proc(opt, vm["camera"].as<int>());
+			auto camera = vm["camera"].as<int>();
+			auto address = vm.count("address") ? vm["address"].as<std::string>(): "";
+			auto port = vm["port"].as<int>();
+			main_proc(opt, camera, address, port);
 		}
 		catch (std::exception const & e){
 			std::cerr << e.what() << "\n" << desc << std::endl;
@@ -127,10 +186,4 @@ int main(int argc, const char * argv[]) {
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}
-
-
-
-
-
 }
-

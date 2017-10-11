@@ -184,7 +184,7 @@ namespace {
 			: image_(image)
 			, colors_(colors)
 		{
-			assert(3 == m.channels());
+			assert(3 == image_.channels());
 			auto const contour = getBlockContour();
 			blockInfo = getBlockInfo(contour);
 			showBlockInfo(blockInfo);
