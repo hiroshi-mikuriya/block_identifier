@@ -28,23 +28,20 @@
 
 ## 使い方
 
-|exe名|説明|
-|---|---|
-|Debug/block_identifier.exe|カメラと非接続<br>擬似カメラ画像を表示<br>TCP送信可|
-|Release/block_identifier.exe|カメラと接続<br>TCP送信可|
-
-- ローカルホスト（ポート80）にTCP送信するモード  
+- ローカルホスト（ポート80）にTCP送信するモード（通常使用モード）  
 `block_identifier -a ::1 -p 80`  
 カメラプレビューが表示されるので、うまくブロックを認識するようカメラ角度やブロックを調整する。  
 コマンドラインで適当な文字を入力しENTERを押すと、TCP送信する。
-- TCP送信はしないモード  
+- TCP送信しないモード（カメラデバッグ等）  
 `block_identifier`
-- WEBカメラではないほうのカメラ（インカメラなど）が表示されてしまうとき  
+- WEBカメラではないカメラ（インカメラなど）が表示されてしまうとき  
 `block_identifier -d 1`
+- カメラを繋がないとき（TCPデバッグ等）  
+`block_identifier --debug`
 - 色数や命令を変更する  
 `block_identifier -g`  
 block_identifier.xmlが出力される。  
-colorタグ、instuctionタグの中身を修正する。  
+colorタグ、instuctionタグの中身を修正する。（色名、色基準値、命令と色の紐付け）  
 `block_identifier -o block_identifier.xml`
 
 ## コマンドラインオプション

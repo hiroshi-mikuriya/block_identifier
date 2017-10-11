@@ -40,63 +40,82 @@ namespace {
     }
 
 	/*!
+	TCP送信スレッドを作る
+	@param[in] opt オプション
+	@param[in] address PythonプロセスのIPアドレス
+	@param[in] port Pythonプロセスのポート番号
+	*/
+	void makeTcpThread(
+		Option const & opt, 
+		std::string const & address, 
+		int port, 
+		std::vector<BlockInfo> const & blockInfo,
+		std::mutex & mutex)
+	{
+		std::thread th([&]{
+			for (;;){
+				std::cout << "Type any KEY and ENTER." << std::endl;
+				std::string tmp;
+				std::cin >> tmp;
+				std::vector<BlockInfo> copy;
+				{
+					std::unique_lock<std::mutex> lock(mutex);
+					copy = blockInfo;
+				}
+				sendTcp(opt, copy, address, port);
+			}
+		});
+		th.detach();
+	}
+
+	/*!
 	メイン処理
 	@param[in] opt オプション
 	@param[in] device_id カメラデバイスID
 	@param[in] address PythonプロセスのIPアドレス
 	@param[in] port Pythonプロセスのポート番号
+	@return Exit code
 	*/
-	int main_proc(Option const & opt, int device_id, std::string const & address, int port)
+	int main_proc(Option const & opt, int device_id, std::string const & address, int port, bool debug)
 	{
 		std::vector<BlockInfo> blockInfo;
 		std::mutex mutex;
-		if(!address.empty()){
-			std::thread th([&]{
-				for (;;){
-					std::cout << "Type any KEY and ENTER." << std::endl;
-					std::string tmp;
-					std::cin >> tmp;
-					std::vector<BlockInfo> copy;
-					{
-						std::unique_lock<std::mutex> lock(mutex);
-						copy = blockInfo;
-					}
-					sendTcp(opt, copy, address, port);
+		if (!address.empty()){
+			makeTcpThread(opt, address, port, blockInfo, mutex);
+		}
+
+		if (debug){
+			srand(0);
+			for (;;){
+				cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
+				{
+					std::unique_lock<std::mutex> lock(mutex);
+					identifyBlock(m, opt.colors, blockInfo);
 				}
-			});
-			th.detach();
-		}
-#ifdef _DEBUG
-		srand(0);
-		for (;;){
-			cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
-			{
-				std::unique_lock<std::mutex> lock(mutex);
-				identifyBlock(m, opt.colors, blockInfo);
+				cv::waitKey();
 			}
-			cv::waitKey();
 		}
-#else
-		cv::VideoCapture cap(device_id);
-		if (!cap.isOpened()){
-			std::cerr << "failed to open camera device." << std::endl;
-			return -1;
-		}
-		// CV_CAP_PROP_GAIN
-		cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
-		cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
-		while (1){
-			{
-				std::unique_lock<std::mutex> lock(mutex);
-				cv::Mat m;
-				cap >> m;
-				cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
-				cv::flip(m.t(), m, 0);
-				identifyBlock(m, opt.colors, blockInfo);
+		else{
+			cv::VideoCapture cap(device_id);
+			if (!cap.isOpened()){
+				std::cerr << "failed to open camera device." << std::endl;
+				return -1;
 			}
-			cv::waitKey(1);
+			// CV_CAP_PROP_GAIN
+			cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
+			cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
+			while (1){
+				{
+					std::unique_lock<std::mutex> lock(mutex);
+					cv::Mat m;
+					cap >> m;
+					cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
+					cv::flip(m.t(), m, 0);
+					identifyBlock(m, opt.colors, blockInfo);
+				}
+				cv::waitKey(1);
+			}
 		}
-#endif // _DEBUG
 		return 0;
 	}
 }
@@ -118,8 +137,9 @@ int main(int argc, const char * argv[]) {
 			("option,o", po::value<std::string>(), "Option file path")
 			("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
 			("address,a", po::value<std::string>(), "Python process IP address")
-			("port,p", po::value<int>()->default_value(80), "Python process port number");
-		;
+			("port,p", po::value<int>()->default_value(80), "Python process port number")
+			("debug", "DEBUG mode");
+			;
 		po::variables_map vm;
 		try{
 			po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -147,7 +167,7 @@ int main(int argc, const char * argv[]) {
 			auto camera = vm["device"].as<int>();
 			auto address = vm.count("address") ? vm["address"].as<std::string>(): "";
 			auto port = vm["port"].as<int>();
-			main_proc(opt, camera, address, port);
+			return main_proc(opt, camera, address, port, !!vm.count("debug"));
 		}
 		catch (std::exception const & e){
 			std::cerr << e.what() << "\n" << desc << std::endl;

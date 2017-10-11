@@ -158,8 +158,11 @@ namespace {
 			int blockCount = (tb.bottom - tb.top + BLOCK_SIZE / 2) / BLOCK_SIZE;
 			for (int i = 0; i < blockCount; ++i){
 				int y = (tb.top * (blockCount - i) + tb.bottom * i) / blockCount;
+				if (bin.rows - BLOCK_SIZE < y){
+					continue;
+				}
 				cv::Mat ary;
-				cv::reduce(bin(cv::Rect(0, y, image_.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
+				cv::reduce(bin(cv::Rect(0, y, bin.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
 				int left = 0;
 				const int th = 220;
 				for (; ary.data[left] < th && left < ary.cols; ++left);
