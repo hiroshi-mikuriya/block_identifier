@@ -52,8 +52,9 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OPENCV)/build/include;$(BOOST)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV)/build/include;$(BOOST);$(ProjectDir)../block_identifier</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -70,8 +71,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OPENCV)/build/include;$(BOOST)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV)/build/include;$(BOOST);$(ProjectDir)../block_identifier</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -85,8 +87,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\block_identifier\identify.cpp" />
     <ClCompile Include="..\block_identifier\main.cpp" />
     <ClCompile Include="OpenCVLink.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\block_identifier\define.h" />
+    <ClInclude Include="..\block_identifier\identify.h" />
+    <ClInclude Include="..\block_identifier\informations.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

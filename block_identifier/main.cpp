@@ -1,20 +1,9 @@
 #include "identify.h"
 #include "define.h"
+#include <boost/program_options.hpp>
+#include <boost/format.hpp>
 
 namespace {
-    /*!
-     プログラムが扱う色種
-     TODO: xmlから読み込む
-     */
-    std::vector<Color> const Colors = {
-        { "red", {0x80, 0x80, 0xFF} },
-        { "green", {0x80, 0xFF, 0x80} },
-        { "white", {0xFC, 0xFC, 0xFC} },
-        { "blue", {0xFF, 0x80, 0x80} },
-        { "aqua", {0xFF, 0xE0, 0xC0} },
-        { "yellow", {0x80, 0xFF, 0xFF} },
-    };
-    
     /*!
      テスト画像を作る。
      カメラがなくても開発をするため。
@@ -23,7 +12,7 @@ namespace {
      */
     cv::Mat createTestImage(int rows, std::vector<Color> const & colors)
     {
-        cv::Mat dst = cv::Mat::zeros(CAMERA_WIDTH * IMAGE_RATIO, CAMERA_HEIGHT * IMAGE_RATIO, CV_8UC3);
+        cv::Mat dst = cv::Mat::zeros(static_cast<int>(CAMERA_WIDTH * IMAGE_RATIO), static_cast<int>(CAMERA_HEIGHT * IMAGE_RATIO), CV_8UC3);
         dst += cv::Scalar::all(10);
         int SIZES[] = { 1, 1, 1, 1, 2, 2, 3 };
         for(int row = 0; row < rows; ++row){
@@ -55,11 +44,46 @@ namespace {
  @return exit code
  */
 int main(int argc, const char * argv[]) {
+	try{
+		namespace po = boost::program_options;
+		po::options_description desc("options");
+		desc.add_options()
+			("version,v", "print sarry lib version")
+			("generate,g", po::value<std::string>()->default_value("options.xml"), "Generate option file")
+			("option,o", po::value<std::string>(), "Option file path")
+			("camera,c", po::value<int>()->default_value(0), "Camera number if PC has multiple camera devices")
+			("address,a", po::value<std::string>(), "Python process IP address")
+			("port,p", po::value<int>()->default_value(80), "Python process port number");
+		;
+		po::variables_map vm;
+		try{
+			po::store(po::parse_command_line(argc, argv, desc), vm);
+			if (vm.count("version")){
+				std::cout << "version: 0.9.0" << std::endl;
+				return 0;
+			}
+			po::notify(vm);
+		}
+		catch (std::exception const & e){
+			std::cerr << e.what() << "\n" << desc << std::endl;
+			return 1;
+		}
+		return 0;
+	}
+	catch (std::exception const & e){
+		std::cerr << e.what() << std::endl;
+		return 1;
+	}
+
+
+
+
+	auto opt = getDefaultOption();
 #ifndef _DEBUG
     srand(0);
     for(;;){
-        cv::Mat m = createTestImage(1 + (rand() % 11), Colors);
-        identifyBlock(m, Colors);
+        cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
+		identifyBlock(m, opt.colors);
         cv::waitKey();
     }
 #else
@@ -76,7 +100,7 @@ int main(int argc, const char * argv[]) {
         cap >> m;
         cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
         cv::flip(m.t(), m, 0);
-        identifyBlock(m, Colors);
+		identifyBlock(m, opt.colors);
         cv::waitKey(1);
     }
 #endif // _DEBUG

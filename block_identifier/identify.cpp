@@ -3,18 +3,6 @@
 
 namespace {
     /*!
-     ブロック情報
-     */
-    struct BlockInfo
-    {
-        Color color; ///< ブロックの色
-        cv::Rect rc; ///< ブロックの矩形
-        cv::Rect color_area; ///< ブロック色判定領域
-        cv::Vec3b ave; ///< 平均色
-        int type; ///< 横幅: 1, 2, 3
-    };
-    
-    /*!
      上端、下端
      */
     struct TopBottom
