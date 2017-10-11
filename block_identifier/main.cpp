@@ -61,7 +61,7 @@ namespace {
 						std::unique_lock<std::mutex> lock(mutex);
 						copy = blockInfo;
 					}
-					send(opt, copy, address, port);
+					sendTcp(opt, copy, address, port);
 				}
 			});
 			th.detach();
@@ -112,6 +112,7 @@ int main(int argc, const char * argv[]) {
 		namespace po = boost::program_options;
 		po::options_description desc("options");
 		desc.add_options()
+			("help,h", "show help")
 			("version,v", "print sarry lib version")
 			("generate,g", "Generate option file")
 			("option,o", po::value<std::string>(), "Option fkile path")
@@ -122,6 +123,10 @@ int main(int argc, const char * argv[]) {
 		po::variables_map vm;
 		try{
 			po::store(po::parse_command_line(argc, argv, desc), vm);
+			if (vm.count("help")){
+				std::cout << desc << std::endl;
+				return 0;
+			}
 			if (vm.count("version")){
 				std::cout << "version: 0.9.0" << std::endl;
 				return 0;
