@@ -1,35 +1,31 @@
 #include "sender.h"
+#include "picojson.h"
 #include <boost/asio.hpp>
 
 namespace
 {
 	std::string makeJson(Option const & opt, std::vector<BlockInfo> const & blockInfo)
 	{
-		std::stringstream ss;
-		ss << "show:{\"orders\":[";
-		for (size_t i = 0; i < blockInfo.size(); ++i){
-			ss << "{\"id\":\"" << opt.clr2inst.at(blockInfo[i].color.name) << "\",\"lifetime\":3,\"param\":{}}";
-			if (i < blockInfo.size() - 1){
-				ss << ",";
-			}
+		using value = picojson::value;
+		picojson::array orders;
+		for (auto info : blockInfo){
+			picojson::object item;
+			item["id"] = value(opt.clr2inst.at(info.color.name));
+			item["lifetime"] = value(3.0);
+			item["param"] = value(picojson::object());
+			orders.emplace_back(item);
 		}
-		ss << "]}";
-		return ss.str();
+		picojson::object show;
+		show["orders"] = value(orders);
+		picojson::object root;
+		root["show"] = value(show);
+		return value(root).serialize();
 	}
 
 	void sendTcp(std::string const & data, std::string const & address, int port)
 	{
 		namespace asio = boost::asio;
 		namespace ip = asio::ip;
-		/*
-		{
-		std::cout << "connecting... " << address << ":" << port << std::endl;
-		ip::tcp::iostream stream(address, boost::lexical_cast<std::string>(port));
-		stream << json << std::endl;
-		std::string res;
-		std::getline(stream, res);
-		}
-		*/
 		asio::io_service io_service;
 		asio::ip::tcp::socket sock(io_service);
 		std::cout << "connecting... " << address << ":" << port << std::endl;

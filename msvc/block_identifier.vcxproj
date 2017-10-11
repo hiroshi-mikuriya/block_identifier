@@ -97,6 +97,7 @@
     <ClInclude Include="..\block_identifier\define.h" />
     <ClInclude Include="..\block_identifier\identify.h" />
     <ClInclude Include="..\block_identifier\option.h" />
+    <ClInclude Include="..\block_identifier\picojson.h" />
     <ClInclude Include="..\block_identifier\sender.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

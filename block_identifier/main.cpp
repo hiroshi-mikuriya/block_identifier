@@ -144,7 +144,7 @@ int main(int argc, const char * argv[]) {
 				auto path = vm["option"].as<std::string>();
 				opt = readOption(path);
 			}
-			auto camera = vm["camera"].as<int>();
+			auto camera = vm["device"].as<int>();
 			auto address = vm.count("address") ? vm["address"].as<std::string>(): "";
 			auto port = vm["port"].as<int>();
 			main_proc(opt, camera, address, port);
