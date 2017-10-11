@@ -40,35 +40,6 @@ namespace {
     }
 
 	/*!
-	TCP送信スレッドを作る
-	@param[in] opt オプション
-	@param[in] address PythonプロセスのIPアドレス
-	@param[in] port Pythonプロセスのポート番号
-	*/
-	void makeTcpThread(
-		Option const & opt, 
-		std::string const & address, 
-		int port, 
-		std::vector<BlockInfo> const & blockInfo,
-		std::mutex & mutex)
-	{
-		std::thread th([&]{
-			for (;;){
-				std::cout << "Type any KEY and ENTER." << std::endl;
-				std::string tmp;
-				std::cin >> tmp;
-				std::vector<BlockInfo> copy;
-				{
-					std::unique_lock<std::mutex> lock(mutex);
-					copy = blockInfo;
-				}
-				sendTcp(opt, copy, address, port);
-			}
-		});
-		th.detach();
-	}
-
-	/*!
 	メイン処理
 	@param[in] opt オプション
 	@param[in] device_id カメラデバイスID
@@ -81,7 +52,20 @@ namespace {
 		std::vector<BlockInfo> blockInfo;
 		std::mutex mutex;
 		if (!address.empty()){
-			makeTcpThread(opt, address, port, blockInfo, mutex);
+			std::thread th([&, port]{
+				for (;;){
+					std::cout << "Type any KEY and ENTER." << std::endl;
+					std::string tmp;
+					std::cin >> tmp;
+					std::vector<BlockInfo> copy;
+					{
+						std::unique_lock<std::mutex> lock(mutex);
+						copy = blockInfo;
+					}
+					sendTcp(opt, copy, address, port);
+				}
+			});
+			th.detach();
 		}
 
 		if (debug){
@@ -165,8 +149,8 @@ int main(int argc, const char * argv[]) {
 				opt = readOption(path);
 			}
 			auto camera = vm["device"].as<int>();
-			auto address = vm.count("address") ? vm["address"].as<std::string>(): "";
-			auto port = vm["port"].as<int>();
+			std::string address = vm.count("address") ? vm["address"].as<std::string>(): "";
+			int port = vm["port"].as<int>();
 			return main_proc(opt, camera, address, port, !!vm.count("debug"));
 		}
 		catch (std::exception const & e){
