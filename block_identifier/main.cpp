@@ -2,6 +2,9 @@
 #include "define.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <fstream>
 
 namespace {
     /*!
@@ -35,6 +38,39 @@ namespace {
         }
         return dst;
     }
+
+	/*!
+	*/
+	int main_proc(Option const & opt)
+	{
+		std::vector<BlockInfo> blockInfo;
+#ifndef _DEBUG
+		srand(0);
+		for (;;){
+			cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
+			identifyBlock(m, opt.colors, blockInfo);
+			cv::waitKey();
+		}
+#else
+		cv::VideoCapture cap(0);
+		if (!cap.isOpened()){
+			std::cerr << "failed to open camera device." << std::endl;
+			return -1;
+		}
+		// CV_CAP_PROP_GAIN
+		cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
+		cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
+		while (1){
+			cv::Mat m;
+			cap >> m;
+			cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
+			cv::flip(m.t(), m, 0);
+			identifyBlock(m, opt.colors, blockInfo);
+			cv::waitKey(1);
+		}
+#endif // _DEBUG
+		return 0;
+	}
 }
 
 /*!
@@ -62,6 +98,13 @@ int main(int argc, const char * argv[]) {
 				std::cout << "version: 0.9.0" << std::endl;
 				return 0;
 			}
+			if (vm.count("generate")){
+				auto path = vm["generate"].as<std::string>();
+				std::ofstream ofs(path);
+				boost::archive::xml_oarchive oa(ofs);
+				oa << boost::serialization::make_nvp("option", getDefaultOption());
+				return 0;
+			}
 			po::notify(vm);
 		}
 		catch (std::exception const & e){
@@ -78,32 +121,6 @@ int main(int argc, const char * argv[]) {
 
 
 
-	auto opt = getDefaultOption();
-#ifndef _DEBUG
-    srand(0);
-    for(;;){
-        cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
-		identifyBlock(m, opt.colors);
-        cv::waitKey();
-    }
-#else
-    cv::VideoCapture cap(0);
-    if(!cap.isOpened()){
-        std::cerr << "failed to open camera device." << std::endl;
-        return -1;
-    }
-    // CV_CAP_PROP_GAIN
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
-    while(1){
-        cv::Mat m;
-        cap >> m;
-        cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
-        cv::flip(m.t(), m, 0);
-		identifyBlock(m, opt.colors);
-        cv::waitKey(1);
-    }
-#endif // _DEBUG
-    return 0;
+
 }
 
