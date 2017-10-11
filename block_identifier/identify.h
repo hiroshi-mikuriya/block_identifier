@@ -1,6 +1,6 @@
 #pragma once
 
-#include "informations.hpp"
+#include "option.h"
 
 /*!
 カメラ画像取得後のメイン処理
