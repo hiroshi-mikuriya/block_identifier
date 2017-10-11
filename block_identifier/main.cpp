@@ -41,7 +41,7 @@ namespace {
 
 	/*!
 	*/
-	int main_proc(Option const & opt)
+	int main_proc(Option const & opt, int device_id)
 	{
 		std::vector<BlockInfo> blockInfo;
 #ifndef _DEBUG
@@ -52,7 +52,7 @@ namespace {
 			cv::waitKey();
 		}
 #else
-		cv::VideoCapture cap(0);
+		cv::VideoCapture cap(device_id);
 		if (!cap.isOpened()){
 			std::cerr << "failed to open camera device." << std::endl;
 			return -1;
@@ -85,7 +85,7 @@ int main(int argc, const char * argv[]) {
 		po::options_description desc("options");
 		desc.add_options()
 			("version,v", "print sarry lib version")
-			("generate,g", po::value<std::string>()->default_value("options.xml"), "Generate option file")
+			("generate,g", "Generate option file")
 			("option,o", po::value<std::string>(), "Option file path")
 			("camera,c", po::value<int>()->default_value(0), "Camera number if PC has multiple camera devices")
 			("address,a", po::value<std::string>(), "Python process IP address")
@@ -99,13 +99,23 @@ int main(int argc, const char * argv[]) {
 				return 0;
 			}
 			if (vm.count("generate")){
-				auto path = vm["generate"].as<std::string>();
+				std::cout << "generating..." << std::endl;
+				auto path = "identify_block.xml";
 				std::ofstream ofs(path);
 				boost::archive::xml_oarchive oa(ofs);
 				oa << boost::serialization::make_nvp("option", getDefaultOption());
+				std::cout << "generated file " << path << std::endl;
 				return 0;
 			}
 			po::notify(vm);
+			auto opt = getDefaultOption();
+			if (vm.count("option")){
+				auto path = vm["option"].as<std::string>();
+				std::ifstream ifs(path);
+				boost::archive::xml_iarchive ia(ifs);
+				ia >> boost::serialization::make_nvp("option", opt);
+			}
+			main_proc(opt, vm["camera"].as<int>());
 		}
 		catch (std::exception const & e){
 			std::cerr << e.what() << "\n" << desc << std::endl;
