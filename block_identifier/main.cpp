@@ -1,10 +1,10 @@
 #include "identify.h"
+#include "sender.h"
 #include "define.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
-#include <boost/asio.hpp>
 #include <fstream>
 #include <mutex>
 #include <thread>
@@ -41,41 +41,6 @@ namespace {
         }
         return dst;
     }
-
-	/*!
-	ブロック情報を送信する
-	@param[in] opt オプション
-	@param[in] blockInfo ブロック情報
-	@param[in] address 送信先
-	@param[in] port ポート番号
-	*/
-	void send(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
-	{
-		try{
-			std::stringstream ss;
-			ss << "show:{\"orders\":[";
-			for (size_t i = 0; i < blockInfo.size(); ++i){
-				ss << "{\"id\":\"" << opt.clr2inst.at(blockInfo[i].color.name) << "\",\"lifetime\":3,\"param\":{}}";
-				if (i < blockInfo.size() - 1){
-					ss << ",";
-				}
-			}
-			ss << "]}\n";
-			auto json = ss.str();
-			std::cout << json << std::endl;
-			using namespace boost::asio;
-			io_service io_service;
-			ip::tcp::socket sock(io_service);
-			std::cout << "connecting... " << address << ":" << port << std::endl;
-			sock.connect(ip::tcp::endpoint(ip::address::from_string(address), port));
-			std::cout << "sending..." << std::endl;
-			write(sock, buffer(json));
-			std::cout << "finished" << std::endl;
-		}
-		catch (std::exception const & e) {
-			std::cerr << e.what() << std::endl;
-		}
-	}
 
 	/*!
 	メイン処理

@@ -89,12 +89,14 @@
   <ItemGroup>
     <ClCompile Include="..\block_identifier\identify.cpp" />
     <ClCompile Include="..\block_identifier\main.cpp" />
+    <ClCompile Include="..\block_identifier\sender.cpp" />
     <ClCompile Include="OpenCVLink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\block_identifier\define.h" />
     <ClInclude Include="..\block_identifier\identify.h" />
     <ClInclude Include="..\block_identifier\informations.hpp" />
+    <ClInclude Include="..\block_identifier\sender.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
