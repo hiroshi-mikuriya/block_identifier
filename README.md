@@ -52,7 +52,8 @@ colorタグ、instuctionタグの中身を修正する。（色名、色基準�
   -o [ --option ] arg      Option file path  
   -d [ --device ] arg (=0) Camera device number if PC has multiple camera devices  
   -a [ --address ] arg     Python process IP address  
-  -p [ --port ] arg (=80)  Python process port number
+  -p [ --port ] arg (=80)  Python process port number  
+  --debug                  DEBUG mode
 
 ## 未実装項目
 
