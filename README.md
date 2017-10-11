@@ -34,7 +34,9 @@
 |Release/block_identifier.exe|カメラと接続<br>TCP送信可|
 
 - ローカルホスト（ポート80）にTCP送信するモード  
-`block_identifier -a ::1 -p 80`
+`block_identifier -a ::1 -p 80`  
+カメラプレビューが表示されるので、うまくブロックを認識するようカメラ角度やブロックを調整する。  
+コマンドラインで適当な文字を入力しENTERを押すと、TCP送信する。
 - TCP送信はしないモード  
 `block_identifier`
 - WEBカメラではないほうのカメラ（インカメラなど）が表示されてしまうとき  
