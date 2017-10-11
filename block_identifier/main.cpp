@@ -115,8 +115,8 @@ int main(int argc, const char * argv[]) {
 			("help,h", "show help")
 			("version,v", "print sarry lib version")
 			("generate,g", "Generate option file")
-			("option,o", po::value<std::string>(), "Option fkile path")
-			("camera,c", po::value<int>()->default_value(0), "Camera number if PC has multiple camera devices")
+			("option,o", po::value<std::string>(), "Option file path")
+			("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
 			("address,a", po::value<std::string>(), "Python process IP address")
 			("port,p", po::value<int>()->default_value(80), "Python process port number");
 		;
@@ -133,7 +133,7 @@ int main(int argc, const char * argv[]) {
 			}
 			if (vm.count("generate")){
 				std::cout << "generating..." << std::endl;
-				auto path = "identify_block.xml";
+				auto path = "block_identifier.xml";
 				writeOption(path, getDefaultOption());
 				std::cout << "generated file " << path << std::endl;
 				return 0;

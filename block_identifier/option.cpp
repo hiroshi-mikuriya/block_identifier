@@ -49,7 +49,7 @@ Option getDefaultOption()
 	opt.clr2inst = std::map<std::string, std::string>{
 		{ "red", "object-ripple" },
 		{ "green", "object-mario-run-anime" },
-		{ "white", "object-mario-runandjump-anime 	" },
+		{ "white", "object-mario-runandjump-anime" },
 		{ "blue", "object-cube" },
 		{ "aqua", "object-repbang" },
 		{ "yellow", "object-fireworks" },
