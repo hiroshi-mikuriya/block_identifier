@@ -4,6 +4,7 @@
 #include <boost/format.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
+#include <boost/asio.hpp>
 #include <fstream>
 #include <mutex>
 #include <thread>
@@ -51,16 +52,25 @@ namespace {
 	void send(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
 	{
 		try{
-			std::stringstream json;
-			json << "show:{\"orders\":[";
+			std::stringstream ss;
+			ss << "show:{\"orders\":[";
 			for (size_t i = 0; i < blockInfo.size(); ++i){
-				json << "{\"id\":\"" << opt.clr2inst.at(blockInfo[i].color.name) << "\",\"lifetime\":3,\"param\":{}}";
+				ss << "{\"id\":\"" << opt.clr2inst.at(blockInfo[i].color.name) << "\",\"lifetime\":3,\"param\":{}}";
 				if (i < blockInfo.size() - 1){
-					json << ",";
+					ss << ",";
 				}
 			}
-			json << "]}\n";
-			std::cout << json.str() << std::endl;
+			ss << "]}\n";
+			auto json = ss.str();
+			std::cout << json << std::endl;
+			using namespace boost::asio;
+			io_service io_service;
+			ip::tcp::socket sock(io_service);
+			std::cout << "connecting... " << address << ":" << port << std::endl;
+			sock.connect(ip::tcp::endpoint(ip::address::from_string(address), port));
+			std::cout << "sending..." << std::endl;
+			write(sock, buffer(json));
+			std::cout << "finished" << std::endl;
 		}
 		catch (std::exception const & e) {
 			std::cerr << e.what() << std::endl;
