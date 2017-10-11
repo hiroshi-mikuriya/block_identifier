@@ -3,9 +3,6 @@
 #include "define.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <fstream>
 #include <mutex>
 #include <thread>
 
@@ -132,9 +129,7 @@ int main(int argc, const char * argv[]) {
 			if (vm.count("generate")){
 				std::cout << "generating..." << std::endl;
 				auto path = "identify_block.xml";
-				std::ofstream ofs(path);
-				boost::archive::xml_oarchive oa(ofs);
-				oa << boost::serialization::make_nvp("option", getDefaultOption());
+				writeOption(path, getDefaultOption());
 				std::cout << "generated file " << path << std::endl;
 				return 0;
 			}
@@ -142,9 +137,7 @@ int main(int argc, const char * argv[]) {
 			auto opt = getDefaultOption();
 			if (vm.count("option")){
 				auto path = vm["option"].as<std::string>();
-				std::ifstream ifs(path);
-				boost::archive::xml_iarchive ia(ifs);
-				ia >> boost::serialization::make_nvp("option", opt);
+				opt = readOption(path);
 			}
 			auto camera = vm["camera"].as<int>();
 			auto address = vm.count("address") ? vm["address"].as<std::string>(): "";

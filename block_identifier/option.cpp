@@ -5,6 +5,35 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <fstream>
+
+namespace boost {
+	namespace serialization {
+		template <class Archive>
+		void serialize(Archive& ar, cv::Vec3b & v, const unsigned int version)
+		{
+			ar & boost::serialization::make_nvp("b", v[0]);
+			ar & boost::serialization::make_nvp("g", v[1]);
+			ar & boost::serialization::make_nvp("r", v[2]);
+		}
+
+		template <class Archive>
+		void serialize(Archive& ar, Color & v, const unsigned int version)
+		{
+			ar & boost::serialization::make_nvp("name", v.name);
+			ar & boost::serialization::make_nvp("bgr", v.bgr);
+		}
+
+		template <class Archive>
+		void serialize(Archive& ar, Option & v, const unsigned int version)
+		{
+			ar & boost::serialization::make_nvp("color", v.colors);
+			ar & boost::serialization::make_nvp("instruction", v.clr2inst);
+		}
+	}
+}
 
 Option getDefaultOption()
 {
@@ -25,5 +54,21 @@ Option getDefaultOption()
 		{ "aqua", "object-repbang" },
 		{ "yellow", "object-fireworks" },
 	};
+	return opt;
+}
+
+void writeOption(std::string const & path, Option const & opt)
+{
+	std::ofstream ofs(path);
+	boost::archive::xml_oarchive oa(ofs);
+	oa << boost::serialization::make_nvp("option", opt);
+}
+
+Option readOption(std::string const & path)
+{
+	Option opt;
+	std::ifstream ifs(path);
+	boost::archive::xml_iarchive ia(ifs);
+	ia >> boost::serialization::make_nvp("option", opt);
 	return opt;
 }

@@ -1,10 +1,6 @@
 #pragma once
 
 #include <opencv2/opencv.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/vector.hpp>
 
 /*!
  色情報
@@ -41,29 +37,16 @@ struct BlockInfo
 */
 Option getDefaultOption();
 
-namespace boost {
-    namespace serialization {
-        template <class Archive>
-        void serialize(Archive& ar, cv::Vec3b & v, const unsigned int version)
-        {
-            ar & boost::serialization::make_nvp("b", v[0]);
-            ar & boost::serialization::make_nvp("g", v[1]);
-            ar & boost::serialization::make_nvp("r", v[2]);
-        }
-        
-        template <class Archive>
-        void serialize(Archive& ar, Color & v, const unsigned int version)
-        {
-            ar & boost::serialization::make_nvp("name", v.name);
-            ar & boost::serialization::make_nvp("bgr", v.bgr);
-        }
+/*!
+オプションをファイルに保存する
+@param[in] path パス
+@param[in] opt オプション
+*/
+void writeOption(std::string const & path, Option const & opt);
 
-		template <class Archive>
-		void serialize(Archive& ar, Option & v, const unsigned int version)
-		{
-			ar & boost::serialization::make_nvp("color", v.colors);
-			ar & boost::serialization::make_nvp("instruction", v.clr2inst);
-		}
-	}
-}
-
+/*!
+ファイルに保存したオプションを読み出す
+@param[in] path パス
+@return オプション
+*/
+Option readOption(std::string const & path);
