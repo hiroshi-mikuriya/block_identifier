@@ -84,9 +84,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\block_identifier\identify.cpp" />
     <ClCompile Include="..\block_identifier\main.cpp" />
     <ClCompile Include="..\block_identifier\option.cpp" />

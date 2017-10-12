@@ -3,8 +3,8 @@
 #include <opencv2/opencv.hpp>
 
 /*!
- 色情報
- */
+色情報
+*/
 struct Color
 {
     std::string name; ///< 色名
@@ -16,8 +16,8 @@ struct Color
 */
 struct Option
 {
-	std::vector<Color> colors; ///< 色情報
-	std::map<std::string, std::string> clr2inst; ///< 色と命令のマップ
+    std::vector<Color> colors; ///< 色情報
+    std::map<std::string, std::string> clr2inst; ///< 色と命令のマップ
 };
 
 /*!
@@ -25,11 +25,11 @@ struct Option
 */
 struct BlockInfo
 {
-	Color color; ///< ブロックの色
-	cv::Rect rc; ///< ブロックの矩形
-	cv::Rect color_area; ///< ブロック色判定領域
-	cv::Vec3b ave; ///< 平均色
-	int type; ///< 横幅: 1, 2, 3
+    Color color; ///< ブロックの色
+    cv::Rect rc; ///< ブロックの矩形
+    cv::Rect color_area; ///< ブロック色判定領域
+    cv::Vec3b ave; ///< 平均色
+    int type; ///< 横幅: 1, 2, 3
 };
 
 /*!

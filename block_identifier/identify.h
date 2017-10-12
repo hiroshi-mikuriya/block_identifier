@@ -10,6 +10,6 @@
 @param[in] blockInfo 判定したブロック情報の書き込み先
 */
 void identifyBlock(
-	cv::Mat const & image,
-	std::vector<Color> const & colors,
-	std::vector<BlockInfo> & blockInfo);
+    cv::Mat const & image,
+    std::vector<Color> const & colors,
+    std::vector<BlockInfo> & blockInfo);
