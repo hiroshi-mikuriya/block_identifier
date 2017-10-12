@@ -15,10 +15,8 @@ namespace
             item["param"] = value(picojson::object());
             orders.emplace_back(item);
         }
-        picojson::object show;
-        show["orders"] = value(orders);
         picojson::object root;
-        root["show"] = value(show);
+        root["orders"] = value(orders);
         return value(root).serialize();
     }
 
@@ -39,9 +37,9 @@ namespace
 void sendTcp(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
 {
     try{
-        auto const json = makeJson(opt, blockInfo);
-        std::cout << json << std::endl;
-        sendTcp(json, address, port);
+        auto const data = "show:" + makeJson(opt, blockInfo) + "\n";
+        std::cout << data << std::endl;
+        sendTcp(data, address, port);
     }
     catch (std::exception const & e) {
         std::cerr << e.what() << std::endl;
