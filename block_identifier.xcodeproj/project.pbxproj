@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0753ED0E1F8D05BF00D5EE41 /* identify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0753ED0C1F8D05BE00D5EE41 /* identify.cpp */; };
+		280965C81F8F01EF00BC4779 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 280965C71F8F01EF00BC4779 /* libboost_program_options.a */; };
+		280965CA1F8F01FC00BC4779 /* libboost_serialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 280965C91F8F01FC00BC4779 /* libboost_serialization.a */; };
+		280965CC1F8F020200BC4779 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 280965CB1F8F020200BC4779 /* libboost_system.a */; };
 		285092AE1F7E0759003FAA98 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AB1F7E0759003FAA98 /* libopencv_core.dylib */; };
 		285092AF1F7E0759003FAA98 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */; };
 		285092B01F7E0759003FAA98 /* libopencv_imgproc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 285092AD1F7E0759003FAA98 /* libopencv_imgproc.dylib */; };
-		28A3E0E81F7E060500340A17 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A3E0E71F7E060500340A17 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,15 +28,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0753ED0C1F8D05BE00D5EE41 /* identify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = identify.cpp; sourceTree = "<group>"; };
-		0753ED0D1F8D05BF00D5EE41 /* identify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = identify.h; sourceTree = "<group>"; };
-		0753ED0F1F8D063F00D5EE41 /* define.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
-		07699A4A1F87A228006757FB /* informations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = informations.hpp; sourceTree = "<group>"; };
+		280965BE1F8F018100BC4779 /* identify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = identify.h; sourceTree = "<group>"; };
+		280965BF1F8F018100BC4779 /* option.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = option.h; sourceTree = "<group>"; };
+		280965C01F8F018100BC4779 /* sender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sender.cpp; sourceTree = "<group>"; };
+		280965C11F8F018100BC4779 /* picojson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = picojson.h; sourceTree = "<group>"; };
+		280965C21F8F018100BC4779 /* option.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = option.cpp; sourceTree = "<group>"; };
+		280965C31F8F018100BC4779 /* identify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = identify.cpp; sourceTree = "<group>"; };
+		280965C41F8F018100BC4779 /* define.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
+		280965C51F8F018100BC4779 /* sender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sender.h; sourceTree = "<group>"; };
+		280965C61F8F018100BC4779 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		280965C71F8F01EF00BC4779 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../../../../usr/local/lib/libboost_program_options.a; sourceTree = "<group>"; };
+		280965C91F8F01FC00BC4779 /* libboost_serialization.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_serialization.a; path = ../../../../usr/local/lib/libboost_serialization.a; sourceTree = "<group>"; };
+		280965CB1F8F020200BC4779 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../../../usr/local/lib/libboost_system.a; sourceTree = "<group>"; };
 		285092AB1F7E0759003FAA98 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../usr/local/lib/libopencv_core.dylib; sourceTree = "<group>"; };
 		285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = ../../../../usr/local/lib/libopencv_highgui.dylib; sourceTree = "<group>"; };
 		285092AD1F7E0759003FAA98 /* libopencv_imgproc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.dylib; path = ../../../../usr/local/lib/libopencv_imgproc.dylib; sourceTree = "<group>"; };
 		28A3E0E41F7E060500340A17 /* block_identifier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = block_identifier; sourceTree = BUILT_PRODUCTS_DIR; };
-		28A3E0E71F7E060500340A17 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +54,9 @@
 				285092AE1F7E0759003FAA98 /* libopencv_core.dylib in Frameworks */,
 				285092AF1F7E0759003FAA98 /* libopencv_highgui.dylib in Frameworks */,
 				285092B01F7E0759003FAA98 /* libopencv_imgproc.dylib in Frameworks */,
+				280965C81F8F01EF00BC4779 /* libboost_program_options.a in Frameworks */,
+				280965CA1F8F01FC00BC4779 /* libboost_serialization.a in Frameworks */,
+				280965CC1F8F020200BC4779 /* libboost_system.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +66,9 @@
 		285092AA1F7E0759003FAA98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				280965CB1F8F020200BC4779 /* libboost_system.a */,
+				280965C91F8F01FC00BC4779 /* libboost_serialization.a */,
+				280965C71F8F01EF00BC4779 /* libboost_program_options.a */,
 				285092AB1F7E0759003FAA98 /* libopencv_core.dylib */,
 				285092AC1F7E0759003FAA98 /* libopencv_highgui.dylib */,
 				285092AD1F7E0759003FAA98 /* libopencv_imgproc.dylib */,
@@ -82,11 +96,15 @@
 		28A3E0E61F7E060500340A17 /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
-				0753ED0F1F8D063F00D5EE41 /* define.h */,
-				0753ED0C1F8D05BE00D5EE41 /* identify.cpp */,
-				0753ED0D1F8D05BF00D5EE41 /* identify.h */,
-				07699A4A1F87A228006757FB /* informations.hpp */,
-				28A3E0E71F7E060500340A17 /* main.cpp */,
+				280965C41F8F018100BC4779 /* define.h */,
+				280965C31F8F018100BC4779 /* identify.cpp */,
+				280965BE1F8F018100BC4779 /* identify.h */,
+				280965C61F8F018100BC4779 /* main.cpp */,
+				280965C21F8F018100BC4779 /* option.cpp */,
+				280965BF1F8F018100BC4779 /* option.h */,
+				280965C11F8F018100BC4779 /* picojson.h */,
+				280965C01F8F018100BC4779 /* sender.cpp */,
+				280965C51F8F018100BC4779 /* sender.h */,
 			);
 			path = block_identifier;
 			sourceTree = "<group>";
@@ -148,8 +166,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28A3E0E81F7E060500340A17 /* main.cpp in Sources */,
-				0753ED0E1F8D05BF00D5EE41 /* identify.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
