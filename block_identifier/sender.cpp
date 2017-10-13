@@ -34,13 +34,12 @@ namespace
         std::cout << "finished" << std::endl;
     }
 
-    void httpPost(
+    void postJson(
         boost::asio::io_service& io_service,
         std::string host,
         int port,
         std::string path,
-        std::string message,
-        std::string room)
+        std::string json)
     {
         boost::asio::ip::tcp::resolver resolver(io_service);
         boost::asio::ip::tcp::resolver::query query(host, "http");
@@ -54,16 +53,16 @@ namespace
             boost::asio::streambuf request;
             std::ostream req_s(&request);
             req_s
-                << "POST " << path << room << " HTTP/1.1\r\n"
+                << "POST " << path << " HTTP/1.1\r\n"
                 << "Host: " << host << "\r\n"
                 << "Accept: */*\r\n"
-                << "Content-Length: " << message.size() << "\r\n"
-                << "Content-Type: application/x-www-form-urlencoded\r\n"
+                << "Content-Length: " << json.size() << "\r\n"
+                << "Content-Type: application/json\r\n"
                 << "Connection: Close\r\n"
                 << "\r\n"
-                << message
+                << json
                 ;
-            std::cout << "MESSAGE :\n" << message << "\n" << std::endl;
+            std::cout << "MESSAGE :\n" << json << "\n" << std::endl;
             boost::asio::write(sock, request);
         }
 
@@ -95,7 +94,7 @@ namespace
     void sendHttp(std::string const & data, std::string const & address, int port)
     {
         boost::asio::io_service io_service;
-        httpPost(io_service, address, port, "/show", data, "");
+        postJson(io_service, address, port, "/api/show", data);
     }
 }
 
