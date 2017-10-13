@@ -12,12 +12,23 @@ struct Color
 };
 
 /*!
+ ブロック識別のチューニングパラメータ
+ */
+struct Tuning
+{
+    int stud_th; ///< 最上段ブロックのぼっちを除去する閾値
+    int size_th; ///< ブロック幅判定閾値
+    int bin_th; ///< ２値化閾値
+};
+
+/*!
 オプションファイルの情報
 */
 struct Option
 {
     std::vector<Color> colors; ///< 色情報
     std::map<std::string, std::string> clr2inst; ///< 色と命令のマップ
+    Tuning tune; ///< ブロック識別のチューニングパラメータ
 };
 
 /*!

@@ -35,12 +35,12 @@ namespace
     }
 
     void postJson(
-        boost::asio::io_service& io_service,
         std::string host,
         int port,
         std::string path,
         std::string json)
     {
+        boost::asio::io_service io_service;
         boost::asio::ip::tcp::resolver resolver(io_service);
         boost::asio::ip::tcp::resolver::query query(host, "http");
         boost::asio::ip::tcp::socket sock(io_service);
@@ -90,12 +90,6 @@ namespace
                 ;
         }
     }
-
-    void sendHttp(std::string const & data, std::string const & address, int port)
-    {
-        boost::asio::io_service io_service;
-        postJson(io_service, address, port, "/api/show", data);
-    }
 }
 
 void sendToServer(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
@@ -105,7 +99,7 @@ void sendToServer(Option const & opt, std::vector<BlockInfo> const & blockInfo, 
             throw std::runtime_error("block count should be natural number.");
         }
         auto const data = makeJson(opt, blockInfo);
-        sendHttp(data, address, port);
+        postJson(address, port, "/api/show", data);
     }
     catch (std::exception const & e) {
         std::cerr << e.what() << std::endl;

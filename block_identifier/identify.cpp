@@ -2,10 +2,6 @@
 #include "define.h"
 
 namespace {
-    const int BLOCK_LITTLE_TH = 40; // 最上段ブロックのぼっちを除去する閾値
-    const int BLOCK_SIZE_TH = 245; // ブロック幅判定閾値
-    const int BIN_TH = 80; // ２値化閾値
-
     /*!
     上端、下端
     */
@@ -14,23 +10,6 @@ namespace {
         int top;
         int bottom;
     };
-
-    /*!
-    輪郭2値画像の上端、下端を返す
-    ブロックの上ボッチをなるべく消す
-    @param[in] bin 輪郭2値画像
-    @return 上端、下端
-    */
-    TopBottom getTopBottom(cv::Mat const & bin)
-    {
-        cv::Mat m;
-        cv::reduce(bin, m, 1, CV_REDUCE_AVG);
-        m = m.t();
-        TopBottom dst;
-        for (dst.top = 0; m.data[dst.top] < BLOCK_LITTLE_TH; dst.top++);
-        for (dst.bottom = m.cols - 1; m.data[dst.bottom] < BLOCK_LITTLE_TH; dst.bottom--);
-        return dst;
-    }
 
     /*!
     矩形を縮尺率を変換する。中心は保つ。
@@ -54,11 +33,28 @@ namespace {
     class IdentifyBlock
     {
         cv::Mat const image_;
-        std::vector<Color> const colors_;
+        Option const opt_;
+
+        /*!
+         輪郭2値画像の上端、下端を返す
+         ブロックの上ボッチをなるべく消す
+         @param[in] bin 輪郭2値画像
+         @return 上端、下端
+         */
+        TopBottom getTopBottom(cv::Mat const & bin)
+        {
+            cv::Mat m;
+            cv::reduce(bin, m, 1, CV_REDUCE_AVG);
+            m = m.t();
+            TopBottom dst;
+            for (dst.top = 0; m.data[dst.top] < opt_.tune.stud_th; dst.top++);
+            for (dst.bottom = m.cols - 1; m.data[dst.bottom] < opt_.tune.stud_th; dst.bottom--);
+            return dst;
+        }
 
         /*!
         ブロック情報の画像を表示する
-        @param[in] blockInfo
+        @param[in] blockInfo ブロック情報
         */
         void showBlockInfo(std::vector<BlockInfo> const & blockInfo)
         {
@@ -93,7 +89,7 @@ namespace {
                 }
                 return d;
             };
-            for (auto c : colors_){
+            for (auto c : opt_.colors){
                 auto len = calcLen2(bgr, c.bgr);
                 if (len < len2){
                     len2 = len;
@@ -104,7 +100,6 @@ namespace {
         }
         /*!
         カメラの画像からブロックの輪郭を抽出する
-        @param[in] m カメラ画像(RGB)
         @return ブロックの輪郭
         */
         std::vector<cv::Point> getBlockContour()
@@ -118,7 +113,7 @@ namespace {
             double slratio = 0.5;
             auto mixed = slratio * l + (1 - slratio) * s;
             cv::Mat block;
-            cv::threshold(mixed, block, BIN_TH, 255, cv::THRESH_BINARY);
+            cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);
             typedef std::vector<cv::Point> contour_t;
             std::vector<contour_t> contours;
             cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
@@ -167,9 +162,9 @@ namespace {
                 cv::Mat ary;
                 cv::reduce(bin(cv::Rect(0, y, bin.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
                 int left = 0;
-                for (; ary.data[left] < BLOCK_SIZE_TH && left < ary.cols; ++left);
+                for (; ary.data[left] < opt_.tune.size_th && left < ary.cols; ++left);
                 int right = bin.cols - 1;
-                for (; ary.data[right] < BLOCK_SIZE_TH && 0 <= right; --right);
+                for (; ary.data[right] < opt_.tune.size_th && 0 <= right; --right);
                 if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
                 BlockInfo info;
                 info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
@@ -184,10 +179,10 @@ namespace {
     public:
         IdentifyBlock(
             cv::Mat const & image,
-            std::vector<Color> const & colors,
+            Option const & opt,
             std::vector<BlockInfo> & blockInfo)
             : image_(image)
-            , colors_(colors)
+            , opt_(opt)
         {
             assert(3 == image_.channels());
             auto const contour = getBlockContour();
@@ -199,8 +194,8 @@ namespace {
 
 void identifyBlock(
     cv::Mat const & image,
-    std::vector<Color> const & colors,
+    Option const & opt,
     std::vector<BlockInfo> & blockInfo)
 {
-    IdentifyBlock(image, colors, blockInfo);
+    IdentifyBlock(image, opt, blockInfo);
 }

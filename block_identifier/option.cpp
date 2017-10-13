@@ -27,10 +27,19 @@ namespace boost {
         }
 
         template <class Archive>
+        void serialize(Archive& ar, Tuning & v, const unsigned int version)
+        {
+            ar & boost::serialization::make_nvp("stud_threshold", v.stud_th);
+            ar & boost::serialization::make_nvp("size_threshold", v.size_th);
+            ar & boost::serialization::make_nvp("bin_threshold", v.bin_th);
+        }
+        
+        template <class Archive>
         void serialize(Archive& ar, Option & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("color", v.colors);
             ar & boost::serialization::make_nvp("instruction", v.clr2inst);
+            ar & boost::serialization::make_nvp("tuning", v.tune);
         }
     }
 }
@@ -54,6 +63,7 @@ Option getDefaultOption()
         { "aqua", "object-repbang" },
         { "yellow", "object-fireworks" },
     };
+    opt.tune = { 40, 245, 80 };
     return opt;
 }
 

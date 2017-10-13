@@ -74,7 +74,7 @@ namespace {
                 cv::Mat m = createTestImage(1 + (rand() % 11), opt.colors);
                 {
                     std::unique_lock<std::mutex> lock(mutex);
-                    identifyBlock(m, opt.colors, blockInfo);
+                    identifyBlock(m, opt, blockInfo);
                 }
                 cv::waitKey();
             }
@@ -88,19 +88,19 @@ namespace {
             // CV_CAP_PROP_GAIN
             cap.set(CV_CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH);
             cap.set(CV_CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT);
-            while (1){
+            for (;;){
+                cv::Mat m;
+                cap >> m;
+                if (m.size().area() == 0){
+                    std::cerr << "failed to get camera image." << std::endl;
+                    cv::waitKey(100);
+                    continue;
+                }
+                cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
+                cv::flip(m.t(), m, 0);
                 {
                     std::unique_lock<std::mutex> lock(mutex);
-                    cv::Mat m;
-                    cap >> m;
-                    if (m.size().area() == 0){
-                        std::cerr << "failed to get camera image." << std::endl;
-                        cv::waitKey(100);
-                        continue;
-                    }
-                    cv::resize(m, m, cv::Size(), IMAGE_RATIO, IMAGE_RATIO);
-                    cv::flip(m.t(), m, 0);
-                    identifyBlock(m, opt.colors, blockInfo);
+                    identifyBlock(m, opt, blockInfo);
                 }
                 cv::waitKey(1);
             }
@@ -137,7 +137,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
             if (vm.count("version")){
-                std::cout << "version: 0.9.2" << std::endl;
+                std::cout << "version: 0.9.3" << std::endl;
                 return 0;
             }
             if (vm.count("generate")){
