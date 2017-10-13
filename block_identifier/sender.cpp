@@ -72,17 +72,22 @@ namespace
             boost::asio::streambuf response;
             boost::asio::read_until(sock, response, "\r\n");
             std::istream res_s(&response);
-            std::string http_version, status_text, message;
+            std::string http_version;
             unsigned int status_code;
             res_s >> http_version;
             res_s >> status_code;
-            res_s >> status_text;
-            res_s >> message;
+            std::vector<char> buf(1000);
+            res_s.read(buf.data(), buf.size());
+            buf.push_back(0);
+            auto p = std::strstr(buf.data(), "\r\n\r\n");
+            if (!p){
+                std::cout << "Not found respoce message." << std::endl;
+                return;
+            }
             std::cout
                 << boost::format("%-12s : %s\n") % "HTTP VERSION" % http_version
                 << boost::format("%-12s : %d\n") % "STATUS CODE" % status_code
-                << boost::format("%-12s : %d\n") % "STATUS TEXT" % status_text
-                << boost::format("%-12s : %s\n") % "MESSAGE" % message
+                << boost::format("%-12s : %s\n") % "MESSAGE" % (p + 4) // "\r\n\r\n"‚Ì’·‚³‚ª4
                 ;
         }
     }
