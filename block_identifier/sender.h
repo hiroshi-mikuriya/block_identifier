@@ -9,4 +9,4 @@
 @param[in] address 送信先
 @param[in] port ポート番号
 */
-void sendTcp(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port);
+void sendToServer(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port);

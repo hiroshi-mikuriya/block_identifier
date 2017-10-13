@@ -62,7 +62,7 @@ namespace {
                         std::unique_lock<std::mutex> lock(mutex);
                         copy = blockInfo;
                     }
-                    sendTcp(opt, copy, address, port);
+                    sendToServer(opt, copy, address, port);
                 }
             });
             th.detach();
