@@ -80,32 +80,32 @@ Option getDefaultOption()
         { "yellow", { 0x80, 0xFF, 0xFF } },
     };
     opt.insts = {
-        { /*ID*/ "object-clear", /*Param*/{} }, // ‰½‚à•\¦‚µ‚È‚¢ó‘Ô‚É‚·‚é
-        { /*ID*/ "object-fill", /*Param*/{} }, // Ô‚Å“h‚è‚Â‚Ô‚µ
-        { /*ID*/ "object-ripple", /*Param*/{} }, // ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚É”g–ä
-        { /*ID*/ "object-mario", /*Param*/{} }, // ƒ}ƒŠü‚ğ•\¦
-        { /*ID*/ "object-mario-run1", /*Param*/{} }, // ‘–‚Á‚Ä‚¢‚éó‘Ô‚Ìƒ}ƒŠü1
-        { /*ID*/ "object-mario-run2", /*Param*/{} }, // ‘–‚Á‚Ä‚¢‚éó‘Ô‚Ìƒ}ƒŠü2
-        { /*ID*/ "object-mario-run-anime", /*Param*/{} }, // ‘–‚éƒ}üƒI(ƒAƒjƒ)
-        { /*ID*/ "object-mario-jump-anime", /*Param*/{} }, // ƒWƒƒƒ“ƒvƒ}üƒI(ƒAƒjƒ)
-        { /*ID*/ "object-mario-runandjump-anime", /*Param*/{} }, // ‘–‚Á‚ÄƒWƒƒƒ“ƒv‚·‚éƒ}üƒI(ƒAƒjƒ)
-        { /*ID*/ "object-drop-mushroom", /*Param*/{} }, // ‚È‚ñ‚©‹‘å‰»‚Å‚«‚»‚¤‚ÈƒLƒmƒR‚ª—‚¿‚Ä‚­‚é
+        { /*ID*/ "object-clear", /*Param*/{} }, // ä½•ã‚‚è¡¨ç¤ºã—ãªã„çŠ¶æ…‹ã«ã™ã‚‹
+        { /*ID*/ "object-fill", /*Param*/{} }, // èµ¤ã§å¡—ã‚Šã¤ã¶ã—
+        { /*ID*/ "object-ripple", /*Param*/{} }, // ãƒ©ãƒ³ãƒ€ãƒ ãªä½ç½®ã«æ³¢ç´‹
+        { /*ID*/ "object-mario", /*Param*/{} }, // ãƒãƒªâ—¯ã‚’è¡¨ç¤º
+        { /*ID*/ "object-mario-run1", /*Param*/{} }, // èµ°ã£ã¦ã„ã‚‹çŠ¶æ…‹ã®ãƒãƒªâ—¯1
+        { /*ID*/ "object-mario-run2", /*Param*/{} }, // èµ°ã£ã¦ã„ã‚‹çŠ¶æ…‹ã®ãƒãƒªâ—¯2
+        { /*ID*/ "object-mario-run-anime", /*Param*/{} }, // èµ°ã‚‹ãƒâ—¯ã‚ª(ã‚¢ãƒ‹ãƒ¡)
+        { /*ID*/ "object-mario-jump-anime", /*Param*/{} }, // ã‚¸ãƒ£ãƒ³ãƒ—ãƒâ—¯ã‚ª(ã‚¢ãƒ‹ãƒ¡)
+        { /*ID*/ "object-mario-runandjump-anime", /*Param*/{} }, // èµ°ã£ã¦ã‚¸ãƒ£ãƒ³ãƒ—ã™ã‚‹ãƒâ—¯ã‚ª(ã‚¢ãƒ‹ãƒ¡)
+        { /*ID*/ "object-drop-mushroom", /*Param*/{} }, // ãªã‚“ã‹å·¨å¤§åŒ–ã§ããã†ãªã‚­ãƒã‚³ãŒè½ã¡ã¦ãã‚‹
         { /*ID*/ "object-bitmap", /*Param*/{ { "bitmap", Instruction::Param::Bitmap } } }, // bitmap
-        { /*ID*/ "object-cube", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌCUBEBlŠp‚ªŠO‚ÉL‚ª‚è‘±‚¯‚é
-        { /*ID*/ "object-sphere", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌSPHEREBŠÛ‚ªŠO‚ÉL‚ª‚è‘±‚¯‚é
-        { /*ID*/ "object-skewed-cube", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌSKEWED
-        { /*ID*/ "object-skewed-sphere", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌSKEWED
-        { /*ID*/ "object-repbang", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌRepBangBU‚Á‚ÄW‚Ü‚Á‚Ä‚Ü‚½U‚Á‚Ä
-        { /*ID*/ "object-fireworks", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌfireworksB‰Ô‰Î
-        { /*ID*/ "object-balls", /*Param*/{} }, // X‚³‚ñƒRƒ“ƒeƒ“ƒc‚ÌballsBƒ{[ƒ‹ŒQ‚ªCube‚Ì’†
-        { /*ID*/ "filter-clear", /*Param*/{} }, // ƒtƒBƒ‹ƒ^[‚ğƒŠƒZƒbƒg‚·‚é
-        { /*ID*/ "filter-wave", /*Param*/{} }, // ‰œs‚«‚É‘Î‚µ‚ÄU•‚·‚éƒtƒBƒ‹ƒ^[
-        { /*ID*/ "filter-flat-wave", /*Param*/{} }, // ‰œs‚«‚É‘Î‚µ‚ÄU•‚·‚éƒtƒBƒ‹ƒ^[B‚QŸŒ³‚É‚Ü‚é‚ß‚é
-        { /*ID*/ "filter-hsv", /*Param*/{} }, // ‰œs‚«‚É‘Î‚µ‚ÄF‚ğ•Ï‚¦‚éƒtƒBƒ‹ƒ^[
-        { /*ID*/ "filter-skewed", /*Param*/{} }, // y²‚ğ’†S‚É‰ñ‚é
-        { /*ID*/ "ctrl-loop", /*Param*/{ { "count", Instruction::Param::Int } } }, // È—ª‰Â”\BÈ—ª‚Í3‚Æ“¯‚¶Bw’è‚µ‚½ê‡‚ÍActrl-loop‚Å‹²‚Ü‚ê‚½–½—ß‚ğŒJ‚è•Ô‚µÀs
-        { /*ID*/ "ctrl-overlap", /*Param*/{ { "time", Instruction::Param::Int } } }, // ƒIƒuƒWƒFƒNƒgŠÔ‚ğd‚Ë‚é•b”.
-        { /*ID*/ "ctrl-inout-effect", /*Param*/{} }, // ƒIƒuƒWƒFƒNƒg‚ÌØ‚è‘Ö‚í‚è‚ÌƒGƒtƒFƒNƒgB™X‚ÉƒAƒ‹ƒtƒ@ƒ`ƒƒƒlƒ‹‚Ì’l‚ğ•Ï‚¦‚é
+        { /*ID*/ "object-cube", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®CUBEã€‚å››è§’ãŒå¤–ã«åºƒãŒã‚Šç¶šã‘ã‚‹
+        { /*ID*/ "object-sphere", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®SPHEREã€‚ä¸¸ãŒå¤–ã«åºƒãŒã‚Šç¶šã‘ã‚‹
+        { /*ID*/ "object-skewed-cube", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®SKEWED
+        { /*ID*/ "object-skewed-sphere", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®SKEWED
+        { /*ID*/ "object-repbang", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®RepBangã€‚æ•£ã£ã¦é›†ã¾ã£ã¦ã¾ãŸæ•£ã£ã¦
+        { /*ID*/ "object-fireworks", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®fireworksã€‚èŠ±ç«
+        { /*ID*/ "object-balls", /*Param*/{} }, // æ£®ã•ã‚“ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®ballsã€‚ãƒœãƒ¼ãƒ«ç¾¤ãŒCubeã®ä¸­
+        { /*ID*/ "filter-clear", /*Param*/{} }, // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
+        { /*ID*/ "filter-wave", /*Param*/{} }, // å¥¥è¡Œãã«å¯¾ã—ã¦æŒ¯å¹…ã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+        { /*ID*/ "filter-flat-wave", /*Param*/{} }, // å¥¥è¡Œãã«å¯¾ã—ã¦æŒ¯å¹…ã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã€‚ï¼’æ¬¡å…ƒã«ã¾ã‚‹ã‚ã‚‹
+        { /*ID*/ "filter-hsv", /*Param*/{} }, // å¥¥è¡Œãã«å¯¾ã—ã¦è‰²ã‚’å¤‰ãˆã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+        { /*ID*/ "filter-skewed", /*Param*/{} }, // yè»¸ã‚’ä¸­å¿ƒã«å›ã‚‹
+        { /*ID*/ "ctrl-loop", /*Param*/{ { "count", Instruction::Param::Int } } }, // çœç•¥å¯èƒ½ã€‚çœç•¥æ™‚ã¯3ã¨åŒã˜ã€‚æŒ‡å®šã—ãŸå ´åˆã¯ã€ctrl-loopã§æŒŸã¾ã‚ŒãŸå‘½ä»¤ã‚’ç¹°ã‚Šè¿”ã—å®Ÿè¡Œ
+        { /*ID*/ "ctrl-overlap", /*Param*/{ { "time", Instruction::Param::Int } } }, // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé–“ã‚’é‡ã­ã‚‹ç§’æ•°.
+        { /*ID*/ "ctrl-inout-effect", /*Param*/{} }, // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆ‡ã‚Šæ›¿ã‚ã‚Šæ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã€‚å¾ã€…ã«ã‚¢ãƒ«ãƒ•ã‚¡ãƒãƒ£ãƒãƒ«ã®å€¤ã‚’å¤‰ãˆã‚‹
     };
     opt.clr2inst = std::map<std::string, std::string>{
         { "red", "object-ripple" },
