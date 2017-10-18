@@ -80,32 +80,32 @@ Option getDefaultOption()
         { "yellow", { 0x80, 0xFF, 0xFF } },
     };
     opt.insts = {
-        { "object-clear", {} }, // 何も表示しない状態にする
-        { "object-fill", {} }, // 赤で塗りつぶし
-        { "object-ripple", {} }, // ランダムな位置に波紋
-        { "object-mario", {} }, // マリ◯を表示
-        { "object-mario-run1", {} }, // 走っている状態のマリ◯1
-        { "object-mario-run2", {} }, // 走っている状態のマリ◯2
-        { "object-mario-run-anime", {} }, // 走るマ◯オ(アニメ)
-        { "object-mario-jump-anime", {} }, // ジャンプマ◯オ(アニメ)
-        { "object-mario-runandjump-anime", {} }, // 走ってジャンプするマ◯オ(アニメ)
-        { "object-drop-mushroom", {} }, // なんか巨大化できそうなキノコが落ちてくる
-        { "object-bitmap", { { "bitmap", Instruction::Param::Bitmap } } }, // bitmap
-        { "object-cube", {} }, // 森さんコンテンツのCUBE。四角が外に広がり続ける
-        { "object-sphere", {} }, // 森さんコンテンツのSPHERE。丸が外に広がり続ける
-        { "object-skewed-cube", {} }, // 森さんコンテンツのSKEWED
-        { "object-skewed-sphere", {} }, // 森さんコンテンツのSKEWED
-        { "object-repbang", {} }, // 森さんコンテンツのRepBang。散って集まってまた散って
-        { "object-fireworks", {} }, // 森さんコンテンツのfireworks。花火
-        { "object-balls", {} }, // 森さんコンテンツのballs。ボール群がCubeの中
-        { "filter-clear", {} }, // フィルターをリセットする
-        { "filter-wave", {} }, // 奥行きに対して振幅するフィルター
-        { "filter-flat-wave", {} }, // 奥行きに対して振幅するフィルター。２次元にまるめる
-        { "filter-hsv", {} }, // 奥行きに対して色を変えるフィルター
-        { "filter-skewed", {} }, // y軸を中心に回る
-        { "ctrl-loop", { { "count", Instruction::Param::Int } } }, // 省略可能。省略時は3と同じ。指定した場合は、ctrl-loopで挟まれた命令を繰り返し実行
-        { "ctrl-overlap", { { "time", Instruction::Param::Int } } }, // オブジェクト間を重ねる秒数.
-        { "ctrl-inout-effect", {} }, // オブジェクトの切り替わり時のエフェクト。徐々にアルファチャネルの値を変える
+        { /*ID*/ "object-clear", /*Param*/{} }, // 何も表示しない状態にする
+        { /*ID*/ "object-fill", /*Param*/{} }, // 赤で塗りつぶし
+        { /*ID*/ "object-ripple", /*Param*/{} }, // ランダムな位置に波紋
+        { /*ID*/ "object-mario", /*Param*/{} }, // マリ◯を表示
+        { /*ID*/ "object-mario-run1", /*Param*/{} }, // 走っている状態のマリ◯1
+        { /*ID*/ "object-mario-run2", /*Param*/{} }, // 走っている状態のマリ◯2
+        { /*ID*/ "object-mario-run-anime", /*Param*/{} }, // 走るマ◯オ(アニメ)
+        { /*ID*/ "object-mario-jump-anime", /*Param*/{} }, // ジャンプマ◯オ(アニメ)
+        { /*ID*/ "object-mario-runandjump-anime", /*Param*/{} }, // 走ってジャンプするマ◯オ(アニメ)
+        { /*ID*/ "object-drop-mushroom", /*Param*/{} }, // なんか巨大化できそうなキノコが落ちてくる
+        { /*ID*/ "object-bitmap", /*Param*/{ { "bitmap", Instruction::Param::Int } } }, // bitmap
+        { /*ID*/ "object-cube", /*Param*/{} }, // 森さんコンテンツのCUBE。四角が外に広がり続ける
+        { /*ID*/ "object-sphere", /*Param*/{} }, // 森さんコンテンツのSPHERE。丸が外に広がり続ける
+        { /*ID*/ "object-skewed-cube", /*Param*/{} }, // 森さんコンテンツのSKEWED
+        { /*ID*/ "object-skewed-sphere", /*Param*/{} }, // 森さんコンテンツのSKEWED
+        { /*ID*/ "object-repbang", /*Param*/{} }, // 森さんコンテンツのRepBang。散って集まってまた散って
+        { /*ID*/ "object-fireworks", /*Param*/{} }, // 森さんコンテンツのfireworks。花火
+        { /*ID*/ "object-balls", /*Param*/{} }, // 森さんコンテンツのballs。ボール群がCubeの中
+        { /*ID*/ "filter-clear", /*Param*/{} }, // フィルターをリセットする
+        { /*ID*/ "filter-wave", /*Param*/{} }, // 奥行きに対して振幅するフィルター
+        { /*ID*/ "filter-flat-wave", /*Param*/{} }, // 奥行きに対して振幅するフィルター。２次元にまるめる
+        { /*ID*/ "filter-hsv", /*Param*/{} }, // 奥行きに対して色を変えるフィルター
+        { /*ID*/ "filter-skewed", /*Param*/{} }, // y軸を中心に回る
+        { /*ID*/ "ctrl-loop", /*Param*/{ { "count", Instruction::Param::Int } } }, // 省略可能。省略時は3と同じ。指定した場合は、ctrl-loopで挟まれた命令を繰り返し実行
+        { /*ID*/ "ctrl-overlap", /*Param*/{ { "time", Instruction::Param::Int } } }, // オブジェクト間を重ねる秒数.
+        { /*ID*/ "ctrl-inout-effect", /*Param*/{} }, // オブジェクトの切り替わり時のエフェクト。徐々にアルファチャネルの値を変える
     };
     opt.clr2inst = std::map<std::string, std::string>{
         { "red", "object-ripple" },
