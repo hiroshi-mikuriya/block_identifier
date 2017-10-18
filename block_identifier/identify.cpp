@@ -1,5 +1,4 @@
 #include "identify.h"
-#include "define.h"
 
 namespace {
     /*!
@@ -32,6 +31,8 @@ namespace {
     */
     class IdentifyBlock
     {
+        IdentifyBlock & operator = (const IdentifyBlock &) = delete;
+
         cv::Mat const image_;
         Option const opt_;
 
@@ -69,7 +70,7 @@ namespace {
                 ss.width(2);
                 ss.fill('0');
                 ss << std::hex << (int)info.ave[2] << (int)info.ave[1] << (int)info.ave[0];
-                cv::putText(canvas, ss.str(), cv::Point(image_.cols * 1.1, info.rc.y + info.rc.height * 0.7), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
+                cv::putText(canvas, ss.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.7f), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
             }
             cv::imshow("blocks", canvas);
         }
@@ -136,12 +137,14 @@ namespace {
         */
         std::vector<BlockInfo> getBlockInfo(std::vector<cv::Point> const & points)
         {
+            /*! 背景：黒　輪郭内：黒　の画像を作る*/
             auto const bin = [this, &points](){
                 cv::Mat bin = cv::Mat::zeros(image_.size(), CV_8UC1);
                 std::vector<std::vector<cv::Point>> contours = { points };
                 cv::drawContours(bin, contours, 0, 255, CV_FILLED);
                 return bin;
             }();
+            /*! 画像の平均色を返す */
             auto getAveBgr = [](cv::Mat const & src){
                 cv::Mat tmp;
                 cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
@@ -153,25 +156,25 @@ namespace {
             if (tb.bottom <= tb.top){
                 return dst;
             }
-            int blockCount = (tb.bottom - tb.top + BLOCK_SIZE / 2) / BLOCK_SIZE;
+            int blockCount = (tb.bottom - tb.top + opt_.tune.get_block_height() / 2) / opt_.tune.get_block_height();
             for (int i = 0; i < blockCount; ++i){
                 int y = (tb.top * (blockCount - i) + tb.bottom * i) / blockCount;
-                if (bin.rows - BLOCK_SIZE < y){
+                if (bin.rows - opt_.tune.get_block_height() < y){
                     continue;
                 }
                 cv::Mat ary;
-                cv::reduce(bin(cv::Rect(0, y, bin.cols, BLOCK_SIZE)), ary, 0, CV_REDUCE_AVG);
+                cv::reduce(bin(cv::Rect(0, y, bin.cols, opt_.tune.get_block_height())), ary, 0, CV_REDUCE_AVG);
                 int left = 0;
                 for (; ary.data[left] < opt_.tune.size_th && left < ary.cols; ++left);
                 int right = bin.cols - 1;
                 for (; ary.data[right] < opt_.tune.size_th && 0 <= right; --right);
                 if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
                 BlockInfo info;
-                info.rc = cv::Rect(left, y, right - left, BLOCK_SIZE);
+                info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
                 info.color_area = info.rc * 0.2;
                 info.ave = getAveBgr(image_(info.color_area));
                 info.color = getColor(info.ave);
-                info.type = (right - left + BLOCK_SIZE_WIDTH / 2) / BLOCK_SIZE_WIDTH;
+                info.type = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
             return dst;

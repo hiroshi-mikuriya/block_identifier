@@ -32,6 +32,11 @@ namespace boost {
             ar & boost::serialization::make_nvp("stud_threshold", v.stud_th);
             ar & boost::serialization::make_nvp("size_threshold", v.size_th);
             ar & boost::serialization::make_nvp("bin_threshold", v.bin_th);
+            ar & boost::serialization::make_nvp("camera_width", v.camera_width);
+            ar & boost::serialization::make_nvp("camera_height", v.camera_height);
+            ar & boost::serialization::make_nvp("camera_ratio", v.camera_ratio);
+            ar & boost::serialization::make_nvp("block_height", v.block_height);
+            ar & boost::serialization::make_nvp("block_width", v.block_width);
         }
         
         template <class Archive>
@@ -63,7 +68,7 @@ Option getDefaultOption()
         { "aqua", "object-repbang" },
         { "yellow", "object-fireworks" },
     };
-    opt.tune = { 40, 245, 80 };
+    opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;
 }
 

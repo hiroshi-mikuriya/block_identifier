@@ -19,6 +19,13 @@ struct Tuning
     int stud_th; ///< 最上段ブロックのぼっちを除去する閾値
     int size_th; ///< ブロック幅判定閾値
     int bin_th; ///< ２値化閾値
+    int camera_width; ///< カメラ横ピクセル数
+    int camera_height; ///< カメラ縦ピクセル数
+    double camera_ratio; ///< カメラ画像縮尺率
+    int block_height; ///< ブロック高さ（縮尺前）
+    int block_width; ///< ブロック幅（2ぼっち分）（縮尺前）
+    int get_block_width() const { return static_cast<int>(block_width * camera_ratio); }
+    int get_block_height() const { return static_cast<int>(block_height * camera_ratio); }
 };
 
 /*!
