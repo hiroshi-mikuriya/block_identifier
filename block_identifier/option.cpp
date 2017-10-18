@@ -1,5 +1,3 @@
-#pragma once
-
 #include "option.h"
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/nvp.hpp>

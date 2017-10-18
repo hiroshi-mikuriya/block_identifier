@@ -21,7 +21,7 @@ namespace
         return value(root).serialize();
     }
 
-    void sendTcp(std::string const & data, std::string const & address, int port)
+    /*void sendTcp(std::string const & data, std::string const & address, int port)
     {
         namespace asio = boost::asio;
         namespace ip = asio::ip;
@@ -32,7 +32,7 @@ namespace
         std::cout << "sending..." << std::endl;
         write(sock, asio::buffer(data));
         std::cout << "finished" << std::endl;
-    }
+    }*/
 
     void postJson(
         std::string host,

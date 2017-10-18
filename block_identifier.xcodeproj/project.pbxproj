@@ -36,7 +36,6 @@
 		6838474D1F8FB98A002D3797 /* sender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sender.h; sourceTree = "<group>"; };
 		6838474E1F8FB98A002D3797 /* picojson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = picojson.h; sourceTree = "<group>"; };
 		6838474F1F8FB98A002D3797 /* identify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = identify.h; sourceTree = "<group>"; };
-		683847501F8FB98A002D3797 /* define.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
 		683847511F8FB98A002D3797 /* option.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = option.cpp; sourceTree = "<group>"; };
 		683847521F8FB98A002D3797 /* sender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sender.cpp; sourceTree = "<group>"; };
 		683847531F8FB98A002D3797 /* option.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = option.h; sourceTree = "<group>"; };
@@ -104,7 +103,6 @@
 		68F8254D1F8FB9460003BCCA /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
-				683847501F8FB98A002D3797 /* define.h */,
 				683847541F8FB98B002D3797 /* identify.cpp */,
 				6838474F1F8FB98A002D3797 /* identify.h */,
 				683847511F8FB98A002D3797 /* option.cpp */,
