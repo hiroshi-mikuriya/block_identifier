@@ -90,7 +90,7 @@ Option getDefaultOption()
         { /*ID*/ "object-mario-jump-anime", /*Param*/{} }, // ジャンプマ◯オ(アニメ)
         { /*ID*/ "object-mario-runandjump-anime", /*Param*/{} }, // 走ってジャンプするマ◯オ(アニメ)
         { /*ID*/ "object-drop-mushroom", /*Param*/{} }, // なんか巨大化できそうなキノコが落ちてくる
-        { /*ID*/ "object-bitmap", /*Param*/{ { "bitmap", Instruction::Param::Int } } }, // bitmap
+        { /*ID*/ "object-bitmap", /*Param*/{ { "bitmap", Instruction::Param::Bitmap } } }, // bitmap
         { /*ID*/ "object-cube", /*Param*/{} }, // 森さんコンテンツのCUBE。四角が外に広がり続ける
         { /*ID*/ "object-sphere", /*Param*/{} }, // 森さんコンテンツのSPHERE。丸が外に広がり続ける
         { /*ID*/ "object-skewed-cube", /*Param*/{} }, // 森さんコンテンツのSKEWED
