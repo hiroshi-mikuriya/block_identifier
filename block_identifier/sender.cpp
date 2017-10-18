@@ -5,15 +5,34 @@
 
 namespace
 {
+    double getValue(Instruction::Param const & param, int type)
+    {
+        if (Instruction::Param::Int == param.type){
+            return type;
+        }
+        if (Instruction::Param::Double == param.type){
+            return type;
+        }
+        throw std::runtime_error((boost::format("unsupported instruction param type. [%s]") % param.type).str());
+    }
+
     std::string makeJson(Option const & opt, std::vector<BlockInfo> const & blockInfo)
     {
         using value = picojson::value;
         picojson::array orders;
         for (auto info : blockInfo){
             picojson::object item;
-            item["id"] = value(opt.clr2inst.at(info.color.name));
+            auto const instname = opt.clr2inst.at(info.color.name);
+            item["id"] = value(instname);
             item["lifetime"] = value(3.0);
-            item["param"] = value(picojson::object());
+            auto inst = std::find_if(opt.insts.begin(), opt.insts.end(), [instname](Instruction const & v){
+                return instname == v.name;
+            });
+            if (inst != opt.insts.end()){
+                for (auto param : inst->params){
+                    item[param.name] = value(getValue(param, info.type));
+                }
+            }
             orders.emplace_back(item);
         }
         picojson::object root;
@@ -99,7 +118,12 @@ void sendToServer(Option const & opt, std::vector<BlockInfo> const & blockInfo, 
             throw std::runtime_error("block count should be natural number.");
         }
         auto const data = makeJson(opt, blockInfo);
-        postJson(address, port, "/api/show", data);
+        if (address.empty()){
+            std::cout << data << std::endl;
+        }
+        else{
+            postJson(address, port, "/api/show", data);
+        }
     }
     catch (std::exception const & e) {
         std::cerr << e.what() << std::endl;

@@ -20,12 +20,12 @@ struct Instruction
     /*! パラメータ */
     struct Param
     {
-        std::string type; ///< パラメータ型
+        static const std::string Int;
+        static const std::string Double;
+        static const std::string String;
+        static const std::string Bitmap;
         std::string name; ///< パラメータ名
-        std::string value; ///< 値
-        int getInt(); ///< valueをintに変換する
-        double getDouble(); ///< valueをdoubleに変換する
-        void set(double); ///< valueに数値を設定する
+        std::string type; ///< パラメータ型
     };
     
     std::vector<Param> params; ///< パラメータ

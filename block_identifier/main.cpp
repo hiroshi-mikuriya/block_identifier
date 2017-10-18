@@ -50,22 +50,19 @@ namespace {
     {
         std::vector<BlockInfo> blockInfo;
         std::mutex mutex;
-        if (!address.empty()){
-            std::thread th([&, port]{
-                for (;;){
-                    std::cout << "Type any KEY and ENTER." << std::endl;
-                    std::string tmp;
-                    std::cin >> tmp;
-                    std::vector<BlockInfo> copy;
-                    {
-                        std::unique_lock<std::mutex> lock(mutex);
-                        copy = blockInfo;
-                    }
-                    sendToServer(opt, copy, address, port);
+        std::thread th([&, port]{
+            for (;;){
+                std::cout << "Type any KEY and ENTER." << std::endl;
+                std::string tmp;
+                std::cin >> tmp;
+                std::vector<BlockInfo> copy;
+                {
+                    std::unique_lock<std::mutex> lock(mutex);
+                    copy = blockInfo;
                 }
-            });
-            th.detach();
-        }
+                sendToServer(opt, copy, address, port);
+            }
+        });
 
         if (debug){
             srand(0);
@@ -104,6 +101,8 @@ namespace {
                 cv::waitKey(1);
             }
         }
+        // unreachable code.
+        th.join();
         return 0;
     }
 }
@@ -136,7 +135,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
             if (vm.count("version")){
-                std::cout << "version: 0.9.5" << std::endl;
+                std::cout << "version: 0.9.6" << std::endl;
                 return 0;
             }
             if (vm.count("generate")){
