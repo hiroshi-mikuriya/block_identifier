@@ -12,6 +12,26 @@ struct Color
 };
 
 /*!
+ 命令情報
+ */
+struct Instruction
+{
+    std::string name; ///< 命令ID
+    /*! パラメータ */
+    struct Param
+    {
+        std::string type; ///< パラメータ型
+        std::string name; ///< パラメータ名
+        std::string value; ///< 値
+        int getInt(); ///< valueをintに変換する
+        double getDouble(); ///< valueをdoubleに変換する
+        void set(double); ///< valueに数値を設定する
+    };
+    
+    std::vector<Param> params; ///< パラメータ
+};
+
+/*!
  ブロック識別のチューニングパラメータ
  */
 struct Tuning
@@ -34,6 +54,7 @@ struct Tuning
 struct Option
 {
     std::vector<Color> colors; ///< 色情報
+    std::vector<Instruction> insts; ///< 命令情報
     std::map<std::string, std::string> clr2inst; ///< 色と命令のマップ
     Tuning tune; ///< ブロック識別のチューニングパラメータ
 };

@@ -5,6 +5,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
+#include <boost/lexical_cast.hpp>
 #include <fstream>
 
 namespace boost {
@@ -25,6 +26,21 @@ namespace boost {
         }
 
         template <class Archive>
+        void serialize(Archive& ar, Instruction::Param & v, const unsigned int version)
+        {
+            ar & boost::serialization::make_nvp("type", v.type);
+            ar & boost::serialization::make_nvp("name", v.name);
+            ar & boost::serialization::make_nvp("value", v.value);
+        }
+        
+        template <class Archive>
+        void serialize(Archive& ar, Instruction & v, const unsigned int version)
+        {
+            ar & boost::serialization::make_nvp("name", v.name);
+            ar & boost::serialization::make_nvp("params", v.params);
+        }
+        
+        template <class Archive>
         void serialize(Archive& ar, Tuning & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("stud_threshold", v.stud_th);
@@ -41,10 +57,26 @@ namespace boost {
         void serialize(Archive& ar, Option & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("color", v.colors);
-            ar & boost::serialization::make_nvp("instruction", v.clr2inst);
+            ar & boost::serialization::make_nvp("instruction", v.insts);
+            ar & boost::serialization::make_nvp("color-instruction-map", v.clr2inst);
             ar & boost::serialization::make_nvp("tuning", v.tune);
         }
     }
+}
+
+int Instruction::Param::getInt()
+{
+    return boost::lexical_cast<int>(value);
+}
+
+double Instruction::Param::getDouble()
+{
+    return boost::lexical_cast<double>(value);
+}
+
+void Instruction::Param::set(double v)
+{
+    value = boost::lexical_cast<std::string>(v);
 }
 
 Option getDefaultOption()
