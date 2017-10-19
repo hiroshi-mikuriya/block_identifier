@@ -96,7 +96,7 @@ namespace
             res_s >> http_version;
             res_s >> status_code;
             std::vector<char> buf(1000);
-            res_s.read(buf.data(), buf.size());
+            res_s.read(buf.data(), buf.size()); // TODO: eofを確認しバッファ長よりも長いデータを最後まで受けとるべき
             buf.push_back(0);
             const char * target = NEW_LINE NEW_LINE;
             auto p = std::strstr(buf.data(), target);
