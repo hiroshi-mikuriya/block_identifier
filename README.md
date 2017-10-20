@@ -10,7 +10,7 @@ https://github.com/tatsuo98se/3d_led_cube2
 
 ## 最新バージョン
 
-- 0.9.6
+- 0.9.7
 
 ## 言語
 
