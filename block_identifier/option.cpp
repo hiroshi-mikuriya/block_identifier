@@ -108,12 +108,12 @@ Option getDefaultOption()
         { /*ID*/ "ctrl-inout-effect", /*Param*/{} }, // オブジェクトの切り替わり時のエフェクト。徐々にアルファチャネルの値を変える
     };
     opt.clr2inst = std::map<std::string, std::string>{
-        { "red", "object-ripple" },
-        { "green", "ctrl-loop" },
-        { "white", "object-mario-runandjump-anime" },
-        { "blue", "object-cube" },
+        { "red", "object-fireworks" },
+        { "green", "object-mario-run2" },
+        { "white", "object-mario-run1" },
+        { "blue", "object-mario" },
         { "aqua", "object-repbang" },
-        { "yellow", "object-fireworks" },
+        { "yellow", "ctrl-loop" },
     };
     opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;

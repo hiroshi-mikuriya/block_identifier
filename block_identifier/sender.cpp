@@ -21,12 +21,16 @@ namespace
         using value = picojson::value;
         picojson::array orders;
         for (auto info : blockInfo){
+            auto const instname = opt.clr2inst.find(info.color.name);
+            if (instname == opt.clr2inst.end()){
+                std::cerr << boost::format("[%s] is not mapped with any instructions.") % info.color.name << std::endl;
+                continue;
+            }
             picojson::object item;
-            auto const instname = opt.clr2inst.at(info.color.name);
-            item["id"] = value(instname);
+            item["id"] = value(instname->second);
             item["lifetime"] = value(3.0);
             auto inst = std::find_if(opt.insts.begin(), opt.insts.end(), [instname](Instruction const & v){
-                return instname == v.name;
+                return instname->second == v.name;
             });
             if (inst != opt.insts.end()){
                 for (auto param : inst->params){
