@@ -1,5 +1,6 @@
 #include "identify.h"
 #include "sender.h"
+#include "Serial.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <mutex>
@@ -44,17 +45,31 @@ namespace {
     @param[in] device_id カメラデバイスID
     @param[in] address PythonプロセスのIPアドレス
     @param[in] port Pythonプロセスのポート番号
+    @param[in] com COMポート
+    @param[in] debug デバッグ
     @return Exit code
     */
-    int main_proc(Option const & opt, int device_id, std::string const & address, int port, bool debug)
+    int main_proc(Option const & opt, int device_id, std::string const & address, int port, int com, bool debug)
     {
         std::vector<BlockInfo> blockInfo;
         std::mutex mutex;
-        std::thread th([&, port]{
+        std::thread th([&, port, com]{
+            Serial arduino;
+            PortInfo info;
+            info.m_port = com;
+            info.m_baudrate = 9600;
+            info.m_bytesize = 8;
+            info.m_parity = 0;
+            info.m_stopbits = 1;
+            std::cout << "Opening COM Port..." << std::endl;
+            arduino.Open(info);
             for (;;){
-                std::cout << "Type any KEY and ENTER." << std::endl;
-                std::string tmp;
-                std::cin >> tmp;
+                // TODO: COMが0ならば標準入力待ちにする
+                std::cout << "PUSH BUTTON" << std::endl;
+                std::vector<unsigned char> buf;
+                while (buf.empty()){
+                    arduino.Receive(buf);
+                }
                 std::vector<BlockInfo> copy;
                 {
                     std::unique_lock<std::mutex> lock(mutex);
@@ -125,6 +140,7 @@ int main(int argc, const char * argv[]) {
             ("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
             ("address,a", po::value<std::string>(), "Python process IP address")
             ("port,p", po::value<int>()->default_value(80), "Python process port number")
+            ("com,c", po::value<int>()->default_value(0), "COM Post")
             ("debug", "DEBUG mode");
         ;
         po::variables_map vm;
@@ -135,7 +151,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
             if (vm.count("version")){
-                std::cout << "version: 0.9.7" << std::endl;
+                std::cout << "version: 0.9.8" << std::endl;
                 return 0;
             }
             if (vm.count("generate")){
@@ -150,7 +166,8 @@ int main(int argc, const char * argv[]) {
             auto camera = vm["device"].as<int>();
             std::string address = vm.count("address") ? vm["address"].as<std::string>() : "";
             int port = vm["port"].as<int>();
-            return main_proc(opt, camera, address, port, !!vm.count("debug"));
+            int com = vm["com"].as<int>();
+            return main_proc(opt, camera, address, port, com, !!vm.count("debug"));
         }
         catch (std::exception const & e){
             std::cerr << e.what() << "\n" << desc << std::endl;
