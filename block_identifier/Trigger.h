@@ -6,11 +6,11 @@ class Trigger
 {
 public:
     /*!
-    ƒgƒŠƒK[‚ğæ“¾‚·‚é
+    ãƒˆãƒªã‚¬ãƒ¼ã‚’å–å¾—ã™ã‚‹
     */
     static std::shared_ptr<Trigger> getTrigger(int com);
     /*!
-    ƒgƒŠƒK[‚ª”­¶‚·‚é‚Ü‚Å‘Ò‚Â
+    ãƒˆãƒªã‚¬ãƒ¼ãŒç™ºç”Ÿã™ã‚‹ã¾ã§å¾…ã¤
     */
     virtual void Wait() = 0;
 };

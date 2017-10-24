@@ -10,7 +10,7 @@ https://github.com/tatsuo98se/3d_led_cube2
 
 ## 最新バージョン
 
-- 0.9.7
+- 0.9.8
 
 ## 言語
 
@@ -30,6 +30,8 @@ https://github.com/tatsuo98se/3d_led_cube2
 - logicool C270カメラ  
 専用のドライバソフトもインストールすること（カメラの設定を編集するため）  
 Macはベンダー提供のドライバがないので、カメラ自体は動作するが設定は編集不可。
+- Arduinoボタン  
+ボタンを押すと、Pythonプロセスへコマンドを送信する。ボタンがないときは、標準入力がトリガーとなる。
 
 ## 使い方
 
@@ -59,6 +61,7 @@ colorタグ、instuctionタグの中身を修正する。（色名、色基準�
   -d [ --device ] arg (=0) Camera device number if PC has multiple camera devices  
   -a [ --address ] arg     Python process IP address  
   -p [ --port ] arg (=80)  Python process port number  
+  -c [ --com ] arg (=0)    COM Post if you use Arduino Button  
   --debug                  DEBUG mode
 
 ## 未実装項目

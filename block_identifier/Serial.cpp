@@ -1,4 +1,4 @@
-#define _X86_ // ‚±‚ñ‚È‚±‚Æ‘‚¢‚Ä‚¢‚¢‚Ì‚©H
+#define _X86_ // ã“ã‚“ãªã“ã¨æ›¸ã„ã¦ã„ã„ã®ã‹ï¼Ÿ
 
 #include "Serial.h"
 #include <algorithm>
@@ -9,7 +9,7 @@
 namespace
 {
     /**
-    * PortInfo‚ğŒ³‚ÉDCB‚ğæ“¾
+    * PortInfoã‚’å…ƒã«DCBã‚’å–å¾—
     */
     DCB getDcd(PortInfo const & info)
     {
@@ -22,10 +22,10 @@ namespace
         return dcb;
     }
     /**
-    * CreateFile‚ª”F¯‚Å‚«‚éƒ|[ƒg–¼‚ğæ“¾
-    * @param[in] port ƒ|[ƒg”Ô†
-    * @return CreateFile‚ª”F¯‚Å‚«‚éƒ|[ƒg–¼
-    * @note ˆø”‚ª•s³‚Ìê‡—áŠO‚ğ“Š‚°‚é
+    * CreateFileãŒèªè­˜ã§ãã‚‹ãƒãƒ¼ãƒˆåã‚’å–å¾—
+    * @param[in] port ãƒãƒ¼ãƒˆç•ªå·
+    * @return CreateFileãŒèªè­˜ã§ãã‚‹ãƒãƒ¼ãƒˆå
+    * @note å¼•æ•°ãŒä¸æ­£ã®å ´åˆä¾‹å¤–ã‚’æŠ•ã’ã‚‹
     */
     std::wstring getPortName(int port)
     {

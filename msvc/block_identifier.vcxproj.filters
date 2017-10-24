@@ -6,15 +6,15 @@
     <ClCompile Include="..\block_identifier\identify.cpp" />
     <ClCompile Include="..\block_identifier\sender.cpp" />
     <ClCompile Include="..\block_identifier\option.cpp" />
-    <ClCompile Include="Serial.cpp" />
-    <ClCompile Include="Trigger.cpp" />
+    <ClCompile Include="..\block_identifier\Serial.cpp" />
+    <ClCompile Include="..\block_identifier\Trigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\block_identifier\identify.h" />
     <ClInclude Include="..\block_identifier\sender.h" />
     <ClInclude Include="..\block_identifier\option.h" />
     <ClInclude Include="..\block_identifier\picojson.h" />
-    <ClInclude Include="Serial.h" />
-    <ClInclude Include="Trigger.h" />
+    <ClInclude Include="..\block_identifier\Serial.h" />
+    <ClInclude Include="..\block_identifier\Trigger.h" />
   </ItemGroup>
 </Project>
