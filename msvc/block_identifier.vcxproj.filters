@@ -7,6 +7,7 @@
     <ClCompile Include="..\block_identifier\sender.cpp" />
     <ClCompile Include="..\block_identifier\option.cpp" />
     <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="Trigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\block_identifier\identify.h" />
@@ -14,5 +15,6 @@
     <ClInclude Include="..\block_identifier\option.h" />
     <ClInclude Include="..\block_identifier\picojson.h" />
     <ClInclude Include="Serial.h" />
+    <ClInclude Include="Trigger.h" />
   </ItemGroup>
 </Project>

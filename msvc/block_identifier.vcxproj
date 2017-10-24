@@ -92,6 +92,7 @@
     <ClCompile Include="..\block_identifier\sender.cpp" />
     <ClCompile Include="OpenCVLink.cpp" />
     <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="Trigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\block_identifier\identify.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\block_identifier\picojson.h" />
     <ClInclude Include="..\block_identifier\sender.h" />
     <ClInclude Include="Serial.h" />
+    <ClInclude Include="Trigger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

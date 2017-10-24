@@ -1,6 +1,6 @@
 #include "identify.h"
 #include "sender.h"
-#include "Serial.h"
+#include "Trigger.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <mutex>
@@ -54,22 +54,9 @@ namespace {
         std::vector<BlockInfo> blockInfo;
         std::mutex mutex;
         std::thread th([&, port, com]{
-            Serial arduino;
-            PortInfo info;
-            info.m_port = com;
-            info.m_baudrate = 9600;
-            info.m_bytesize = 8;
-            info.m_parity = 0;
-            info.m_stopbits = 1;
-            std::cout << "Opening COM Port..." << std::endl;
-            arduino.Open(info);
+            auto trigger = Trigger::getTrigger(com);
             for (;;){
-                // TODO: COMが0ならば標準入力待ちにする
-                std::cout << "PUSH BUTTON" << std::endl;
-                std::vector<unsigned char> buf;
-                while (buf.empty()){
-                    arduino.Receive(buf);
-                }
+                trigger->Wait();
                 std::vector<BlockInfo> copy;
                 {
                     std::unique_lock<std::mutex> lock(mutex);
