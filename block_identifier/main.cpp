@@ -127,7 +127,7 @@ int main(int argc, const char * argv[]) {
             ("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
             ("address,a", po::value<std::string>(), "Python process IP address")
             ("port,p", po::value<int>()->default_value(80), "Python process port number")
-            ("com,c", po::value<int>()->default_value(0), "COM Port if you use Arduino Button")
+            ("com,c", po::value<int>()->default_value(0), "COM Port if you use Arduino Button(windows only)")
             ("debug", "DEBUG mode");
         ;
         po::variables_map vm;
