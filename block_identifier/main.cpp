@@ -1,6 +1,6 @@
 #include "identify.h"
 #include "sender.h"
-#include "Trigger.h"
+#include "trigger.h"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <mutex>
@@ -54,9 +54,9 @@ namespace {
         std::vector<BlockInfo> blockInfo;
         std::mutex mutex;
         std::thread th([&, port, com]{
-            auto trigger = Trigger::getTrigger(com);
+            auto trigger = Trigger::create(com);
             for (;;){
-                trigger->Wait();
+                trigger->wait();
                 std::vector<BlockInfo> copy;
                 {
                     std::unique_lock<std::mutex> lock(mutex);

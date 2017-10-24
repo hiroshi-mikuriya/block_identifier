@@ -1,8 +1,4 @@
-#define _X86_ // こんなこと書いていいのか？
-
-#include "Serial.h"
-#include <algorithm>
-#include <exception>
+#include "serial.h"
 #include <wtypes.h>
 #include <boost/format.hpp>
 
@@ -15,10 +11,10 @@ namespace
     {
         DCB dcb = { 0 };
         dcb.DCBlength = sizeof(DCB);
-        dcb.BaudRate = info.m_baudrate;
-        dcb.ByteSize = info.m_bytesize;
-        dcb.Parity = info.m_parity;
-        dcb.StopBits = info.m_stopbits;
+        dcb.BaudRate = info.baudrate;
+        dcb.ByteSize = info.bytesize;
+        dcb.Parity = info.parity;
+        dcb.StopBits = info.stopbits;
         return dcb;
     }
     /**
@@ -44,17 +40,17 @@ Serial::Serial()
 
 Serial::~Serial()
 {
-    Close();
+    close();
 }
 
-void Serial::Open(PortInfo const & info)
+void Serial::open(PortInfo const & info)
 {
-    Close();
-    m_com = CreateFile(getPortName(info.m_port).c_str(),
+    close();
+    m_com = CreateFile(getPortName(info.port).c_str(),
         GENERIC_READ | GENERIC_WRITE, 0, NULL,
         OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (INVALID_HANDLE_VALUE == m_com){
-        throw std::runtime_error((boost::format("Failed to open port %d") % info.m_port).str());
+        throw std::runtime_error((boost::format("Failed to open port %d") % info.port).str());
     }
     DCB dcb = getDcd(info);
     if (!SetCommState(m_com, &dcb)){
@@ -62,7 +58,7 @@ void Serial::Open(PortInfo const & info)
     }
 }
 
-void Serial::Close()
+void Serial::close()
 {
     if (INVALID_HANDLE_VALUE != m_com){
         if (!CloseHandle(m_com)){
@@ -71,13 +67,13 @@ void Serial::Close()
     }
 }
 
-bool Serial::Send(std::vector<unsigned char> const & data)const
+bool Serial::send(std::vector<unsigned char> const & data)const
 {
     DWORD send_size = 0;
     return !!WriteFile(m_com, &data.front(), data.size(), &send_size, 0) && send_size == data.size();
 }
 
-bool Serial::Receive(std::vector<unsigned char> & buffer)const
+bool Serial::receive(std::vector<unsigned char> & buffer)const
 {
     DWORD dwError;
     COMSTAT comStat;
@@ -92,7 +88,7 @@ bool Serial::Receive(std::vector<unsigned char> & buffer)const
     return ReadFile(m_com, &buffer.front(), buffer.size(), &read_size, 0) && read_size == buffer.size();
 }
 
-bool Serial::Connected()const
+bool Serial::connected()const
 {
     return m_com != INVALID_HANDLE_VALUE;
 }

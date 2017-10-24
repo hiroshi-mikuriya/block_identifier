@@ -1,6 +1,6 @@
-#include "Trigger.h"
+#include "trigger.h"
 #if defined _WIN32 || defined _WIN64
-#include "Serial.h"
+#include "serial.h"
 #endif // defined _WIN32 || defined _WIN64
 #include <iostream>
 #include <boost/format.hpp>
@@ -13,19 +13,19 @@ public:
     ArduinoButton(int com)
     {
         PortInfo info;
-        info.m_port = com;
-        info.m_baudrate = 9600;
-        info.m_bytesize = 8;
-        info.m_parity = 0;
-        info.m_stopbits = 1;
+        info.port = com;
+        info.baudrate = 9600;
+        info.bytesize = 8;
+        info.parity = 0;
+        info.stopbits = 1;
         std::cout << boost::format("Opening COM Port%d ...") % com << std::endl;
-        m.Open(info);
+        m.open(info);
     }
-    void Wait()
+    void wait()
     {
         std::cout << "PUSH BUTTON !" << std::endl;
         std::vector<unsigned char> tmp;
-        while (!m.Receive(tmp));
+        while (!m.receive(tmp));
     }
 };
 #endif // defined _WIN32 || defined _WIN64
@@ -36,7 +36,7 @@ public:
     StdinTrigger()
     {
     }
-    void Wait()
+    void wait()
     {
         std::cout << "Input any key and Enter..." << std::endl;
         std::string tmp;
@@ -44,7 +44,7 @@ public:
     }
 };
 
-std::shared_ptr<Trigger> Trigger::getTrigger(int com)
+std::shared_ptr<Trigger> Trigger::create(int com)
 {
 #if defined _WIN32 || defined _WIN64
     if (0 < com){
