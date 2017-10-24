@@ -23,9 +23,11 @@ public:
     }
     void wait()
     {
-        std::cout << "PUSH BUTTON !" << std::endl;
+        std::cout << "\n" "PUSH BUTTON !" << std::endl;
         std::vector<unsigned char> tmp;
-        while (!m.receive(tmp));
+        while (tmp.size() != 1){
+            m.receive(tmp);
+        }
     }
 };
 #endif // defined _WIN32 || defined _WIN64
