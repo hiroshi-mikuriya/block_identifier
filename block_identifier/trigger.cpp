@@ -26,7 +26,13 @@ public:
         std::cout << "\n" "PUSH BUTTON !" << std::endl;
         std::vector<unsigned char> tmp;
         while (tmp.size() != 1){
-            m.receive(tmp);
+            m.receive(tmp); // 0D0Aも一緒に受信するときと、別々に受信するときがある
+            for (;;){
+                if (tmp.empty() || (tmp.back() != 0x0A && tmp.back() != 0x0D)){
+                    break;
+                }
+                tmp.pop_back();
+            }
         }
     }
 };
