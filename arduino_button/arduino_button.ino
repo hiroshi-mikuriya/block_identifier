@@ -10,7 +10,7 @@ void setup() {
 void loop() {
   state = digitalRead(PIN);
   if(state != preState){
-    Serial.println(state);
+    Serial.print(state);
   }
   preState = state;
   delay(50);
