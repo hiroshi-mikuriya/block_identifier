@@ -10,7 +10,7 @@ https://github.com/tatsuo98se/3d_led_cube2
 
 ## 最新バージョン
 
-- 0.9.8
+- 0.9.9
 
 ## 言語
 
@@ -50,6 +50,25 @@ Macはベンダー提供のドライバがないので、カメラ自体は動�
 `block_identifier -g`  
 block_identifier.xmlが出力される。  
 colorタグ、instuctionタグの中身を修正する。（色名、色基準値、命令と色の紐付け）  
+`block_identifier -o block_identifier.xml`
+
+## LEGO DUPLOとLEGOの変更方法
+
+XMLファイルを出力する。
+`block_identifier -g`
+
+以下の設定を変更する（デフォルトはLEGO DUPLO）
+
+* LEGO DUPLO
+  * stud_threshold:40
+  * block_height:102
+  * block_width>150
+* LEGO
+  * stud_threshold:20
+  * block_height:51
+  * block_width>75
+
+XMLを読み込んで実行する  
 `block_identifier -o block_identifier.xml`
 
 ## コマンドラインオプション
