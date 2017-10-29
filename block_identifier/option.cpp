@@ -26,13 +26,6 @@ namespace boost {
         }
         
         template <class Archive>
-        void serialize(Archive& ar, Instruction::Param & v, const unsigned int version)
-        {
-            ar & boost::serialization::make_nvp("key", v.key);
-            ar & boost::serialization::make_nvp("value", v.value);
-        }
-        
-        template <class Archive>
         void serialize(Archive& ar, Instruction & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("name", v.name);
