@@ -54,7 +54,7 @@ colorタグ、instuctionタグの中身を修正する。（色名、色基準�
 
 ## LEGO DUPLOとLEGOの変更方法
 
-XMLファイルを出力する。
+XMLファイルを出力する。  
 `block_identifier -g`
 
 以下の設定を変更する（デフォルトはLEGO DUPLO）
@@ -70,6 +70,38 @@ XMLファイルを出力する。
 
 XMLを読み込んで実行する  
 `block_identifier -o block_identifier.xml`
+
+## ブロックと命令の対応を編集する
+
+「ブロックの色、幅」がキー、「命令、パラメータ」がバリューのマップとして紐づけます。  
+XMLファイルを出力する。  
+`block_identifier -g`
+
+XMLファイルを開き、block-instruction-mapを編集する。  
+
+キーとバリューの対応は以下で記述する。  
+
+```xml
+<item>
+  <first>
+    <color>yellow</color> <!--ブロック色-->
+    <width>3</width> <!--ブロック幅-->
+  </first>
+  <second>
+    <name>ctrl-loop</name> <!--命令名-->
+    <param>
+      <count>1</count> <!--パラメータ数-->
+      <item_version>0</item_version> <!--固定値-->
+      <item>
+        <first>count</first> <!--パラメータ名-->
+        <second>1</second> <!--パラメータ値-->
+      </item>
+    </param>
+  </second>
+</item>
+```
+
+
 
 ## コマンドラインオプション
 
