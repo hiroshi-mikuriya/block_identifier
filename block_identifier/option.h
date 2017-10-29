@@ -17,18 +17,8 @@ struct Color
 struct Instruction
 {
     std::string name; ///< 命令ID
-    /*! パラメータ */
-    struct Param
-    {
-        static const std::string Int;
-        static const std::string Double;
-        static const std::string String;
-        static const std::string Bitmap;
-        std::string name; ///< パラメータ名
-        std::string type; ///< パラメータ型
-    };
-    
-    std::vector<Param> params; ///< パラメータ
+    std::string key; ///< パラメータ名
+    int value; ///< 値
 };
 
 /*!
@@ -65,8 +55,7 @@ bool operator<(Block const & lv, Block const & rv); ///< 比較演算子
 struct Option
 {
     std::vector<Color> colors; ///< 色情報
-    std::vector<Instruction> insts; ///< 命令情報
-    std::map<Block, std::string> block2inst; ///< 色と命令のマップ
+    std::map<Block, Instruction> block2inst; ///< 色と命令のマップ
     Tuning tune; ///< ブロック識別のチューニングパラメータ
 };
 

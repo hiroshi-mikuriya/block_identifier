@@ -5,38 +5,19 @@
 
 namespace
 {
-    double getValue(Instruction::Param const & param, int type)
-    {
-        if (Instruction::Param::Int == param.type){
-            return type;
-        }
-        if (Instruction::Param::Double == param.type){
-            return type;
-        }
-        throw std::runtime_error((boost::format("unsupported instruction param type. [%s]") % param.type).str());
-    }
-
     std::string makeJson(Option const & opt, std::vector<BlockInfo> const & blockInfo)
     {
         using value = picojson::value;
         picojson::array orders;
         for (auto info : blockInfo){
-            auto const instname = opt.block2inst.find(info.to_block());
-            if (instname == opt.block2inst.end()){
-                std::cerr << boost::format("[%s] is not mapped with any instructions.") % info.color.name << std::endl;
+            auto const inst = opt.block2inst.find(info.to_block());
+            if (inst == opt.block2inst.end()){
+                std::cerr << boost::format("[%s:%d] is not mapped with any instructions.") % info.color.name % info.width << std::endl;
                 continue;
             }
             picojson::object item;
-            item["id"] = value(instname->second);
-            item["lifetime"] = value(3.0);
-            auto inst = std::find_if(opt.insts.begin(), opt.insts.end(), [instname](Instruction const & v){
-                return instname->second == v.name;
-            });
-            if (inst != opt.insts.end()){
-                for (auto param : inst->params){
-                    item[param.name] = value(getValue(param, info.width));
-                }
-            }
+            item["id"] = value(inst->second.name);
+            item[inst->second.key] = value(inst->second.value + 0.0);
             orders.emplace_back(item);
         }
         picojson::object root;

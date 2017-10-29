@@ -62,7 +62,7 @@ namespace {
         {
             auto to_instname = [this](Block const & block){
                 auto inst = opt_.block2inst.find(block);
-                return inst == opt_.block2inst.end() ? "unknown" : inst->second;
+                return inst == opt_.block2inst.end() ? "unknown" : inst->second.name;
             };
             cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols * 2, CV_8UC3);
             image_.copyTo(canvas(cv::Rect(0, 0, image_.cols, image_.rows)));
