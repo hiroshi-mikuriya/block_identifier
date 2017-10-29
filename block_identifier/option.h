@@ -17,8 +17,12 @@ struct Color
 struct Instruction
 {
     std::string name; ///< 命令ID
-    std::string key; ///< パラメータ名
-    int value; ///< 値
+    struct Param
+    {
+        std::string key; ///< パラメータ名
+        int value; ///< 値
+    };
+    std::vector<Param> param;
 };
 
 /*!

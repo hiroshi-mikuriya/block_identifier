@@ -17,20 +17,26 @@ namespace boost {
             ar & boost::serialization::make_nvp("g", v[1]);
             ar & boost::serialization::make_nvp("r", v[2]);
         }
-
+        
         template <class Archive>
         void serialize(Archive& ar, Color & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("name", v.name);
             ar & boost::serialization::make_nvp("bgr", v.bgr);
         }
-
+        
+        template <class Archive>
+        void serialize(Archive& ar, Instruction::Param & v, const unsigned int version)
+        {
+            ar & boost::serialization::make_nvp("key", v.key);
+            ar & boost::serialization::make_nvp("value", v.value);
+        }
+        
         template <class Archive>
         void serialize(Archive& ar, Instruction & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("name", v.name);
-            ar & boost::serialization::make_nvp("key", v.key);
-            ar & boost::serialization::make_nvp("value", v.value);
+            ar & boost::serialization::make_nvp("param", v.param);
         }
         
         template <class Archive>
@@ -85,17 +91,17 @@ Option getDefaultOption()
         { "yellow", { 0x80, 0xFF, 0xFF } },
     };
     opt.block2inst = std::map<Block, Instruction>{
-        { { "white", 1}, { "object-heart", "lifetime", 5 } },
-        { { "yellow", 1}, { "object-star", "lifetime", 5 } },
-        { { "red", 1}, { "object-fireworks", "lifetime", 5 } },
-        { { "blue", 1}, { "object-mario-run-anime", "lifetime", 5 } },
-        { { "aqua", 1}, { "filter-jump", "lifetime", 5 } },
-        { { "green", 1}, { "filter-jump", "lifetime", 5 } },
-        { { "yellow", 2}, { "filter-bk-snows", "lifetime", 5 } },
-        { { "blue", 2}, { "filter-bk-wave", "lifetime", 5 } },
-        { { "green", 2}, { "filter-bk-mountain", "lifetime", 5 } },
-        { { "red", 2}, { "filter-clear", "lifetime", 5 } },
-        { { "yellow", 3}, { "ctrl-loop", "count", 10 } },
+        { Block{ "white", 1}, Instruction{ "object-heart", { { "lifetime", 5 } } } },
+        { Block{ "yellow", 1}, Instruction{ "object-star", { { "lifetime", 5 } } } },
+        { Block{ "red", 1}, Instruction{ "object-fireworks", { { "lifetime", 5 } } } },
+        { Block{ "blue", 1}, Instruction{ "object-mario-run-anime", { { "lifetime", 5 } } } },
+        { Block{ "aqua", 1}, Instruction{ "filter-jump", { } } },
+        { Block{ "green", 1}, Instruction{ "filter-jump", { } } },
+        { Block{ "yellow", 2}, Instruction{ "filter-bk-snows", { } } },
+        { Block{ "blue", 2}, Instruction{ "filter-bk-wave", { } } },
+        { Block{ "green", 2}, Instruction{ "filter-bk-mountain", { } } },
+        { Block{ "red", 2}, Instruction{ "filter-clear", { } } },
+        { Block{ "yellow", 3}, Instruction{ "ctrl-loop", { { "count", 10 } } } },
     };
     opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;
@@ -116,3 +122,4 @@ Option readOption(std::string const & path)
     ia >> boost::serialization::make_nvp("option", opt);
     return opt;
 }
+

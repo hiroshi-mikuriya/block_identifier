@@ -17,7 +17,9 @@ namespace
             }
             picojson::object item;
             item["id"] = value(inst->second.name);
-            item[inst->second.key] = value(inst->second.value + 0.0);
+            for(auto param : inst->second.param){
+                item[param.key] = value(param.value + 0.0);
+            }
             orders.emplace_back(item);
         }
         picojson::object root;
