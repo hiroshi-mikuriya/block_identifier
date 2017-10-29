@@ -21,8 +21,8 @@ namespace
         using value = picojson::value;
         picojson::array orders;
         for (auto info : blockInfo){
-            auto const instname = opt.clr2inst.find(info.color.name);
-            if (instname == opt.clr2inst.end()){
+            auto const instname = opt.block2inst.find(info.to_block());
+            if (instname == opt.block2inst.end()){
                 std::cerr << boost::format("[%s] is not mapped with any instructions.") % info.color.name << std::endl;
                 continue;
             }
@@ -34,7 +34,7 @@ namespace
             });
             if (inst != opt.insts.end()){
                 for (auto param : inst->params){
-                    item[param.name] = value(getValue(param, info.type));
+                    item[param.name] = value(getValue(param, info.width));
                 }
             }
             orders.emplace_back(item);

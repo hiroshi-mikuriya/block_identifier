@@ -1,4 +1,5 @@
 #include "identify.h"
+#include <boost/format.hpp>
 
 namespace {
     /*!
@@ -59,18 +60,20 @@ namespace {
         */
         void showBlockInfo(std::vector<BlockInfo> const & blockInfo)
         {
+            auto to_instname = [this](Block const & block){
+                auto inst = opt_.block2inst.find(block);
+                return inst == opt_.block2inst.end() ? "unknown" : inst->second;
+            };
             cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols * 2, CV_8UC3);
             image_.copyTo(canvas(cv::Rect(0, 0, image_.cols, image_.rows)));
             for (auto info : blockInfo){
                 cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
                 cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
+                auto instname = to_instname(info.to_block());
                 auto v = info.color.bgr;
-                std::stringstream ss;
-                ss << info.type << ":" << info.color.name << " ";
-                ss.width(2);
-                ss.fill('0');
-                ss << std::hex << (int)info.ave[2] << (int)info.ave[1] << (int)info.ave[0];
-                cv::putText(canvas, ss.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.7f), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(v[0], v[1], v[2]));
+                auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
+                cv::putText(canvas, f.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+                cv::putText(canvas, instname, cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.9f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
             }
             cv::imshow("blocks", canvas);
         }
@@ -174,7 +177,7 @@ namespace {
                 info.color_area = info.rc * 0.2;
                 info.ave = getAveBgr(image_(info.color_area));
                 info.color = getColor(info.ave);
-                info.type = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
+                info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
             return dst;

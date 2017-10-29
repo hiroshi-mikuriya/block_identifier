@@ -40,6 +40,13 @@ namespace boost {
         }
         
         template <class Archive>
+        void serialize(Archive& ar, Block & v, const unsigned int version)
+        {
+            ar & boost::serialization::make_nvp("color", v.color);
+            ar & boost::serialization::make_nvp("width", v.width);
+        }
+        
+        template <class Archive>
         void serialize(Archive& ar, Tuning & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("stud_threshold", v.stud_th);
@@ -57,7 +64,7 @@ namespace boost {
         {
             ar & boost::serialization::make_nvp("color", v.colors);
             ar & boost::serialization::make_nvp("instruction", v.insts);
-            ar & boost::serialization::make_nvp("color-instruction-map", v.clr2inst);
+            ar & boost::serialization::make_nvp("block-instruction-map", v.block2inst);
             ar & boost::serialization::make_nvp("tuning", v.tune);
         }
     }
@@ -67,6 +74,16 @@ const std::string Instruction::Param::Int = "int";
 const std::string Instruction::Param::Double = "double";
 const std::string Instruction::Param::String = "string";
 const std::string Instruction::Param::Bitmap = "bitmap";
+
+bool operator<(Block const & lv, Block const & rv)
+{
+    return lv.color != rv.color ? lv.color < rv.color : lv.width < rv.width;
+}
+
+Block BlockInfo::to_block()const
+{
+    return { this->color.name, this->width };
+}
 
 Option getDefaultOption()
 {
@@ -107,13 +124,18 @@ Option getDefaultOption()
         { /*ID*/ "ctrl-overlap", /*Param*/{ { "time", Instruction::Param::Int } } }, // オブジェクト間を重ねる秒数.
         { /*ID*/ "ctrl-inout-effect", /*Param*/{} }, // オブジェクトの切り替わり時のエフェクト。徐々にアルファチャネルの値を変える
     };
-    opt.clr2inst = std::map<std::string, std::string>{
-        { "red", "object-fireworks" },
-        { "green", "object-mario-run2" },
-        { "white", "object-mario-run1" },
-        { "blue", "object-mario" },
-        { "aqua", "object-repbang" },
-        { "yellow", "ctrl-loop" },
+    opt.block2inst = std::map<Block, std::string>{
+        { { "white", 1}, "object-heart" },
+        { { "yellow", 1}, "object-star" },
+        { { "red", 1}, "object-fireworks" },
+        { { "blue", 1}, "object-mario-run-anime" },
+        { { "aqua", 1}, "filter-jump" },
+        { { "green", 1}, "filter-jump" },
+        { { "yellow", 2}, "filter-bk-snows" },
+        { { "blue", 2}, "filter-bk-wave" },
+        { { "green", 2}, "filter-bk-mountain" },
+        { { "red", 2}, "filter-clear" },
+        { { "yellow", 3}, "ctrl-loop" },
     };
     opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;

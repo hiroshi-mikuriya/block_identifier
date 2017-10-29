@@ -49,13 +49,24 @@ struct Tuning
 };
 
 /*!
+ ブロック型
+ */
+struct Block
+{
+    std::string color; ///< 色名
+    int width; ///< ブロック幅
+};
+
+bool operator<(Block const & lv, Block const & rv); ///< 比較演算子
+
+/*!
 オプションファイルの情報
 */
 struct Option
 {
     std::vector<Color> colors; ///< 色情報
     std::vector<Instruction> insts; ///< 命令情報
-    std::map<std::string, std::string> clr2inst; ///< 色と命令のマップ
+    std::map<Block, std::string> block2inst; ///< 色と命令のマップ
     Tuning tune; ///< ブロック識別のチューニングパラメータ
 };
 
@@ -68,7 +79,8 @@ struct BlockInfo
     cv::Rect rc; ///< ブロックの矩形
     cv::Rect color_area; ///< ブロック色判定領域
     cv::Vec3b ave; ///< 平均色
-    int type; ///< 横幅: 1, 2, 3
+    int width; ///< 横幅: 1, 2, 3
+    Block to_block()const; ///< Block型へ変換する
 };
 
 /*!

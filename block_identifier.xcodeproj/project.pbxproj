@@ -17,6 +17,7 @@
 		683847641F8FBA28002D3797 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6838475D1F8FBA28002D3797 /* libboost_program_options.a */; };
 		683847651F8FBA28002D3797 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6838475E1F8FBA28002D3797 /* libopencv_core.dylib */; };
 		683847661F8FBA28002D3797 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6838475F1F8FBA28002D3797 /* libopencv_highgui.dylib */; };
+		68972CF81FA5676800F799E0 /* trigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68972CF71FA5676800F799E0 /* trigger.cpp */; };
 		68F8254F1F8FB9460003BCCA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68F8254E1F8FB9460003BCCA /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,8 @@
 		6838475D1F8FBA28002D3797 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libboost_program_options.a"; sourceTree = "<group>"; };
 		6838475E1F8FBA28002D3797 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_core.dylib"; sourceTree = "<group>"; };
 		6838475F1F8FBA28002D3797 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_highgui.dylib"; sourceTree = "<group>"; };
+		68972CF61FA5676800F799E0 /* trigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trigger.h; sourceTree = "<group>"; };
+		68972CF71FA5676800F799E0 /* trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trigger.cpp; sourceTree = "<group>"; };
 		68F8254B1F8FB9460003BCCA /* block_identifier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = block_identifier; sourceTree = BUILT_PRODUCTS_DIR; };
 		68F8254E1F8FB9460003BCCA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,12 +108,14 @@
 			children = (
 				683847541F8FB98B002D3797 /* identify.cpp */,
 				6838474F1F8FB98A002D3797 /* identify.h */,
+				68F8254E1F8FB9460003BCCA /* main.cpp */,
 				683847511F8FB98A002D3797 /* option.cpp */,
 				683847531F8FB98A002D3797 /* option.h */,
 				6838474E1F8FB98A002D3797 /* picojson.h */,
 				683847521F8FB98A002D3797 /* sender.cpp */,
 				6838474D1F8FB98A002D3797 /* sender.h */,
-				68F8254E1F8FB9460003BCCA /* main.cpp */,
+				68972CF71FA5676800F799E0 /* trigger.cpp */,
+				68972CF61FA5676800F799E0 /* trigger.h */,
 			);
 			path = block_identifier;
 			sourceTree = "<group>";
@@ -174,6 +179,7 @@
 			files = (
 				683847551F8FB98B002D3797 /* option.cpp in Sources */,
 				683847571F8FB98B002D3797 /* identify.cpp in Sources */,
+				68972CF81FA5676800F799E0 /* trigger.cpp in Sources */,
 				683847561F8FB98B002D3797 /* sender.cpp in Sources */,
 				68F8254F1F8FB9460003BCCA /* main.cpp in Sources */,
 			);
