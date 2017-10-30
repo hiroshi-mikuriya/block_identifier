@@ -84,17 +84,17 @@ Option getDefaultOption()
         { "yellow", { 0x80, 0xFF, 0xFF } },
     };
     opt.block2inst = std::map<Block, Instruction>{
-        { Block{ "white", 1}, Instruction{ "object-heart", { { "lifetime", 5 } } } },
-        { Block{ "yellow", 1}, Instruction{ "object-star", { { "lifetime", 5 } } } },
-        { Block{ "red", 1}, Instruction{ "object-fireworks", { { "lifetime", 5 } } } },
-        { Block{ "blue", 1}, Instruction{ "object-mario-run-anime", { { "lifetime", 5 } } } },
-        { Block{ "aqua", 1}, Instruction{ "filter-jump", { } } },
-        { Block{ "green", 1}, Instruction{ "filter-jump", { } } },
-        { Block{ "yellow", 2}, Instruction{ "filter-bk-snows", { } } },
-        { Block{ "blue", 2}, Instruction{ "filter-bk-wave", { } } },
-        { Block{ "green", 2}, Instruction{ "filter-bk-mountain", { } } },
-        { Block{ "red", 2}, Instruction{ "filter-clear", { } } },
-        { Block{ "yellow", 3}, Instruction{ "ctrl-loop", { { "count", 10 } } } },
+        { Block{ "white", 1 }, Instruction{ "object-heart", Params{ { "lifetime", 5 } } } },
+        { Block{ "yellow", 1 }, Instruction{ "object-star", Params{ { "lifetime", 5 } } } },
+        { Block{ "red", 1 }, Instruction{ "object-fireworks", Params{ { "lifetime", 5 } } } },
+        { Block{ "blue", 1 }, Instruction{ "object-mario-run-anime", Params{ { "lifetime", 5 } } } },
+        { Block{ "aqua", 1 }, Instruction{ "filter-rainbow", Params{} } },
+        { Block{ "green", 1 }, Instruction{ "filter-jump", Params{} } },
+        { Block{ "yellow", 2 }, Instruction{ "filter-bk-snows", Params{} } },
+        { Block{ "blue", 2 }, Instruction{ "filter-bk-wave", Params{} } },
+        { Block{ "green", 2 }, Instruction{ "filter-bk-mountain", Params{} } },
+        { Block{ "red", 2 }, Instruction{ "filter-clear", Params{} } },
+        { Block{ "yellow", 3 }, Instruction{ "ctrl-loop", Params{ { "count", 10 } } } },
     };
     opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;

@@ -11,13 +11,15 @@ struct Color
     cv::Vec3b bgr; ///< RGB値
 };
 
+typedef std::map<std::string, double> Params;
+
 /*!
  命令情報
  */
 struct Instruction
 {
     std::string name; ///< 命令ID
-    std::map<std::string, double> param; ///< パラメータ
+    Params param; ///< パラメータ
 };
 
 /*!
@@ -46,7 +48,11 @@ struct Block
     int width; ///< ブロック幅
 };
 
-bool operator<(Block const & lv, Block const & rv); ///< 比較演算子
+/*!
+Block型の比較演算子<br>
+std::mapのキーにするために作成
+*/
+bool operator<(Block const & lv, Block const & rv);
 
 /*!
 オプションファイルの情報
