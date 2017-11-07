@@ -59,14 +59,18 @@ XMLファイルを出力する。
 
 以下の設定を変更する（デフォルトはLEGO DUPLO）
 
-* LEGO DUPLO
-  * stud_threshold:40
-  * block_height:102
-  * block_width>150
+* LEGO DUPLO
+```xml
+<stud_threshold>40</stud_threshold> <!-- ポッチサイズ -->
+<block_height>102</block_height> <!-- ブロック高さ -->
+<block_width>150</block_width> <!-- ブロック幅 -->
+```
 * LEGO
-  * stud_threshold:20
-  * block_height:51
-  * block_width>75
+```xml
+<stud_threshold>20</stud_threshold> <!-- ポッチサイズ -->
+<block_height>51</block_height> <!-- ブロック高さ -->
+<block_width>75</block_width> <!-- ブロック幅 -->
+```
 
 XMLを読み込んで実行する  
 `block_identifier -o block_identifier.xml`
@@ -93,7 +97,7 @@ XMLファイルを開き、block-instruction-mapを編集する。
       <count>1</count> <!--パラメータ数-->
       <item_version>0</item_version> <!--固定値-->
       <item>
-        <first>count</first> <!--パラメータ名-->
+        <first>count</first> <!--パラメータ名-->
         <second>1</second> <!--パラメータ値-->
       </item>
     </param>
