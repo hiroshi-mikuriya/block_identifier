@@ -83,14 +83,17 @@ XMLファイルを出力する。
 XMLファイルを開き、colorを編集する。  
 
 ```xml
-<item>
-  <name>green</name> <!-- 色名 -->
-  <bgr>
-    <b>128</b> <!-- B値 -->
-    <g>255</g> <!-- G値 -->
-    <r>128</r> <!-- R値 -->
-  </bgr>
-</item>
+<color>
+  <count>6</count> <!-- 色数 -->
+  <item>
+    <name>green</name> <!-- 色名 -->
+    <bgr>
+      <b>128</b> <!-- B値 -->
+      <g>255</g> <!-- G値 -->
+      <r>128</r> <!-- R値 -->
+    </bgr>
+  </item>
+</color>
 ```
 
 ## ブロックと命令の対応を編集する
