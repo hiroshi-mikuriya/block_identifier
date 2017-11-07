@@ -75,6 +75,24 @@ XMLファイルを出力する。
 XMLを読み込んで実行する  
 `block_identifier -o block_identifier.xml`
 
+## 認識する色を編集する
+
+XMLファイルを出力する。  
+`block_identifier -g`
+
+XMLファイルを開き、colorを編集する。  
+
+```xml
+<item>
+  <name>green</name> <!-- 色名 -->
+  <bgr>
+    <b>128</b> <!-- B値 -->
+    <g>255</g> <!-- G値 -->
+    <r>128</r> <!-- R値 -->
+  </bgr>
+</item>
+```
+
 ## ブロックと命令の対応を編集する
 
 「ブロックの色、幅」がキー、「命令、パラメータ」がバリューのマップとして紐づけます。  
@@ -104,8 +122,6 @@ XMLファイルを開き、block-instruction-mapを編集する。
   </second>
 </item>
 ```
-
-
 
 ## コマンドラインオプション
 
