@@ -6,6 +6,9 @@
 #include <boost/format.hpp>
 
 #if defined _WIN32 || defined _WIN64
+#pragma comment(lib,"Winmm.lib")
+#include <Windows.h>
+#include <mmsystem.h>
 class ArduinoButton : public Trigger
 {
     Serial m;
@@ -33,6 +36,9 @@ public:
                 }
                 tmp.pop_back();
             }
+        }
+        if (!PlaySound(L"se_maoudamashii_chime13.wav", 0, SND_FILENAME | SND_SYNC | SND_NODEFAULT)){
+            std::cerr << "PlaySound returns false." << std::endl;
         }
     }
 };
