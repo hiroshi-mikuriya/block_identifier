@@ -5,7 +5,7 @@ Conv = Hash[*%w(
 海 filter-bk-wave
 フィルタークリア ctrl-filter-clear
 白 white
-ハート object-heart
+ハート object-snowman
 上からくりかえしスクロール filter-rolldown
 雪 filter-bk-snows
 緑 green
@@ -14,11 +14,11 @@ Zoominandout filter-zoom
 山 filter-bk-mountain
 黄緑 yellowgreen
 ヨット object-yacht
-ペラペラ [unknown]
+ペラペラ filter-flat-wave
 草原 filter-bk-grass
 黄色 yellow
 星 object-star
-y軸回転 [unknown]
+y軸回転 filter-skewed
 星空 filter-bk-stars
 オレンジ orange
 音符 object-note
@@ -28,7 +28,7 @@ y軸回転 [unknown]
 靴下 object-socks
 スパイラル filter-spiral
 赤 red
-雪だるま object-snowman
+雪だるま object-heart
 ジャンプ filter-jump
 桜吹雪 filter-bk-sakura
 )]
