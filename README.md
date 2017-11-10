@@ -68,8 +68,8 @@ XMLファイルを出力する。
 * LEGO
 ```xml
 <stud_threshold>20</stud_threshold> <!-- ポッチサイズ -->
-<block_height>51</block_height> <!-- ブロック高さ -->
-<block_width>75</block_width> <!-- ブロック幅 -->
+<block_height>60</block_height> <!-- ブロック高さ -->
+<block_width>50</block_width> <!-- ブロック幅 -->
 ```
 
 XMLを読み込んで実行する  
