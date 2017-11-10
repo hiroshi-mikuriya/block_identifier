@@ -23,7 +23,7 @@ y軸回転 filter-skewed
 オレンジ orange
 音符 object-note
 虹 filter-rainbow
-花火 object-fireworks
+花火 filter-bk-fireworks
 茶色 brown
 靴下 object-socks
 スパイラル filter-spiral
