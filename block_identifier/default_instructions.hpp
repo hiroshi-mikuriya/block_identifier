@@ -16,9 +16,10 @@
 { Block{ "yellow", 4 }, Instruction{ "filter-bk-stars", Params{} } }, // 黄色[4]:星空
 { Block{ "orange", 2 }, Instruction{ "object-note", Params{ { "lifetime", 5 } } } }, // オレンジ[2]:音符
 { Block{ "orange", 3 }, Instruction{ "filter-rainbow", Params{} } }, // オレンジ[3]:虹
-{ Block{ "orange", 4 }, Instruction{ "object-fireworks", Params{ { "lifetime", 5 } } } }, // オレンジ[4]:花火
+{ Block{ "orange", 4 }, Instruction{ "filter-bk-fireworks", Params{} } }, // オレンジ[4]:花火
 { Block{ "brown", 2 }, Instruction{ "object-socks", Params{ { "lifetime", 5 } } } }, // 茶色[2]:靴下
 { Block{ "brown", 3 }, Instruction{ "filter-spiral", Params{} } }, // 茶色[3]:スパイラル
+{ Block{ "brown", 4 }, Instruction{ "filter-bk-cloud", Params{} } }, // 茶色[4]:雲
 { Block{ "red", 2 }, Instruction{ "object-heart", Params{ { "lifetime", 5 } } } }, // 赤[2]:雪だるま
 { Block{ "red", 3 }, Instruction{ "filter-jump", Params{} } }, // 赤[3]:ジャンプ
 { Block{ "red", 4 }, Instruction{ "filter-bk-sakura", Params{} } }, // 赤[4]:桜吹雪
