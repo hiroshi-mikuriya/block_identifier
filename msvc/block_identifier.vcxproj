@@ -95,6 +95,8 @@
     <ClCompile Include="OpenCVLink.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\block_identifier\default_colors.hpp" />
+    <ClInclude Include="..\block_identifier\default_instructions.hpp" />
     <ClInclude Include="..\block_identifier\identify.h" />
     <ClInclude Include="..\block_identifier\option.h" />
     <ClInclude Include="..\block_identifier\picojson.h" />

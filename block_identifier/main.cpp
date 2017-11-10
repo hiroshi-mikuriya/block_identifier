@@ -138,7 +138,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
             if (vm.count("version")){
-                std::cout << "version: 0.9.10" << std::endl;
+                std::cout << "version: 0.9.11" << std::endl;
                 return 0;
             }
             if (vm.count("generate")){

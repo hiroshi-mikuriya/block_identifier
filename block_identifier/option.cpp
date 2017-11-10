@@ -76,25 +76,10 @@ Option getDefaultOption()
 {
     Option opt;
     opt.colors = {
-        { "red", { 0x80, 0x80, 0xFF } },
-        { "green", { 0x80, 0xFF, 0x80 } },
-        { "white", { 0xFC, 0xFC, 0xFC } },
-        { "blue", { 0xFF, 0x80, 0x80 } },
-        { "aqua", { 0xFF, 0xE0, 0xC0 } },
-        { "yellow", { 0x80, 0xFF, 0xFF } },
+#include "default_colors.hpp"
     };
     opt.block2inst = std::map<Block, Instruction>{
-        { Block{ "white", 1 }, Instruction{ "object-heart", Params{ { "lifetime", 5 } } } },
-        { Block{ "yellow", 1 }, Instruction{ "object-star", Params{ { "lifetime", 5 } } } },
-        { Block{ "red", 1 }, Instruction{ "object-fireworks", Params{ { "lifetime", 5 } } } },
-        { Block{ "blue", 1 }, Instruction{ "object-mario-run-anime", Params{ { "lifetime", 5 } } } },
-        { Block{ "aqua", 1 }, Instruction{ "filter-rainbow", Params{} } },
-        { Block{ "green", 1 }, Instruction{ "filter-jump", Params{} } },
-        { Block{ "yellow", 2 }, Instruction{ "filter-bk-snows", Params{} } },
-        { Block{ "blue", 2 }, Instruction{ "filter-bk-wave", Params{} } },
-        { Block{ "green", 2 }, Instruction{ "filter-bk-mountain", Params{} } },
-        { Block{ "red", 2 }, Instruction{ "filter-clear", Params{} } },
-        { Block{ "yellow", 3 }, Instruction{ "ctrl-loop", Params{ { "count", 10 } } } },
+#include "default_instructions.hpp"
     };
     opt.tune = { 40, 245, 80, 1280, 720, 0.5, 102, 150 };
     return opt;
