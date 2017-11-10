@@ -20,5 +20,5 @@
 { Block{ "brown", 2 }, Instruction{ "object-socks", Params{ { "lifetime", 5 } } } }, // 茶色[2]:靴下
 { Block{ "brown", 3 }, Instruction{ "filter-spiral", Params{} } }, // 茶色[3]:スパイラル
 { Block{ "red", 2 }, Instruction{ "object-snowman", Params{ { "lifetime", 5 } } } }, // 赤[2]:雪だるま
-{ Block{ "red", 3 }, Instruction{ "filter-rainbow", Params{} } }, // 赤[3]:ジャンプ
+{ Block{ "red", 3 }, Instruction{ "filter-jump", Params{} } }, // 赤[3]:ジャンプ
 { Block{ "red", 4 }, Instruction{ "filter-bk-sakura", Params{} } }, // 赤[4]:桜吹雪

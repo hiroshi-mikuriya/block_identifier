@@ -29,7 +29,7 @@ y軸回転 [unknown]
 スパイラル filter-spiral
 赤 red
 雪だるま object-snowman
-ジャンプ filter-rainbow
+ジャンプ filter-jump
 桜吹雪 filter-bk-sakura
 )]
 
