@@ -27,6 +27,7 @@ y軸回転 filter-skewed
 茶色 brown
 靴下 object-socks
 スパイラル filter-spiral
+雲 filter-bk-cloud
 赤 red
 雪だるま object-heart
 ジャンプ filter-jump
@@ -52,5 +53,5 @@ __END__
 黄緑 ヨット ペラペラ 草原
 黄色 星 y軸回転 星空
 オレンジ 音符 虹 花火
-茶色 靴下 スパイラル
+茶色 靴下 スパイラル 雲
 赤 雪だるま ジャンプ 桜吹雪
