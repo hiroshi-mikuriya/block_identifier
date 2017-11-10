@@ -1,6 +1,12 @@
 #include "identify.h"
 #include <boost/format.hpp>
 
+#ifdef _DEBUG
+#define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
+#else
+#define DEBUG_SHOW(s, m)
+#endif
+
 namespace {
     /*!
     上端、下端
@@ -72,8 +78,7 @@ namespace {
                 auto instname = to_instname(info.to_block());
                 auto v = info.color.bgr;
                 auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
-                cv::putText(canvas, f.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
-                cv::putText(canvas, instname, cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.9f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+                cv::putText(canvas, f.str() + "(" + instname + ")", cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
             }
             cv::imshow("blocks", canvas);
         }
@@ -108,16 +113,27 @@ namespace {
         */
         std::vector<cv::Point> getBlockContour()
         {
-            cv::Mat hls;
-            cv::cvtColor(image_, hls, CV_BGR2HLS);
-            std::vector<cv::Mat> v;
-            cv::split(hls, v);
-            auto l = v[1];
-            auto s = v[2];
-            double slratio = 0.5;
-            auto mixed = slratio * l + (1 - slratio) * s;
+            cv::Mat hsv;
+            cv::cvtColor(image_, hsv, CV_BGR2HSV);
+            std::vector<cv::Mat> splits;
+            cv::split(hsv, splits);
+            auto s = splits[1];
+            auto v = splits[2];
+            auto mixed = s + v;
+            DEBUG_SHOW("HSV[H]", splits[0]);
+            DEBUG_SHOW("HSV[S]", s);
+            DEBUG_SHOW("HSV[V]", v);
+            DEBUG_SHOW("mixed", mixed);
             cv::Mat block;
             cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);
+            DEBUG_SHOW("block", block);
+            int const iteration = 5;
+            cv::Mat kernel(3, 1, CV_8UC1);
+            kernel = 255;
+            std::cout << kernel << std::endl;
+            cv::dilate(block, block, kernel, cv::Point(-1, -1), iteration);
+            cv::erode(block, block, kernel, cv::Point(-1, -1), iteration);
+            DEBUG_SHOW("block dilate erode", block);
             typedef std::vector<cv::Point> contour_t;
             std::vector<contour_t> contours;
             cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);

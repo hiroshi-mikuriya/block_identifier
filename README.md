@@ -84,7 +84,7 @@ XMLファイルを開き、colorを編集する。
 
 ```xml
 <color>
-  <count>6</count> <!-- 色数 -->
+  <count>8</count> <!-- 色数 -->
   <item>
     <name>green</name> <!-- 色名 -->
     <bgr>
@@ -108,6 +108,7 @@ XMLファイルを開き、block-instruction-mapを編集する。
 
 ```xml
 <item>
+  <count>32</count> <!-- 対応数 -->
   <first>
     <color>yellow</color> <!--ブロック色-->
     <width>3</width> <!--ブロック幅-->
