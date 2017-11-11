@@ -48,6 +48,8 @@
 		6838475D1F8FBA28002D3797 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libboost_program_options.a"; sourceTree = "<group>"; };
 		6838475E1F8FBA28002D3797 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_core.dylib"; sourceTree = "<group>"; };
 		6838475F1F8FBA28002D3797 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_highgui.dylib"; sourceTree = "<group>"; };
+		6841C80C1FB6D3E00052A484 /* default_colors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = default_colors.hpp; sourceTree = "<group>"; };
+		6841C80D1FB6D3E00052A484 /* default_instructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = default_instructions.hpp; sourceTree = "<group>"; };
 		68972CF61FA5676800F799E0 /* trigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trigger.h; sourceTree = "<group>"; };
 		68972CF71FA5676800F799E0 /* trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trigger.cpp; sourceTree = "<group>"; };
 		68F8254B1F8FB9460003BCCA /* block_identifier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = block_identifier; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,8 @@
 		68F8254D1F8FB9460003BCCA /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
+				6841C80C1FB6D3E00052A484 /* default_colors.hpp */,
+				6841C80D1FB6D3E00052A484 /* default_instructions.hpp */,
 				683847541F8FB98B002D3797 /* identify.cpp */,
 				6838474F1F8FB98A002D3797 /* identify.h */,
 				68F8254E1F8FB9460003BCCA /* main.cpp */,
