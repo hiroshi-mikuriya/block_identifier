@@ -127,12 +127,14 @@ namespace {
             cv::Mat block;
             cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);
             DEBUG_SHOW("block", block);
-            int const iteration = 5;
-            cv::Mat kernel(3, 1, CV_8UC1);
-            kernel = 255;
-            std::cout << kernel << std::endl;
-            cv::dilate(block, block, kernel, cv::Point(-1, -1), iteration);
-            cv::erode(block, block, kernel, cv::Point(-1, -1), iteration);
+            {
+                // ブロックは継ぎ目で上下に途切れることがあるので、上下に拡大して結合する。
+                int const iteration = 5;
+                cv::Mat kernel(3, 1, CV_8UC1);
+                kernel = 255;
+                cv::dilate(block, block, kernel, cv::Point(-1, -1), iteration);
+                cv::erode(block, block, kernel, cv::Point(-1, -1), iteration);
+            }
             DEBUG_SHOW("block dilate erode", block);
             typedef std::vector<cv::Point> contour_t;
             std::vector<contour_t> contours;
