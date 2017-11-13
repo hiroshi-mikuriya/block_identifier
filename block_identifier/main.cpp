@@ -7,6 +7,10 @@
 #include <thread>
 
 namespace {
+    template<typename T, size_t N>
+    T & randomChoice(T(&a)[N]){
+        return a[rand() % N];
+    }
     /*!
     テスト画像を作る。
     カメラがなくても開発をするため。
@@ -17,11 +21,11 @@ namespace {
     {
         cv::Mat dst = cv::Mat::zeros(static_cast<int>(opt.tune.camera_width * opt.tune.camera_ratio), static_cast<int>(opt.tune.camera_height * opt.tune.camera_ratio), CV_8UC3);
         dst += cv::Scalar::all(10);
-        int SIZES[] = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 6 };
+        int const SIZES[] = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 6 };
         for (int row = 0; row < rows; ++row){
             int y = dst.rows - opt.tune.get_block_height() * (row + 2);
             int x = dst.cols / 2 - (rand() % opt.tune.get_block_height()) / 2;
-            int type = SIZES[rand() % (sizeof(SIZES) / sizeof(*SIZES))];
+            int type = randomChoice(SIZES);
             cv::Rect rc(x, y, opt.tune.get_block_width() * type, opt.tune.get_block_height());
             auto bgr = colors[rand() % colors.size()].bgr;
             cv::Scalar s(bgr[0], bgr[1], bgr[2]);
