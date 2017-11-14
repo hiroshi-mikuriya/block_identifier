@@ -41,8 +41,7 @@ DATA.each do |d|
   Hash[2, o2, 3, o3, 4, o4, 6, o6].each do |block, v|
     v2 = Conv[v]
     next if v2.nil?
-    param = (v2 =~/object/) ? %( { "lifetime", 5 } ) : ''
-    f.puts %({ Block{ "#{Conv[color]}", #{block} }, Instruction{ "#{v2}", Params{#{param}} } }, // #{color}[#{block}]:#{v})
+    f.puts %({ Block{ "#{Conv[color]}", #{block} }, Instruction{ "#{v2}", Params{} } }, // #{color}[#{block}]:#{v})
   end
 end
 

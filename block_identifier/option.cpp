@@ -81,8 +81,8 @@ Option getDefaultOption()
     opt.block2inst = std::map<Block, Instruction>{
 #include "default_instructions.hpp"
     };
-    // opt.tune = { 40, 245, 200, 1280, 720, 0.5, 102, 150 }; // Duplo
-    opt.tune = { 25, 245, 200, 1280, 720, 0.5, 60, 50 }; // Lego
+    // opt.tune = { 40, 230, 200, 1280, 720, 0.5, 102, 150 }; // Duplo
+    opt.tune = { 20, 230, 200, 1280, 720, 0.5, 48, 40 }; // Lego
     return opt;
 }
 

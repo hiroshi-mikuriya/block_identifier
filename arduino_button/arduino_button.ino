@@ -1,5 +1,5 @@
 const int PIN = 9;
-const int LIMIT = 30;
+const int LIMIT = 100;
 const int DELAY = 1;
 int count = 0;
 int state = 0;
