@@ -1,6 +1,5 @@
 CXX       := g++
-# CXXFLAGS  := -Wall -std=c++0x -v
-CXXFLAGS  := -std=c++0x -v
+CXXFLAGS  := -Wall -std=c++0x -v
 
 TARGET    := block_identifier
 PROJ_ROOT := $(realpath ..)
