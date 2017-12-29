@@ -145,3 +145,12 @@ XMLファイルを開き、block-instruction-mapを編集する。
 一応、XMLファイルで変更や追加はできる。デフォルト値がいい加減なだけ。
 - キャリブレーションモード未実装  
 一応、XMLファイルを手で修正すれば校正は可能（手動であり自動でないだけ）
+
+## RaspberryPi環境構築
+
+本コンテンツをRaspberryPiへ移植する計画があるため、環境構築手順を備忘録として書く。  
+SDカードは以下を参考に作る。  
+http://karaage.hatenadiary.jp/entry/2015/07/15/080000  
+
+boostとopencvは以下のコマンドでインストールする。  
+`$ sudo apt-get install libopencv-dev libboost1.62-all`
