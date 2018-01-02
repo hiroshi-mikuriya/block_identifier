@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef ENABLE_RASPBERRY_PI_CAMERA
-#include "RaspiCamCV.h "
+#include "RaspiCamCV.h"
 #define CvCapture RaspiCamCvCapture
 #define cvCreateCameraCapture raspiCamCvCreateCameraCapture
 #define cvQueryFrame raspiCamCvQueryFrame
