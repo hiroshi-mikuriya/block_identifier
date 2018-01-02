@@ -5,8 +5,7 @@ TARGET    := block_identifier
 PROJ_ROOT := $(realpath ..)
 VPATH     := $(PROJ_ROOT)/block_identifier
 INCLUDES  := `pkg-config opencv --cflags` \
-	     -I $(PROJ_ROOT)/block_identifier \
-		 -I $(HOME)/git/robidouille/raspicam_cv
+	     -I $(PROJ_ROOT)/block_identifier
 SRCS      := identify.cpp \
 			 main.cpp \
 			 option.cpp \
@@ -18,7 +17,7 @@ LIBS      := -lpthread \
 	     -lboost_serialization \
 	     -lboost_system \
 		 -lboost_program_options \
-		 -L$(HOME)/git/robidouille/raspicam_cv -lraspicamcv \
+		 -lraspicamcv \
 	     -lm
 
 OBJS      := $(SRCS:.cpp=.o)
