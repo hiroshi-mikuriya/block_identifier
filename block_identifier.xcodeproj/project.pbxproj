@@ -34,6 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		680F5DB11FFBD017005342A5 /* mycamera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mycamera.hpp; sourceTree = "<group>"; };
 		6838474D1F8FB98A002D3797 /* sender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sender.h; sourceTree = "<group>"; };
 		6838474E1F8FB98A002D3797 /* picojson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = picojson.h; sourceTree = "<group>"; };
 		6838474F1F8FB98A002D3797 /* identify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = identify.h; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 		68F8254D1F8FB9460003BCCA /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
+				680F5DB11FFBD017005342A5 /* mycamera.hpp */,
 				6841C80C1FB6D3E00052A484 /* default_colors.hpp */,
 				6841C80D1FB6D3E00052A484 /* default_instructions.hpp */,
 				683847541F8FB98B002D3797 /* identify.cpp */,

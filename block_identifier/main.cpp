@@ -1,6 +1,7 @@
 #include "identify.h"
 #include "sender.h"
 #include "trigger.h"
+#include "mycamera.hpp"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <mutex>
@@ -82,7 +83,7 @@ namespace {
             }
         }
         else{
-            cv::VideoCapture cap(device_id);
+            MyCamera cap(device_id);
             if (!cap.isOpened()){
                 std::cerr << "failed to open camera device." << std::endl;
                 return -1;
