@@ -154,3 +154,6 @@ http://karaage.hatenadiary.jp/entry/2015/07/15/080000
 
 boostとopencvは以下のコマンドでインストールする。  
 `$ sudo apt-get install libopencv-dev libboost1.62-all`
+
+RaspberryPiカメラモジュールをOpenCVから操作する。以下を参考にした。  
+https://github.com/robidouille/robidouille/tree/master/raspicam_cv
