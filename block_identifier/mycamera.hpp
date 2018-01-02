@@ -1,18 +1,21 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
+#ifdef ENABLE_RASPBERRY_PI_CAMERA
+#include "RaspiCamCV.h "
+#define CvCapture RaspiCamCvCapture
+#define cvCreateCameraCapture raspiCamCvCreateCameraCapture
+#define cvQueryFrame raspiCamCvQueryFrame
+#define cvReleaseCapture raspiCamCvReleaseCapture
+#define cvGetCaptureProperty raspiCamCvGetCaptureProperty
+#define cvSetCaptureProperty raspiCamCvSetCaptureProperty
+#else
+#include <opencv/highgui.h>
+#endif
 
 class MyCamera
 {
     CvCapture * m;
 public:
-    /*
-     CvCapture -> RaspiCamCvCapture
-     cvCreateCameraCapture -> raspiCamCvCreateCameraCapture
-     cvQueryFrame -> raspiCamCvQueryFrame
-     cvReleaseCapture -> raspiCamCvReleaseCapture
-     cvGetCaptureProperty -> raspiCamCvGetCaptureProperty
-     */
     MyCamera()
     {
     }

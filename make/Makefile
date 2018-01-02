@@ -1,11 +1,12 @@
 CXX       := g++
-CXXFLAGS  := -Wall -std=c++0x -v
+CXXFLAGS  := -Wall -std=c++0x -v -DENABLE_RASPBERRY_PI_CAMERA
 
 TARGET    := block_identifier
 PROJ_ROOT := $(realpath ..)
 VPATH     := $(PROJ_ROOT)/block_identifier
 INCLUDES  := `pkg-config opencv --cflags` \
-	     -I $(PROJ_ROOT)/block_identifier
+	     -I $(PROJ_ROOT)/block_identifier \
+		 -I $(HOME)/git/robidouille/raspicam_cv
 SRCS      := identify.cpp \
 			 main.cpp \
 			 option.cpp \
@@ -17,6 +18,7 @@ LIBS      := -lpthread \
 	     -lboost_serialization \
 	     -lboost_system \
 		 -lboost_program_options \
+		 -L$(HOME)/git/robidouille/raspicam_cv -lraspicamcv \
 	     -lm
 
 OBJS      := $(SRCS:.cpp=.o)
