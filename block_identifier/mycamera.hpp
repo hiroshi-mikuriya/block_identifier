@@ -39,9 +39,7 @@ public:
     }
     MyCamera & operator >> (cv::Mat & image)
     {
-        IplImage *frame = cvQueryFrame(m);
-        image = cv::Mat(frame);
-        cvReleaseImage(&frame);
+        image = cv::Mat(cvQueryFrame(m));
         return *this;
     }
     bool set(int propId, double value)
