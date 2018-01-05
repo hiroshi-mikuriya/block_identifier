@@ -54,3 +54,12 @@ public:
         return cvGetCaptureProperty(m, propId);
     }
 };
+
+#ifdef ENABLE_RASPBERRY_PI_CAMERA
+#undef CvCapture
+#undef cvCreateCameraCapture
+#undef cvQueryFrame
+#undef cvReleaseCapture
+#undef cvGetCaptureProperty
+#undef cvSetCaptureProperty
+#endif
