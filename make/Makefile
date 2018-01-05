@@ -35,11 +35,11 @@ all: $(TARGET)
 make: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXDEFS) -o $@ $(OBJS) $(LIBS)
+	$(CXX) -o $@ $(OBJS) $(LIBS)
 
 .PHONY: clean
 clean:
 	$(RM) -f $(TARGET) *.o
 
 .cpp.o:
-	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $<
+	$(CXX) -c $(CXXFLAGS) $(CXXDEFS) $(INCLUDES) $<
