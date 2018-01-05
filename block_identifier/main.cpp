@@ -4,7 +4,6 @@
 #include "mycamera.hpp"
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
-#include <mutex>
 #include <thread>
 
 namespace {
@@ -57,17 +56,12 @@ namespace {
     int main_proc(Option const & opt, int device_id, std::string const & address, int port, int com, bool debug)
     {
         std::vector<BlockInfo> blockInfo;
-        std::mutex mutex;
+        bool triggered = false;
         std::thread th([&, port, com]{
             auto trigger = Trigger::create(com);
             for (;;){
                 trigger->wait();
-                std::vector<BlockInfo> copy;
-                {
-                    std::unique_lock<std::mutex> lock(mutex);
-                    copy = blockInfo;
-                }
-                sendToServer(opt, copy, address, port);
+                triggered = true;
             }
         });
 
@@ -75,10 +69,7 @@ namespace {
             srand(0);
             for (;;){
                 cv::Mat m = createTestImage(opt, 1 + (rand() % 11), opt.colors);
-                {
-                    std::unique_lock<std::mutex> lock(mutex);
-                    identifyBlock(m, opt, blockInfo);
-                }
+                identifyBlock(m, opt, blockInfo);
                 cv::waitKey();
             }
         }
@@ -94,18 +85,20 @@ namespace {
             for (;;){
                 cv::Mat m;
                 cap >> m;
-                if (m.size().area() == 0){
+                if (m.empty()){
                     std::cerr << "failed to get camera image." << std::endl;
                     cv::waitKey(100);
                     continue;
                 }
                 cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
                 cv::flip(m.t(), m, 0);
-                {
-                    std::unique_lock<std::mutex> lock(mutex);
-                    identifyBlock(m, opt, blockInfo);
-                }
+                cv::imshow("camera", m);
                 cv::waitKey(1);
+                if(triggered){
+                    triggered = false;
+                    identifyBlock(m, opt, blockInfo);
+                    sendToServer(opt, blockInfo, address, port);
+                }
             }
         }
         // unreachable code.
@@ -143,7 +136,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
             if (vm.count("version")){
-                std::cout << "version: 1.0.0" << std::endl;
+                std::cout << "version: 1.1.0" << std::endl;
                 return 0;
             }
             if (vm.count("generate")){
