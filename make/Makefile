@@ -1,5 +1,5 @@
 CXX       := g++
-CXXFLAGS  := -Wall -std=c++0x -v -DENABLE_RASPBERRY_PI_CAMERA
+CXXFLAGS  := -Wall -std=c++0x -v
 
 TARGET    := block_identifier
 PROJ_ROOT := $(realpath ..)
@@ -17,8 +17,13 @@ LIBS      := -lpthread \
 	     -lboost_serialization \
 	     -lboost_system \
 		 -lboost_program_options \
-		 -lraspicamcv \
 	     -lm
+
+UNAME := ${shell uname}
+ifeq ($(UNAME), Linux)
+CXXDEFS := -DENABLE_REAL_3D_LED_CUBE
+LIBS := $(LIBS) -lraspicamcv
+endif
 
 OBJS      := $(SRCS:.cpp=.o)
 
@@ -30,7 +35,7 @@ all: $(TARGET)
 make: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) -v -o $@ $(OBJS) $(LIBS)
+	$(CXX) $(CXXDEFS) -o $@ $(OBJS) $(LIBS)
 
 .PHONY: clean
 clean:
