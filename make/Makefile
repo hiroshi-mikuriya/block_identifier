@@ -21,7 +21,7 @@ LIBS      := -lpthread \
 
 UNAME := ${shell uname}
 ifeq ($(UNAME), Linux)
-CXXFLAGS := $(CXXFLAGS) -DENABLE_REAL_3D_LED_CUBE
+CXXFLAGS := $(CXXFLAGS) -DENABLE_RASPBERRY_PI_CAMERA
 LIBS := $(LIBS) -lraspicamcv
 endif
 
