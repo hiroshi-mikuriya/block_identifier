@@ -156,13 +156,18 @@ http://karaage.hatenadiary.jp/entry/2015/07/15/080000
 `$ sudo apt-get install libopencv-dev libboost1.62-all`
 
 カメラを有効にする。  
+`sudo apt-get upgrade`  
 `sudo raspi-config`  
-Enable Camera  
+5 Interfacing Options  
+P1 Camera  
 Yes  
-Yes
+OK  
+Finish  
 
 xwindowsにリモートログインする。  
-`sudo apt-get install tightvncserver`
+`sudo apt-get install tightvncserver`  
+`tightvncserver`  
+パスワードを設定する。  
 
 
 RaspberryPiカメラモジュールをOpenCVから操作する。以下を参考にした。  
