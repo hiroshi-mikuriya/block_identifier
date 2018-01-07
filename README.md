@@ -169,6 +169,9 @@ xwindowsにリモートログインする。
 `tightvncserver`  
 パスワードを設定する。  
 
+finderからログインする。  
+移動、サーバーへ移動  
+`vnc://172.21.184.38:5901`
 
 RaspberryPiカメラモジュールをOpenCVから操作する。以下を参考にした。  
 https://github.com/robidouille/robidouille/tree/master/raspicam_cv
@@ -181,5 +184,5 @@ https://github.com/robidouille/robidouille/tree/master/raspicam_cv
 追記：  
 ライブラリのビルドは面倒なので、ビルド済みファイルを用意した。  
 `git clone https://github.com/hiroshi-mikuriya/facedetect`  
-`sudo mv raspicamcv/RaspiCamCV.h /usr/include`  
-`sudo mv raspicamcv/libraspicamcv.so /usr/lib`  
+`sudo mv facedetect/raspicamcv/RaspiCamCV.h /usr/include`  
+`sudo mv facedetect/raspicamcv/libraspicamcv.so /usr/lib`  
