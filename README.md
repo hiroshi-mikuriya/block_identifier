@@ -155,9 +155,26 @@ http://karaage.hatenadiary.jp/entry/2015/07/15/080000
 boostとopencvは以下のコマンドでインストールする。  
 `$ sudo apt-get install libopencv-dev libboost1.62-all`
 
+カメラを有効にする。  
+`sudo raspi-config`  
+Enable Camera  
+Yes  
+Yes
+
+xwindowsにリモートログインする。  
+`sudo apt-get install tightvncserver`
+
+
 RaspberryPiカメラモジュールをOpenCVから操作する。以下を参考にした。  
 https://github.com/robidouille/robidouille/tree/master/raspicam_cv
 
 ビルドしたライブラリは移動させた。  
-`sudo cp /home/pi/git/robidouille/raspicam_cv/libraspicamcv.so /usr/lib`  
-`sudo cp /home/pi/git/robidouille/raspicam_cv/RaspiCamCV.h /usr/include`
+`cd /home/pi/git/robidouille/raspicam_cv/`  
+`sudo cp libraspicamcv.so /usr/lib`  
+`sudo cp RaspiCamCV.h /usr/include`
+
+追記：  
+ライブラリのビルドは面倒なので、ビルド済みファイルを用意した。  
+`git clone https://github.com/hiroshi-mikuriya/facedetect`  
+`sudo mv raspicamcv/RaspiCamCV.h /usr/include`  
+`sudo mv raspicamcv/libraspicamcv.so /usr/lib`  
