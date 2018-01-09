@@ -186,3 +186,17 @@ https://github.com/robidouille/robidouille/tree/master/raspicam_cv
 `git clone https://github.com/hiroshi-mikuriya/facedetect`  
 `sudo mv facedetect/raspicamcv/RaspiCamCV.h /usr/include`  
 `sudo mv facedetect/raspicamcv/libraspicamcv.so /usr/lib`  
+
+Raspberry Pi Zeroの設定  
+参考：http://www.raspi.jp/2016/07/pizero-usb-otg/  
+* SDカードにRaspbianを焼く  
+* config.txt  
+dtoverlay=dwc2の1行を追記します。
+* cmdline.txt  
+modules-load=dwc2,g_etherの1文をrootwaitのあとに追記します。
+* USBでPCとつなぐ  
+以下コマンドでログイン  
+`$ ssh pi@raspberrypi.local`
+* Raspberry Pi Zeroをインターネットにつなぐ  
+Macの設定、共有、インターネット共有、RNDISをチェック、インターネット共有オンになる  
+apt-getでもできれば接続成功
