@@ -194,7 +194,7 @@ Raspberry Pi Zeroの設定
 dtoverlay=dwc2の1行を追記します。
 * cmdline.txt  
 modules-load=dwc2,g_etherの1文をrootwaitのあとに追記します。
-* USBでPCとつなぐ  
+* USBでPCとつなぐ（PWR INではなくUSBのほうにつなぐこと）  
 以下コマンドでログイン  
 `$ ssh pi@raspberrypi.local`
 * Raspberry Pi Zeroをインターネットにつなぐ  
