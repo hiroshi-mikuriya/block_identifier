@@ -152,7 +152,7 @@ XMLファイルを開き、block-instruction-mapを編集する。
 SDカードは以下を参考に作る。  
 http://karaage.hatenadiary.jp/entry/2015/07/15/080000  
 
-boostとopencvは以下のコマンドでインストールする。  
+boostとopencvは以下のコマンドでインストールする。  
 `$ sudo apt-get install libopencv-dev libboost1.62-all`
 
 カメラを有効にする。  
@@ -197,6 +197,6 @@ modules-load=dwc2,g_etherの1文をrootwaitのあとに追記します。
 * USBでPCとつなぐ（PWR INではなくUSBのほうにつなぐこと）  
 以下コマンドでログイン  
 `$ ssh pi@raspberrypi.local`
-* Raspberry Pi Zeroをインターネットにつなぐ  
+* Raspberry Pi Zeroをインターネットにつなぐ  
 Macの設定、共有、インターネット共有、RNDISをチェック、インターネット共有オンになる  
 apt-getでもできれば接続成功
