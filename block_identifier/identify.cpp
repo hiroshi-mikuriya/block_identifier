@@ -32,52 +32,6 @@ namespace {
             std::max(1, static_cast<int>(rc.height * r))
             );
     }
-    
-    /**
-     * 線分を引くアニメーションを描画する
-     */
-    void drawLineAnnimation(std::string windowName,
-                            cv::Mat & canvas,
-                            cv::Point pt0,
-                            cv::Point pt1,
-                            cv::Scalar color,
-                            int thickness)
-    {
-        double len = [pt0, pt1](){
-            int x = pt0.x - pt1.x;
-            int y = pt0.y - pt1.y;
-            return std::sqrt(x * x + y * y);
-        }();
-        auto inner = [](cv::Point pt0, double d0, cv::Point pt1, double d1)->cv::Point{
-            int x = static_cast<int>(pt0.x * d0 + pt1.x * d1) / (d0 + d1);
-            int y = static_cast<int>(pt0.y * d0 + pt1.y * d1) / (d0 + d1);
-            return { x, y };
-        };
-        cv::Point start = pt0;
-        for(int i = 1; i <= len; i += 10){
-            auto end = inner(pt0, len - i, pt1, i);
-            cv::line(canvas, start, end, color, thickness);
-            start = end;
-            cv::imshow(windowName, canvas);
-            cv::waitKey(1);
-        }
-    }
-
-    /**
-     * 輪郭を引くアニメーションを描画する
-     */
-    void drawContourAnnimation(std::string windowName,
-                               cv::Mat & canvas,
-                               std::vector<cv::Point> const & contour,
-                               cv::Scalar color,
-                               int thickness)
-    {
-        for(size_t i = 0; i < contour.size(); ++i){
-            auto pt0 = contour[i];
-            auto pt1 = contour[(i + 1) % contour.size()];
-            drawLineAnnimation(windowName, canvas, pt0, pt1, color, thickness);
-        }
-    }
 
     /*!
     画像からレゴブロックを認識するクラス
