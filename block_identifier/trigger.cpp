@@ -1,6 +1,7 @@
 #include "trigger.h"
 #include <iostream>
 #include <boost/format.hpp>
+#include <boost/asio.hpp>
 
 class StdinTrigger : public Trigger
 {
@@ -16,48 +17,31 @@ public:
     }
 };
 
-#ifdef ENABLE_RASPBERRY_PI_CAMERA
-#include <bcm2835.h>
-class ButtonTrigger : public Trigger
+class TcpTrigger : public Trigger
 {
-    int m_gpio;
-    int sampling(int count)
-    {
-        int c = 0;
-        for(int i = 0; i < count; ++i){
-            c += bcm2835_gpio_lev(m_gpio);
-        }
-        return c;
-    }
 public:
-    ButtonTrigger()
-    : m_gpio(24)
+    TcpTrigger()
     {
-        if(!bcm2835_init()){
-            std::cerr << "failed to init bcm2835" << std::endl;
-            exit(1);
-        }
-        bcm2835_gpio_fsel(m_gpio, 0 );
-        bcm2835_gpio_set_pud(m_gpio, 1);
     }
     void wait()
     {
-        int const count = 20;
-        while(sampling(count) != 0){
-            bcm2835_delay(1);
-        }
-        while(sampling(count) != count){
-            bcm2835_delay(1);
-        }
+        std::cout << "Waiting button push..." << std::endl;
+        boost::asio::io_service io_service;
+        boost::asio::ip::tcp::socket sock(io_service);
+        u_short port = 4123;
+        boost::asio::ip::tcp::acceptor acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
+        acceptor.accept(sock);
+        boost::asio::streambuf receive_buffer;
+        boost::system::error_code error;
+        boost::asio::read(sock, receive_buffer, boost::asio::transfer_at_least(1), error);
     }
 };
-#endif // ENABLE_RASPBERRY_PI_CAMERA
 
 std::shared_ptr<Trigger> Trigger::create()
 {
 #ifdef ENABLE_RASPBERRY_PI_CAMERA
-    return std::make_shared<ButtonTrigger>();
+    return std::make_shared<TcpTrigger>();
 #else
-    return std::make_shared<StdinTrigger>();
+    return std::make_shared<TcpTrigger>();
 #endif
 }
