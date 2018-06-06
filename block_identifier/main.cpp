@@ -7,98 +7,48 @@
 #include <thread>
 
 namespace {
-    template<typename T, size_t N>
-    T & randomChoice(T(&a)[N]){
-        return a[rand() % N];
-    }
-    /*!
-    テスト画像を作る。
-    カメラがなくても開発をするため。
-    @param[in] rows ブロック段数
-    @return テスト画像
-    */
-    cv::Mat createTestImage(Option const & opt, int rows, std::vector<Color> const & colors)
-    {
-        cv::Mat dst = cv::Mat::zeros(static_cast<int>(opt.tune.camera_width * opt.tune.camera_ratio), static_cast<int>(opt.tune.camera_height * opt.tune.camera_ratio), CV_8UC3);
-        dst += cv::Scalar::all(10);
-        int const SIZES[] = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 6 };
-        for (int row = 0; row < rows; ++row){
-            int y = dst.rows - opt.tune.get_block_height() * (row + 2);
-            int x = dst.cols / 2 - (rand() % opt.tune.get_block_height()) / 2;
-            int type = randomChoice(SIZES);
-            cv::Rect rc(x, y, opt.tune.get_block_width() * type, opt.tune.get_block_height());
-            auto bgr = colors[rand() % colors.size()].bgr;
-            cv::Scalar s(bgr[0], bgr[1], bgr[2]);
-            cv::rectangle(dst, rc, s, CV_FILLED);
-            int b = rc.height / 5;
-            for (int i = 0; i < type; ++i){
-                cv::rectangle(dst, cv::Rect(rc.x + opt.tune.get_block_width() * i + b, rc.y - b, b, b), s, CV_FILLED);
-                cv::rectangle(dst, cv::Rect(rc.x + opt.tune.get_block_width() * (i + 1) - 2 * b, rc.y - b, b, b), s, CV_FILLED);
-            }
-        }
-        for (int i = 0; i < dst.size().area() / 50; ++i){
-            cv::Point pt = { rand() % dst.cols, rand() % dst.rows };
-            dst.at<cv::Vec3b>(pt) = { (uchar)(rand() % 256), (uchar)(rand() % 256), (uchar)(rand() % 256) };
-        }
-        return dst;
-    }
-
     /*!
     メイン処理
     @param[in] opt オプション
-    @param[in] device_id カメラデバイスID
     @param[in] address PythonプロセスのIPアドレス
     @param[in] port Pythonプロセスのポート番号
-    @param[in] com COMポート
-    @param[in] debug デバッグ
     @return Exit code
     */
-    int main_proc(Option const & opt, int device_id, std::string const & address, int port, int com, bool debug)
+    int main_proc(Option const & opt, std::string const & address, int port)
     {
         std::vector<BlockInfo> blockInfo;
         bool triggered = false;
-        std::thread th([&, port, com]{
-            auto trigger = Trigger::create(com);
+        std::thread th([&, port]{
+            auto trigger = Trigger::create();
             for (;;){
                 trigger->wait();
                 triggered = true;
             }
         });
-
-        if (debug){
-            srand(0);
-            for (;;){
-                cv::Mat m = createTestImage(opt, 1 + (rand() % 11), opt.colors);
-                identifyBlock(m, opt, blockInfo);
-                cv::waitKey();
-            }
+        MyCamera cap(0);
+        if (!cap.isOpened()){
+            std::cerr << "failed to open camera device." << std::endl;
+            return -1;
         }
-        else{
-            MyCamera cap(device_id);
-            if (!cap.isOpened()){
-                std::cerr << "failed to open camera device." << std::endl;
-                return -1;
+        // CV_CAP_PROP_GAIN
+        cap.set(CV_CAP_PROP_FRAME_WIDTH, opt.tune.camera_width);
+        cap.set(CV_CAP_PROP_FRAME_HEIGHT, opt.tune.camera_height);
+        for (;;){
+            cv::Mat m;
+            cap >> m;
+            if (m.empty()){
+                std::cerr << "failed to get camera image." << std::endl;
+                cv::waitKey(100);
+                continue;
             }
-            // CV_CAP_PROP_GAIN
-            cap.set(CV_CAP_PROP_FRAME_WIDTH, opt.tune.camera_width);
-            cap.set(CV_CAP_PROP_FRAME_HEIGHT, opt.tune.camera_height);
-            for (;;){
-                cv::Mat m;
-                cap >> m;
-                if (m.empty()){
-                    std::cerr << "failed to get camera image." << std::endl;
-                    cv::waitKey(100);
-                    continue;
-                }
-                cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
-                cv::flip(m, m, -1);
-                m = m(cv::Rect(m.cols / 3, 0, m.cols / 3, m.rows));
-                identifyBlock(m, opt, blockInfo);
-                cv::waitKey(1);
-                if(triggered){
-                    triggered = false;
-                    sendToServer(opt, blockInfo, address, port);
-                }
+            cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
+            cv::flip(m, m, -1);
+            m = m(cv::Rect(m.cols / 3, 0, m.cols / 3, m.rows));
+            identifyBlock(m, opt, blockInfo);
+            cv::waitKey(1);
+            if(triggered){
+                triggered = false;
+                sendToServer(opt, blockInfo, address, port);
             }
         }
         // unreachable code.
@@ -122,11 +72,8 @@ int main(int argc, const char * argv[]) {
             ("version,v", "Print software version")
             ("generate,g", "Generate option file")
             ("option,o", po::value<std::string>(), "Option file path")
-            ("device,d", po::value<int>()->default_value(0), "Camera device number if PC has multiple camera devices")
             ("address,a", po::value<std::string>(), "Python process IP address")
             ("port,p", po::value<int>()->default_value(80), "Python process port number")
-            ("com,c", po::value<int>()->default_value(0), "COM Port if you use Arduino Button(windows only)")
-            ("debug", "DEBUG mode");
         ;
         po::variables_map vm;
         try{
@@ -148,11 +95,9 @@ int main(int argc, const char * argv[]) {
             }
             po::notify(vm);
             auto const opt = vm.count("option") ? readOption(vm["option"].as<std::string>()) : getDefaultOption();
-            auto camera = vm["device"].as<int>();
             std::string address = vm.count("address") ? vm["address"].as<std::string>() : "";
             int port = vm["port"].as<int>();
-            int com = vm["com"].as<int>();
-            return main_proc(opt, camera, address, port, com, !!vm.count("debug"));
+            return main_proc(opt, address, port);
         }
         catch (std::exception const & e){
             std::cerr << e.what() << "\n" << desc << std::endl;

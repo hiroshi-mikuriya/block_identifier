@@ -8,7 +8,7 @@ public:
     /*!
     トリガーを取得する
     */
-    static std::shared_ptr<Trigger> create(int com);
+    static std::shared_ptr<Trigger> create();
     /*!
     トリガーが発生するまで待つ
     */
