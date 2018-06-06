@@ -91,12 +91,12 @@ namespace {
                     continue;
                 }
                 cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
-                cv::flip(m.t(), m, 0);
-                cv::imshow("camera", m);
+                cv::flip(m, m, -1);
+                m = m(cv::Rect(m.cols / 3, 0, m.cols / 3, m.rows));
+                identifyBlock(m, opt, blockInfo);
                 cv::waitKey(1);
                 if(triggered){
                     triggered = false;
-                    identifyBlock(m, opt, blockInfo);
                     sendToServer(opt, blockInfo, address, port);
                 }
             }

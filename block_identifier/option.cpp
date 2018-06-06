@@ -81,8 +81,18 @@ Option getDefaultOption()
     opt.block2inst = std::map<Block, Instruction>{
 #include "default_instructions.hpp"
     };
+    /*
+    int stud_th; ///< 最上段ブロックのぼっちを除去する閾値
+    int size_th; ///< ブロック幅判定閾値
+    int bin_th; ///< ２値化閾値
+    int camera_width; ///< カメラ横ピクセル数
+    int camera_height; ///< カメラ縦ピクセル数
+    double camera_ratio; ///< カメラ画像縮尺率
+    int block_height; ///< ブロック高さ（縮尺前）
+    int block_width; ///< ブロック幅（2ぼっち分）（縮尺前）
+    */
     // opt.tune = { 40, 230, 200, 1280, 720, 0.5, 102, 150 }; // Duplo
-    opt.tune = { 20, 230, 200, 1280, 720, 0.5, 48, 40 }; // Lego
+    opt.tune = { 20, 230, 200, 1280, 720, 1.0, 20, 16 }; // Lego
     return opt;
 }
 

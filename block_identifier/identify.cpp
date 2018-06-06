@@ -41,8 +41,7 @@ namespace {
                             cv::Point pt0,
                             cv::Point pt1,
                             cv::Scalar color,
-                            int thickness,
-                            int speed)
+                            int thickness)
     {
         double len = [pt0, pt1](){
             int x = pt0.x - pt1.x;
@@ -54,17 +53,14 @@ namespace {
             int y = static_cast<int>(pt0.y * d0 + pt1.y * d1) / (d0 + d1);
             return { x, y };
         };
-        auto start = pt0;
-        for(int i = 1; i <= len; i += speed){
+        cv::Point start = pt0;
+        for(int i = 1; i <= len; i += 10){
             auto end = inner(pt0, len - i, pt1, i);
             cv::line(canvas, start, end, color, thickness);
             start = end;
             cv::imshow(windowName, canvas);
             cv::waitKey(1);
         }
-        cv::line(canvas, start, pt1, color, thickness);
-        cv::imshow(windowName, canvas);
-        cv::waitKey(1);
     }
 
     /**
@@ -76,47 +72,11 @@ namespace {
                                cv::Scalar color,
                                int thickness)
     {
-        double len = cv::arcLength(contour, true);
-        int speed = static_cast<int>(std::max(1.0, len / 100));
         for(size_t i = 0; i < contour.size(); ++i){
             auto pt0 = contour[i];
             auto pt1 = contour[(i + 1) % contour.size()];
-            drawLineAnnimation(windowName, canvas, pt0, pt1, color, thickness, speed);
+            drawLineAnnimation(windowName, canvas, pt0, pt1, color, thickness);
         }
-    }
-    
-    void drawRectAnnimation(std::string windowName,
-                            cv::Mat & canvas,
-                            cv::Rect const & rc,
-                            cv::Scalar color,
-                            int thickness)
-    {
-        std::vector<cv::Point> pts = { { rc.x, rc.y }, { rc.x + rc.width, rc.y }, { rc.x + rc.width, rc.y + rc.height }, { rc.x, rc.y + rc.height } };
-        drawContourAnnimation(windowName, canvas, pts, color, thickness);
-    }
-    
-    void showAnnimation(std::string windowName,
-                        cv::Mat const & img,
-                        std::vector<cv::Point> const & contour,
-                        std::vector<BlockInfo> const & blockInfo)
-    {
-        cv::Mat canvas = img.clone();
-        auto simpleContour = contour;
-        cv::approxPolyDP(contour, simpleContour, 10, true);
-        drawContourAnnimation(windowName, canvas, simpleContour, cv::Scalar(0, 255, 0), 5);
-        for(int i = 0; i < 256; i += 4){
-            cv::Mat mask(canvas.size(), CV_8UC3);
-            mask = cv::Scalar::all(255 - i);
-            std::vector<std::vector<cv::Point>> contours = { simpleContour };
-            cv::drawContours(mask, contours, 0, cv::Scalar::all(255), CV_FILLED);
-            canvas &= mask;
-            cv::imshow(windowName, canvas);
-            cv::waitKey(1);
-        }
-        for(auto bi : blockInfo) {
-            drawRectAnnimation(windowName, canvas, bi.rc, cv::Scalar(255, 0, 0), 3);
-        }
-        cv::waitKey();
     }
 
     /*!
@@ -156,7 +116,7 @@ namespace {
                 auto inst = opt_.block2inst.find(block);
                 return inst == opt_.block2inst.end() ? "unknown" : inst->second.name;
             };
-            cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols * 2, CV_8UC3);
+            cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols + 640, CV_8UC3);
             image_.copyTo(canvas(cv::Rect(0, 0, image_.cols, image_.rows)));
             for (auto info : blockInfo){
                 cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
@@ -297,7 +257,6 @@ namespace {
             assert(3 == image_.channels());
             auto const contour = getBlockContour();
             blockInfo = getBlockInfo(contour);
-            showAnnimation("annimation", image, contour, blockInfo);
             showBlockInfo(blockInfo);
         }
     };
