@@ -37,8 +37,8 @@ public:
             std::cerr << "failed to init bcm2835" << std::endl;
             exit(1);
         }
-        bcm2835_gpio_fsel(m_gpio, BCM2835_GPIO_FSEL_INPT );
-        bcm2835_gpio_set_pud(m_gpio, BCM2835_GPIO_PUD_UP);
+        bcm2835_gpio_fsel(m_gpio, 0 );
+        bcm2835_gpio_set_pud(m_gpio, 1);
     }
     void wait()
     {
