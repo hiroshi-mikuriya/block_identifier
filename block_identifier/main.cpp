@@ -18,7 +18,7 @@ namespace {
     {
         std::vector<BlockInfo> blockInfo;
         bool triggered = false;
-        std::thread th([&, port]{
+        std::thread th([&]{
             auto trigger = Trigger::create();
             for (;;){
                 trigger->wait();

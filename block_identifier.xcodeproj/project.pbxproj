@@ -18,6 +18,7 @@
 		683847651F8FBA28002D3797 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6838475E1F8FBA28002D3797 /* libopencv_core.dylib */; };
 		683847661F8FBA28002D3797 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6838475F1F8FBA28002D3797 /* libopencv_highgui.dylib */; };
 		68972CF81FA5676800F799E0 /* trigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68972CF71FA5676800F799E0 /* trigger.cpp */; };
+		68A2AA1120C795E500EC30DB /* libopencv_videoio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A2AA1020C795E500EC30DB /* libopencv_videoio.dylib */; };
 		68F8254F1F8FB9460003BCCA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68F8254E1F8FB9460003BCCA /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,8 @@
 		6841C80D1FB6D3E00052A484 /* default_instructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = default_instructions.hpp; sourceTree = "<group>"; };
 		68972CF61FA5676800F799E0 /* trigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trigger.h; sourceTree = "<group>"; };
 		68972CF71FA5676800F799E0 /* trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trigger.cpp; sourceTree = "<group>"; };
+		68A2AA0E20C795DC00EC30DB /* libopencv_video.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_video.dylib; path = ../../../../usr/local/lib/libopencv_video.dylib; sourceTree = "<group>"; };
+		68A2AA1020C795E500EC30DB /* libopencv_videoio.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videoio.dylib; path = ../../../../usr/local/lib/libopencv_videoio.dylib; sourceTree = "<group>"; };
 		68F8254B1F8FB9460003BCCA /* block_identifier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = block_identifier; sourceTree = BUILT_PRODUCTS_DIR; };
 		68F8254E1F8FB9460003BCCA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,6 +72,7 @@
 				683847631F8FBA28002D3797 /* libopencv_imgproc.dylib in Frameworks */,
 				683847651F8FBA28002D3797 /* libopencv_core.dylib in Frameworks */,
 				683847661F8FBA28002D3797 /* libopencv_highgui.dylib in Frameworks */,
+				68A2AA1120C795E500EC30DB /* libopencv_videoio.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +82,8 @@
 		683847581F8FBA28002D3797 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				68A2AA1020C795E500EC30DB /* libopencv_videoio.dylib */,
+				68A2AA0E20C795DC00EC30DB /* libopencv_video.dylib */,
 				6838475D1F8FBA28002D3797 /* libboost_program_options.a */,
 				683847591F8FBA28002D3797 /* libboost_serialization.a */,
 				6838475B1F8FBA28002D3797 /* libboost_system.a */,
