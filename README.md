@@ -154,6 +154,8 @@ XMLファイルを開き、block-instruction-mapを編集する。
 2018-04-18-raspbian-stretch.zip
 * SSH有効  
 sshという名称の空ファイルを作る
+* パスワード変更（to 警告消す）  
+`sudo raspi-config`
 * apt-getアップデート  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
