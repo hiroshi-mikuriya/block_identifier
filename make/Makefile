@@ -17,7 +17,6 @@ LIBS      := -lpthread \
 	     -lboost_serialization \
 	     -lboost_system \
 		 -lboost_program_options \
-		 -lbcm2835 \
 	     -lm
 
 UNAME := ${shell uname}
