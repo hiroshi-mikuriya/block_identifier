@@ -187,8 +187,9 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 `sudo cp RaspiCamCV.h /usr/include`
 * LEGO認識  
 `git clone https://github.com/hiroshi-mikuriya/block_identifier`  
-`cd block_identifier/make`
+`cd block_identifier/make`  
 `make`  
+`sudo chmod 777 run.sh`  
 `sudo vim /etc/rc.local`  
 以下追記  
 `cd /home/pi/block_identifier/button`  
