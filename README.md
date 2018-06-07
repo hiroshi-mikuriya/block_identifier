@@ -189,8 +189,8 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 `make`  
 `sudo vim /etc/rc.local`  
 以下追記  
-cd /home/pi/block_identifier/button  
-sudo ruby button  
+`cd /home/pi/block_identifier/button`  
+`sudo ruby main.rb`  
 `vim ~/.config/lxsession/LXDE-pi/autostart`  
 以下追記  
 `@/home/pi/block_identifier/make/run.sh`
