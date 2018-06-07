@@ -6,7 +6,6 @@
     <ClCompile Include="..\block_identifier\identify.cpp" />
     <ClCompile Include="..\block_identifier\sender.cpp" />
     <ClCompile Include="..\block_identifier\option.cpp" />
-    <ClCompile Include="..\block_identifier\serial.cpp" />
     <ClCompile Include="..\block_identifier\trigger.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -14,7 +13,6 @@
     <ClInclude Include="..\block_identifier\sender.h" />
     <ClInclude Include="..\block_identifier\option.h" />
     <ClInclude Include="..\block_identifier\picojson.h" />
-    <ClInclude Include="..\block_identifier\serial.h" />
     <ClInclude Include="..\block_identifier\trigger.h" />
     <ClInclude Include="..\block_identifier\default_instructions.hpp" />
     <ClInclude Include="..\block_identifier\default_colors.hpp" />

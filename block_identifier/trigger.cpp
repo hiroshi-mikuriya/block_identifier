@@ -42,6 +42,6 @@ std::shared_ptr<Trigger> Trigger::create()
 #ifdef ENABLE_RASPBERRY_PI_CAMERA
     return std::make_shared<TcpTrigger>();
 #else
-    return std::make_shared<TcpTrigger>();
+    return std::make_shared<StdinTrigger>();
 #endif
 }
