@@ -154,9 +154,11 @@ XMLファイルを開き、block-instruction-mapを編集する。
 2018-04-18-raspbian-stretch.zip
 * SSH有効  
 sshという名称の空ファイルを作る
-* apt-get最新に  
+* apt-getアップデート  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
+* vim
+`sudo apt-get install vim`
 * FTP有効  
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
@@ -181,6 +183,18 @@ Finish
 https://github.com/hiroshi-mikuriya/facedetect をクローンする  
 `sudo cp libraspicamcv.so /usr/lib`  
 `sudo cp RaspiCamCV.h /usr/include`
+* LEGO認識  
+`git clone https://github.com/hiroshi-mikuriya/block_identifier`  
+`cd block_identifier/make`
+`make`  
+`sudo vim /etc/rc.local`  
+以下追記  
+cd /home/pi/block_identifier/button  
+sudo ruby button  
+`vim ~/.config/lxsession/LXDE-pi/autostart`  
+以下追記  
+`@/home/pi/block_identifier/make/run.sh`
+
 
 ## 参考
 * [raspicam_cv](https://github.com/robidouille/robidouille/tree/master/raspicam_cv)
