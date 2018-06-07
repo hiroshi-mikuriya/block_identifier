@@ -149,54 +149,36 @@ XMLファイルを開き、block-instruction-mapを編集する。
 ## RaspberryPi環境構築
 
 本コンテンツをRaspberryPiへ移植する計画があるため、環境構築手順を備忘録として書く。  
-SDカードは以下を参考に作る。  
-http://karaage.hatenadiary.jp/entry/2015/07/15/080000  
 
-boostとopencvは以下のコマンドでインストールする。  
-`$ sudo apt-get install libopencv-dev libboost1.62-all`
-
-カメラを有効にする。  
-`sudo apt-get upgrade`  
+* SDカードイメージ  
+2018-04-18-raspbian-stretch.zip
+* SSH有効  
+sshという名称の空ファイルを作る
+* apt-get最新に  
+`sudo apt-get update`  
+`sudo apt-get upgrade`
+* FTP有効
+* リモートデスクトップ有効
+* boost, opencvインストール  
+`sudo apt-get install libopencv-dev libboost1.62-all`
+* bcm2835インストール  
+`sudo wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.44.tar.gz`  
+`tar zxvf bcm2835-1.44.tar.gz`  
+`cd bcm2835-1.44/`  
+`sudo ./configure`  
+`sudo make`  
+`sudo make install`  
+* カメラ有効  
 `sudo raspi-config`  
 5 Interfacing Options  
 P1 Camera  
 Yes  
 OK  
 Finish  
-
-xwindowsにリモートログインする。  
-`sudo apt-get install tightvncserver`  
-`tightvncserver`  
-パスワードを設定する。  
-
-finderからログインする。  
-移動、サーバーへ移動  
-`vnc://172.21.184.38:5901`
-
-RaspberryPiカメラモジュールをOpenCVから操作する。以下を参考にした。  
-https://github.com/robidouille/robidouille/tree/master/raspicam_cv
-
-ビルドしたライブラリは移動させた。  
-`cd /home/pi/git/robidouille/raspicam_cv/`  
+* RaspiCamCVインストール  
+https://github.com/hiroshi-mikuriya/facedetect をクローンする  
 `sudo cp libraspicamcv.so /usr/lib`  
 `sudo cp RaspiCamCV.h /usr/include`
 
-追記：  
-ライブラリのビルドは面倒なので、ビルド済みファイルを用意した。  
-`git clone https://github.com/hiroshi-mikuriya/facedetect`  
-`sudo mv facedetect/raspicamcv/RaspiCamCV.h /usr/include`  
-`sudo mv facedetect/raspicamcv/libraspicamcv.so /usr/lib`  
-
-Raspberry Pi Zeroの設定  
-参考：http://www.raspi.jp/2016/07/pizero-usb-otg/  
-* SDカードにRaspbianを焼く  
-* config.txt  
-dtoverlay=dwc2の1行を追記します。
-* cmdline.txt  
-modules-load=dwc2,g_etherの1文をrootwaitのあとに追記します。
-* USBでPCとつなぐ（PWR INではなくUSBのほうにつなぐこと）  
-以下コマンドでログイン  
-`$ ssh pi@raspberrypi.local`
-* Raspberry Pi Zeroをインターネットにつなぐ  
-Macの設定、共有、インターネット共有、RNDISをチェック、インターネット共有オンになる  
-apt-getでもできれば接続成功
+## 参考
+* https://github.com/robidouille/robidouille/tree/master/raspicam_cv
