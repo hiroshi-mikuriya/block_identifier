@@ -157,8 +157,10 @@ sshという名称の空ファイルを作る
 * apt-get最新に  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
-* FTP有効
-* リモートデスクトップ有効
+* FTP有効  
+`sudo apt-get install vsftpd`
+* リモートデスクトップ有効  
+`sudo apt-get install xrdp`
 * boost, opencvインストール  
 `sudo apt-get install libopencv-dev libboost1.62-all`
 * bcm2835インストール  
