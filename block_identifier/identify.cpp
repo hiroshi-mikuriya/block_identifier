@@ -40,6 +40,8 @@ namespace {
     {
         IdentifyBlock & operator = (const IdentifyBlock &) = delete;
 
+        typedef std::vector<cv::Point> contour_t;
+
         cv::Mat const image_;
         Option const opt_;
 
@@ -87,7 +89,7 @@ namespace {
         @param[in] bgr BGR値
         @return 最も近い色
         */
-        Color getColor(cv::Vec3b bgr)
+        Color identifyColor(cv::Vec3b bgr)
         {
             double len2 = 100000;
             Color dst;
@@ -128,7 +130,7 @@ namespace {
             cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);
             DEBUG_SHOW("block", block);
             {
-                // ブロックは継ぎ目で上下に途切れることがあるので、上下に拡大して結合する。
+                // ブロックは継ぎ目で上下に途切れることがあるので、上下方向に拡大/縮小して結合する。
                 int const iteration = 5;
                 cv::Mat kernel(3, 1, CV_8UC1);
                 kernel = 255;
@@ -136,20 +138,26 @@ namespace {
                 cv::erode(block, block, kernel, cv::Point(-1, -1), iteration);
             }
             DEBUG_SHOW("block dilate erode", block);
-            typedef std::vector<cv::Point> contour_t;
             std::vector<contour_t> contours;
             cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-            // 一番面積の広い領域がブロックと判断する。ただし画像サイズ並みの面積だった場合は除外
-            contour_t cach;
+            return getBiggestAreaContour(contours);
+        }
+        /**
+        最も面積が広い輪郭を返す.
+        ただし輪郭の面積が画像サイズ並みだった場合は除外する.
+        */
+        contour_t getBiggestAreaContour(std::vector<contour_t> const & contours)
+        {
+            contour_t res;
             double maxArea = -1;
             for (auto points : contours){
                 double area = cv::contourArea(points);
                 if (maxArea < area && area < image_.size().area() * 0.9){
                     maxArea = area;
-                    cach = points;
+                    res = points;
                 }
             }
-            return cach;
+            return res;
         }
         /*!
         画像内の指定した矩形の全ブロック情報を取得する
@@ -158,7 +166,7 @@ namespace {
         */
         std::vector<BlockInfo> getBlockInfo(std::vector<cv::Point> const & points)
         {
-            /*! 背景：黒　輪郭内：黒　の画像を作る*/
+            /*! 背景：黒　輪郭内：白　の画像を作る*/
             auto const bin = [this, &points](){
                 cv::Mat bin = cv::Mat::zeros(image_.size(), CV_8UC1);
                 std::vector<std::vector<cv::Point>> contours = { points };
@@ -166,7 +174,7 @@ namespace {
                 return bin;
             }();
             /*! 画像の平均色を返す */
-            auto getAveBgr = [](cv::Mat const & src){
+            auto calcAveBgr = [](cv::Mat const & src){
                 cv::Mat tmp;
                 cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
                 cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
@@ -193,8 +201,8 @@ namespace {
                 BlockInfo info;
                 info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
                 info.color_area = info.rc * 0.2;
-                info.ave = getAveBgr(image_(info.color_area));
-                info.color = getColor(info.ave);
+                info.ave = calcAveBgr(image_(info.color_area));
+                info.color = identifyColor(info.ave);
                 info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
