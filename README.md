@@ -158,7 +158,7 @@ sshという名称の空ファイルを作る
 `sudo apt-get update`  
 `sudo apt-get upgrade`
 * FTP有効  
-`sudo apt-get install vsftpd`
+http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
 `sudo apt-get install xrdp`
 * boost, opencvインストール  
@@ -183,4 +183,6 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 `sudo cp RaspiCamCV.h /usr/include`
 
 ## 参考
-* https://github.com/robidouille/robidouille/tree/master/raspicam_cv
+* [raspicam_cv](https://github.com/robidouille/robidouille/tree/master/raspicam_cv)
+* [Raspberry Piの設定【FTPサーバ（vsftpd）の設定】](http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648)
+
