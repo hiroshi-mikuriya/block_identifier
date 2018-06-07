@@ -194,7 +194,12 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 `vim ~/.config/lxsession/LXDE-pi/autostart`  
 以下追記  
 `@/home/pi/block_identifier/make/run.sh`
-
+* ETH固定IP化  
+`sudo vim /etc/dhcpcd.conf`  
+以下追記  
+`interface eth0`  
+`static ip_address=192.168.0.21`  
+`static routers=192.168.0.1`
 
 ## 参考
 * [raspicam_cv](https://github.com/robidouille/robidouille/tree/master/raspicam_cv)
