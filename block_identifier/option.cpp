@@ -26,13 +26,6 @@ namespace boost {
         }
         
         template <class Archive>
-        void serialize(Archive& ar, Instruction & v, const unsigned int version)
-        {
-            ar & boost::serialization::make_nvp("name", v.name);
-            ar & boost::serialization::make_nvp("param", v.param);
-        }
-        
-        template <class Archive>
         void serialize(Archive& ar, Block & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("color", v.color);
@@ -56,7 +49,6 @@ namespace boost {
         void serialize(Archive& ar, Option & v, const unsigned int version)
         {
             ar & boost::serialization::make_nvp("color", v.colors);
-            ar & boost::serialization::make_nvp("block-instruction-map", v.block2inst);
             ar & boost::serialization::make_nvp("tuning", v.tune);
         }
     }
@@ -77,9 +69,6 @@ Option getDefaultOption()
     Option opt;
     opt.colors = {
 #include "default_colors.hpp"
-    };
-    opt.block2inst = std::map<Block, Instruction>{
-#include "default_instructions.hpp"
     };
     /*
     int stud_th; ///< 最上段ブロックのぼっちを除去する閾値

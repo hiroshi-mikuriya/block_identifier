@@ -51,7 +51,6 @@
 		6838475E1F8FBA28002D3797 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_core.dylib"; sourceTree = "<group>"; };
 		6838475F1F8FBA28002D3797 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = "../../../../Volumes/Macintosh HD/usr/local/lib/libopencv_highgui.dylib"; sourceTree = "<group>"; };
 		6841C80C1FB6D3E00052A484 /* default_colors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = default_colors.hpp; sourceTree = "<group>"; };
-		6841C80D1FB6D3E00052A484 /* default_instructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = default_instructions.hpp; sourceTree = "<group>"; };
 		68972CF61FA5676800F799E0 /* trigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trigger.h; sourceTree = "<group>"; };
 		68972CF71FA5676800F799E0 /* trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trigger.cpp; sourceTree = "<group>"; };
 		68A2AA0E20C795DC00EC30DB /* libopencv_video.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_video.dylib; path = ../../../../usr/local/lib/libopencv_video.dylib; sourceTree = "<group>"; };
@@ -117,7 +116,6 @@
 			children = (
 				680F5DB11FFBD017005342A5 /* mycamera.hpp */,
 				6841C80C1FB6D3E00052A484 /* default_colors.hpp */,
-				6841C80D1FB6D3E00052A484 /* default_instructions.hpp */,
 				683847541F8FB98B002D3797 /* identify.cpp */,
 				6838474F1F8FB98A002D3797 /* identify.h */,
 				68F8254E1F8FB9460003BCCA /* main.cpp */,

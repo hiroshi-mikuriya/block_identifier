@@ -14,15 +14,6 @@ struct Color
 typedef std::map<std::string, double> Params;
 
 /*!
- 命令情報
- */
-struct Instruction
-{
-    std::string name; ///< 命令ID
-    Params param; ///< パラメータ
-};
-
-/*!
  ブロック識別のチューニングパラメータ
  */
 struct Tuning
@@ -60,7 +51,6 @@ bool operator<(Block const & lv, Block const & rv);
 struct Option
 {
     std::vector<Color> colors; ///< 色情報
-    std::map<Block, Instruction> block2inst; ///< 色と命令のマップ
     Tuning tune; ///< ブロック識別のチューニングパラメータ
 };
 

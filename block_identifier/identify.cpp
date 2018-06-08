@@ -68,19 +68,14 @@ namespace {
         */
         void showBlockInfo(std::vector<BlockInfo> const & blockInfo)
         {
-            auto to_instname = [this](Block const & block){
-                auto inst = opt_.block2inst.find(block);
-                return inst == opt_.block2inst.end() ? "unknown" : inst->second.name;
-            };
             cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols + 640, CV_8UC3);
             image_.copyTo(canvas(cv::Rect(0, 0, image_.cols, image_.rows)));
             for (auto info : blockInfo){
                 cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
                 cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
-                auto instname = to_instname(info.to_block());
                 auto v = info.color.bgr;
                 auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
-                cv::putText(canvas, f.str() + "(" + instname + ")", cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+                cv::putText(canvas, f.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
             }
             cv::imshow("blocks", canvas);
         }

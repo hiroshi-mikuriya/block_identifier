@@ -10,35 +10,15 @@ namespace
         using value = picojson::value;
         picojson::array orders;
         for (auto info : blockInfo){
-            auto const inst = opt.block2inst.find(info.to_block());
-            if (inst == opt.block2inst.end()){
-                std::cerr << boost::format("[%s:%d] is not mapped with any instructions.") % info.color.name % info.width << std::endl;
-                continue;
-            }
             picojson::object item;
-            item["id"] = value(inst->second.name);
-            for(auto param : inst->second.param){
-                item[param.first] = value(param.second);
-            }
+            item["color"] = value(info.color.name);
+            item["width"] = value(info.width * 1.0);
             orders.emplace_back(item);
         }
         picojson::object root;
         root["orders"] = value(orders);
         return value(root).serialize();
     }
-
-    /*void sendTcp(std::string const & data, std::string const & address, int port)
-    {
-        namespace asio = boost::asio;
-        namespace ip = asio::ip;
-        asio::io_service io_service;
-        asio::ip::tcp::socket sock(io_service);
-        std::cout << "connecting... " << address << ":" << port << std::endl;
-        sock.connect(asio::ip::tcp::endpoint(asio::ip::address::from_string(address), port));
-        std::cout << "sending..." << std::endl;
-        write(sock, asio::buffer(data));
-        std::cout << "finished" << std::endl;
-    }*/
 
     void postJson(
         std::string host,
