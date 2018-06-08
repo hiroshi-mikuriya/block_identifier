@@ -133,11 +133,8 @@ XMLファイルを開き、block-instruction-mapを編集する。
   -v [ --version ]         Print software version  
   -g [ --generate ]        Generate option file  
   -o [ --option ] arg      Option file path  
-  -d [ --device ] arg (=0) Camera device number if PC has multiple camera devices  
   -a [ --address ] arg     Python process IP address  
   -p [ --port ] arg (=80)  Python process port number  
-  -c [ --com ] arg (=0)    COM Post if you use Arduino Button  
-  --debug                  DEBUG mode
 
 ## 未実装項目
 
@@ -148,7 +145,7 @@ XMLファイルを開き、block-instruction-mapを編集する。
 
 ## RaspberryPi環境構築
 
-本コンテンツをRaspberryPiへ移植する計画があるため、環境構築手順を備忘録として書く。  
+RaspberryPiセットアップ手順
 
 * SDカードイメージ  
 2018-04-18-raspbian-stretch.zip
