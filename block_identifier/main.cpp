@@ -16,7 +16,6 @@ namespace {
     */
     int main_proc(Option const & opt, std::string const & address, int port)
     {
-        std::vector<BlockInfo> blockInfo;
         bool triggered = false;
         std::thread th([&]{
             auto trigger = Trigger::create();
@@ -44,10 +43,16 @@ namespace {
             cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
             cv::flip(m, m, -1);
             m = m(cv::Rect(m.cols / 3, 0, m.cols / 3, m.rows));
+            std::vector<BlockInfo> blockInfo;
             identifyBlock(m, opt, blockInfo);
             cv::waitKey(1);
             if(triggered){
                 triggered = false;
+                if(blockInfo.empty()){
+                    system("aplay ../sound/hazure.wav");
+                }else{
+                    system("aplay ../sound/atari.wav");
+                }
                 sendToServer(opt, blockInfo, address, port);
             }
         }

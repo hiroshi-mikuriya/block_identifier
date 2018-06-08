@@ -22,7 +22,6 @@ loop do
   loop { break if sampling(count).zero? }
   loop { break if count == sampling(count) }
   puts 'pushed button!'
-  `aplay se_maoudamashii_onepoint23.wav`
   begin
     sock = TCPSocket.open('127.0.0.1', 4123)
     sock.write('push button')
