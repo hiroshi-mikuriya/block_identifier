@@ -186,16 +186,16 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 `git clone https://github.com/hiroshi-mikuriya/block_identifier`  
 `cd block_identifier/make`  
 `make`
-* LEGO認識自動起動  
+* LEGO認識自動起動  
 `sudo chmod 777 run.sh`  
+`vim ~/.config/lxsession/LXDE-pi/autostart`  
 以下追記  
 `@/home/pi/block_identifier/make/run.sh`
-* LEGOボタン自動起動
+* LEGOボタン自動起動  
 `sudo vim /etc/rc.local`  
 以下追記  
 `cd /home/pi/block_identifier/button`  
 `sudo ruby main.rb`  
-`vim ~/.config/lxsession/LXDE-pi/autostart`  
 * ETH固定IP化  
 `sudo vim /etc/dhcpcd.conf`  
 以下追記  
