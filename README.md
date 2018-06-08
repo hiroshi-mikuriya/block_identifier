@@ -159,7 +159,7 @@ sshという名称の空ファイルを作る
 * apt-getアップデート  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
-* vim
+* vimインストール  
 `sudo apt-get install vim`
 * FTP有効  
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
@@ -185,18 +185,20 @@ Finish
 https://github.com/hiroshi-mikuriya/facedetect をクローンする  
 `sudo cp libraspicamcv.so /usr/lib`  
 `sudo cp RaspiCamCV.h /usr/include`
-* LEGO認識  
+* LEGO認識インストール  
 `git clone https://github.com/hiroshi-mikuriya/block_identifier`  
 `cd block_identifier/make`  
-`make`  
+`make`
+* LEGO認識自動起動  
 `sudo chmod 777 run.sh`  
+以下追記  
+`@/home/pi/block_identifier/make/run.sh`
+* LEGOボタン自動起動
 `sudo vim /etc/rc.local`  
 以下追記  
 `cd /home/pi/block_identifier/button`  
 `sudo ruby main.rb`  
 `vim ~/.config/lxsession/LXDE-pi/autostart`  
-以下追記  
-`@/home/pi/block_identifier/make/run.sh`
 * ETH固定IP化  
 `sudo vim /etc/dhcpcd.conf`  
 以下追記  
