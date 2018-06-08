@@ -84,16 +84,12 @@ namespace
 void sendToServer(Option const & opt, std::vector<BlockInfo> const & blockInfo, std::string const & address, int port)
 {
     try{
-        if (blockInfo.empty()){
-            throw std::runtime_error("block count should be natural number.");
-        }
         auto const data = makeJson(opt, blockInfo);
         if (address.empty()){
             std::cout << data << std::endl;
+            return;
         }
-        else{
-            postJson(address, port, "/api/show", data);
-        }
+        postJson(address, port, "/api/show", data);
     }
     catch (std::exception const & e) {
         std::cerr << e.what() << std::endl;

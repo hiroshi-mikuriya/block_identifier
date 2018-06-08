@@ -12,9 +12,7 @@ BCM.bcm2835_gpio_fsel(GPIO, 0)
 BCM.bcm2835_gpio_set_pud(GPIO, 1)
 
 def sampling(count)
-  (count + 1).times.inject do |a, _|
-    a + BCM.bcm2835_gpio_lev(GPIO)
-  end
+  Array.new(count) { BCM.bcm2835_gpio_lev(GPIO) }.inject(&:+)
 end
 
 loop do
@@ -23,8 +21,9 @@ loop do
   loop { break if count == sampling(count) }
   puts 'pushed button!'
   begin
-    sock = TCPSocket.open('127.0.0.1', 4123)
-    sock.write('push button')
+    s = TCPSocket.open('127.0.0.1', 4123)
+    s.write('push button')
+    s.close
   rescue StandardError => e
     warn e
   end

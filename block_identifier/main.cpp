@@ -52,8 +52,8 @@ namespace {
                     system("aplay ../sound/hazure.wav");
                 }else{
                     system("aplay ../sound/atari.wav");
+                    sendToServer(opt, blockInfo, address, port);
                 }
-                sendToServer(opt, blockInfo, address, port);
             }
         }
         // unreachable code.
