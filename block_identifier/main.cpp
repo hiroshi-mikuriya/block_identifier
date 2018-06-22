@@ -5,16 +5,26 @@
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <thread>
+#include <chrono>
+#include <ctime>
 
 namespace {
+    void save_image(cv::Mat const & m) {
+        auto const now = std::chrono::system_clock::now();
+        std::time_t time = std::chrono::system_clock::to_time_t(now);
+        std::string name = std::ctime(&time);
+        name.pop_back();
+        cv::imwrite(name + ".png", m);
+    }
     /*!
     メイン処理
     @param[in] opt オプション
     @param[in] address PythonプロセスのIPアドレス
     @param[in] port Pythonプロセスのポート番号
+    @param[in] save カメラ画像保存
     @return Exit code
     */
-    int main_proc(Option const & opt, std::string const & address, int port)
+    int main_proc(Option const & opt, std::string const & address, int port, bool save)
     {
         bool triggered = false;
         std::thread th([&]{
@@ -43,6 +53,9 @@ namespace {
             cv::resize(m, m, cv::Size(), opt.tune.camera_ratio, opt.tune.camera_ratio);
             cv::flip(m, m, -1);
             m = m(cv::Rect(m.cols / 3, 0, m.cols / 3, m.rows));
+            if(save){
+                save_image(m);
+            }
             std::vector<BlockInfo> blockInfo;
             identifyBlock(m, opt, blockInfo);
             cv::waitKey(1);
@@ -79,6 +92,7 @@ int main(int argc, const char * argv[]) {
             ("option,o", po::value<std::string>(), "Option file path")
             ("address,a", po::value<std::string>(), "Python process IP address")
             ("port,p", po::value<int>()->default_value(80), "Python process port number")
+            ("save,s", "Save camera images")
         ;
         po::variables_map vm;
         try{
@@ -102,7 +116,8 @@ int main(int argc, const char * argv[]) {
             auto const opt = vm.count("option") ? readOption(vm["option"].as<std::string>()) : getDefaultOption();
             std::string address = vm.count("address") ? vm["address"].as<std::string>() : "";
             int port = vm["port"].as<int>();
-            return main_proc(opt, address, port);
+            bool save = 0 < vm.count("save");
+            return main_proc(opt, address, port, save);
         }
         catch (std::exception const & e){
             std::cerr << e.what() << "\n" << desc << std::endl;
