@@ -34,6 +34,29 @@ std::vector<TestData::Block> const Exp = {
     { "red", 4 },
 };
 
+std::vector<TestData::Block> const Exp2 = {
+    { "white", 2 },
+    { "white", 3 },
+    { "white", 4 },
+    { "brown", 2 },
+    { "brown", 2 },
+    { "brown", 2 },
+    { "brown", 3 },
+    { "brown", 3 },
+    { "brown", 3 },
+    { "brown", 4 },
+    { "brown", 4 },
+    { "brown", 4 },
+    { "red", 2 },
+    { "red", 2 },
+    { "red", 3 },
+    { "red", 3 },
+    { "red", 3 },
+    { "red", 4 },
+    { "red", 4 },
+    { "red", 4 },
+};
+
 std::vector<TestData> const Data = {
     // { "Thu Jun  7 165705 2018.png", Exp },
     { "Thu Jun  7 165706 2018.png", Exp },
@@ -44,7 +67,20 @@ std::vector<TestData> const Data = {
     { "Thu Jun  7 165711 2018.png", Exp },
     { "Thu Jun  7 165712 2018.png", Exp },
     { "Thu Jun  7 165713 2018.png", Exp },
+    { "Thu Jun  7 203901 2018.png", Exp2 },
+    { "Thu Jun  7 203902 2018.png", Exp2 },
+    { "Thu Jun  7 203903 2018.png", Exp2 },
+    { "Thu Jun  7 203904 2018.png", Exp2 },
+    { "Thu Jun  7 203905 2018.png", Exp2 },
+    { "Thu Jun  7 203906 2018.png", Exp2 },
+    { "Thu Jun  7 203907 2018.png", Exp2 },
+    { "Thu Jun  7 203908 2018.png", Exp2 },
+    { "Thu Jun  7 203909 2018.png", Exp2 },
+    { "Thu Jun  7 203910 2018.png", Exp2 },
+    { "Thu Jun  7 203911 2018.png", Exp2 },
 };
+
+
 
 int main(int argc, const char * argv[])
 {
