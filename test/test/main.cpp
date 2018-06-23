@@ -35,15 +35,15 @@ std::vector<TestData::Block> const Exp = {
 };
 
 std::vector<TestData> const Data = {
-    { "Thu Jun  7 16/57/05 2018.png", Exp },
-    { "Thu Jun  7 16/57/06 2018.png", Exp },
-    { "Thu Jun  7 16/57/07 2018.png", Exp },
-    { "Thu Jun  7 16/57/08 2018.png", Exp },
-    { "Thu Jun  7 16/57/09 2018.png", Exp },
-    { "Thu Jun  7 16/57/10 2018.png", Exp },
-    { "Thu Jun  7 16/57/11 2018.png", Exp },
-    { "Thu Jun  7 16/57/12 2018.png", Exp },
-    { "Thu Jun  7 16/57/13 2018.png", Exp },
+    { "Thu Jun  7 165705 2018.png", Exp },
+    { "Thu Jun  7 165706 2018.png", Exp },
+    { "Thu Jun  7 165707 2018.png", Exp },
+    { "Thu Jun  7 165708 2018.png", Exp },
+    { "Thu Jun  7 165709 2018.png", Exp },
+    { "Thu Jun  7 165710 2018.png", Exp },
+    { "Thu Jun  7 165711 2018.png", Exp },
+    { "Thu Jun  7 165712 2018.png", Exp },
+    { "Thu Jun  7 165713 2018.png", Exp },
 };
 
 int main(int argc, const char * argv[])
