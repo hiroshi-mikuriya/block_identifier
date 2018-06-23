@@ -35,7 +35,7 @@ std::vector<TestData::Block> const Exp = {
 };
 
 std::vector<TestData> const Data = {
-    { "Thu Jun  7 165705 2018.png", Exp },
+    // { "Thu Jun  7 165705 2018.png", Exp },
     { "Thu Jun  7 165706 2018.png", Exp },
     { "Thu Jun  7 165707 2018.png", Exp },
     { "Thu Jun  7 165708 2018.png", Exp },
@@ -56,10 +56,10 @@ int main(int argc, const char * argv[])
             std::cout << "failed to load " + d.path << std::endl;
             continue;
         }
-        Option opt;
+        Option opt = getDefaultOption();
         std::vector<BlockInfo> blockInfo;
         identifyBlock(m, opt, blockInfo);
         cv::waitKey();
-        return 0;
     }
+    return 0;
 }
