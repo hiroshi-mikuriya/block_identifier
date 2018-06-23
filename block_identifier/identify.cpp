@@ -4,7 +4,7 @@
 #ifdef _DEBUG
 #define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #else
-#define DEBUG_SHOW(s, m)
+#define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #endif
 
 namespace {
@@ -162,12 +162,15 @@ namespace {
         std::vector<BlockInfo> getBlockInfo(std::vector<cv::Point> const & points)
         {
             /*! 背景：黒　輪郭内：白　の画像を作る*/
-            auto const bin = [this, &points](){
+            auto bin = [this, &points](){
                 cv::Mat bin = cv::Mat::zeros(image_.size(), CV_8UC1);
                 std::vector<std::vector<cv::Point>> contours = { points };
                 cv::drawContours(bin, contours, 0, 255, CV_FILLED);
                 return bin;
             }();
+            DEBUG_SHOW("original", image_);
+            DEBUG_SHOW("bin", bin);
+
             /*! 画像の平均色を返す */
             auto calcAveBgr = [](cv::Mat const & src){
                 cv::Mat tmp;
@@ -201,6 +204,10 @@ namespace {
                 info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
+            for(auto block : dst){
+                cv::rectangle(bin, block.rc, 128);
+            }
+            DEBUG_SHOW("block rects", bin);
             return dst;
         }
     public:
