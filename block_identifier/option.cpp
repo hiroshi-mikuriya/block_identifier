@@ -81,7 +81,7 @@ Option getDefaultOption()
     int block_width; ///< ブロック幅（2ぼっち分）（縮尺前）
     */
     // opt.tune = { 40, 230, 200, 1280, 720, 0.5, 102, 150 }; // Duplo
-    opt.tune = { 20, 250, 230, 1280, 720, 1.0, 20, 16 }; // Lego
+    opt.tune = { 20, 190, 200, 1280, 720, 1.0, 20, 16 }; // Lego
     return opt;
 }
 

@@ -4,7 +4,7 @@
 #ifdef _DEBUG
 #define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #else
-#define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
+#define DEBUG_SHOW(s, m)
 #endif
 
 namespace {
@@ -116,7 +116,7 @@ namespace {
             cv::split(hsv, splits);
             auto s = splits[1];
             auto v = splits[2];
-            auto mixed = s + v;
+            auto mixed = s * 0.6 + v;
             DEBUG_SHOW("HSV[H]", splits[0]);
             DEBUG_SHOW("HSV[S]", s);
             DEBUG_SHOW("HSV[V]", v);
