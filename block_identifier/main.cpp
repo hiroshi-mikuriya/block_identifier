@@ -16,6 +16,14 @@ namespace {
         name.pop_back();
         cv::imwrite(name + ".png", m);
     }
+    bool is_atari(std::vector<BlockInfo> const & infos){
+        for (auto const info : infos){
+            if (info.width == 2){ // オブジェクトブロックが１つでもあればOK
+                return true;
+            }
+        }
+        return false;
+    }
     /*!
     メイン処理
     @param[in] opt オプション
@@ -61,11 +69,12 @@ namespace {
             cv::waitKey(1);
             if(triggered){
                 triggered = false;
-                if(blockInfo.empty()){
-                    system("aplay ../sound/hazure.wav");
-                }else{
+                if (is_atari(blockInfo)){
                     system("aplay ../sound/atari.wav");
                     sendToServer(opt, blockInfo, address, port);
+                }
+                else{
+                    system("aplay ../sound/hazure.wav");
                 }
             }
         }

@@ -14,7 +14,6 @@
     <ClInclude Include="..\block_identifier\option.h" />
     <ClInclude Include="..\block_identifier\picojson.h" />
     <ClInclude Include="..\block_identifier\trigger.h" />
-    <ClInclude Include="..\block_identifier\default_instructions.hpp" />
     <ClInclude Include="..\block_identifier\default_colors.hpp" />
   </ItemGroup>
 </Project>
