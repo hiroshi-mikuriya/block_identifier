@@ -57,15 +57,8 @@ colorタグ、instuctionタグの中身を修正する。（色名、色基準�
 XMLファイルを出力する。  
 `block_identifier -g`
 
-以下の設定を変更する（デフォルトはLEGO DUPLO）
+以下の設定を変更する
 
-* LEGO DUPLO
-```xml
-<stud_threshold>40</stud_threshold> <!-- ポッチサイズ -->
-<block_height>102</block_height> <!-- ブロック高さ -->
-<block_width>150</block_width> <!-- ブロック幅 -->
-```
-* LEGO
 ```xml
 <stud_threshold>20</stud_threshold> <!-- ポッチサイズ -->
 <block_height>48</block_height> <!-- ブロック高さ -->
@@ -136,13 +129,6 @@ XMLファイルを開き、block-instruction-mapを編集する。
   -a [ --address ] arg     Python process IP address  
   -p [ --port ] arg (=80)  Python process port number  
 
-## 未実装項目
-
-- ブロック色と命令の紐付けがテキトーすぎる（暫定のつもり）  
-一応、XMLファイルで変更や追加はできる。デフォルト値がいい加減なだけ。
-- キャリブレーションモード未実装  
-一応、XMLファイルを手で修正すれば校正は可能（手動であり自動でないだけ）
-
 ## RaspberryPi環境構築
 
 RaspberryPiセットアップ手順
@@ -206,4 +192,4 @@ https://github.com/hiroshi-mikuriya/facedetect をクローンする
 ## 参考
 * [raspicam_cv](https://github.com/robidouille/robidouille/tree/master/raspicam_cv)
 * [Raspberry Piの設定【FTPサーバ（vsftpd）の設定】](http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648)
-
+* [Raspberry Pi 3Bのスリープモード解除](http://www.pentacreation.com/blog/2017/07/170712.html)
