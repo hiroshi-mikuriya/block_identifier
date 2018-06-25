@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28432A0820E0FE0D002D0C97 /* libopencv_imgcodecs.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 28432A0720E0FE0D002D0C97 /* libopencv_imgcodecs.dylib */; };
 		683847551F8FB98B002D3797 /* option.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683847511F8FB98A002D3797 /* option.cpp */; };
 		683847561F8FB98B002D3797 /* sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683847521F8FB98A002D3797 /* sender.cpp */; };
 		683847571F8FB98B002D3797 /* identify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683847541F8FB98B002D3797 /* identify.cpp */; };
@@ -35,6 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		28432A0720E0FE0D002D0C97 /* libopencv_imgcodecs.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgcodecs.dylib; path = ../../../../usr/local/lib/libopencv_imgcodecs.dylib; sourceTree = "<group>"; };
 		680F5DB11FFBD017005342A5 /* mycamera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mycamera.hpp; sourceTree = "<group>"; };
 		6838474D1F8FB98A002D3797 /* sender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sender.h; sourceTree = "<group>"; };
 		6838474E1F8FB98A002D3797 /* picojson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = picojson.h; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				683847621F8FBA28002D3797 /* libboost_system.a in Frameworks */,
 				683847641F8FBA28002D3797 /* libboost_program_options.a in Frameworks */,
 				683847611F8FBA28002D3797 /* libopencv_video.dylib in Frameworks */,
+				28432A0820E0FE0D002D0C97 /* libopencv_imgcodecs.dylib in Frameworks */,
 				683847631F8FBA28002D3797 /* libopencv_imgproc.dylib in Frameworks */,
 				683847651F8FBA28002D3797 /* libopencv_core.dylib in Frameworks */,
 				683847661F8FBA28002D3797 /* libopencv_highgui.dylib in Frameworks */,
@@ -81,6 +84,7 @@
 		683847581F8FBA28002D3797 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				28432A0720E0FE0D002D0C97 /* libopencv_imgcodecs.dylib */,
 				68A2AA1020C795E500EC30DB /* libopencv_videoio.dylib */,
 				68A2AA0E20C795DC00EC30DB /* libopencv_video.dylib */,
 				6838475D1F8FBA28002D3797 /* libboost_program_options.a */,

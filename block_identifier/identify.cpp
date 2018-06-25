@@ -63,23 +63,6 @@ namespace {
         }
 
         /*!
-        ブロック情報の画像を表示する
-        @param[in] blockInfo ブロック情報
-        */
-        void showBlockInfo(std::vector<BlockInfo> const & blockInfo)
-        {
-            cv::Mat canvas = cv::Mat::zeros(image_.rows, image_.cols + 640, CV_8UC3);
-            image_.copyTo(canvas(cv::Rect(0, 0, image_.cols, image_.rows)));
-            for (auto info : blockInfo){
-                cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
-                cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
-                auto v = info.color.bgr;
-                auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
-                cv::putText(canvas, f.str(), cv::Point2f(image_.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
-            }
-            cv::imshow("blocks", canvas);
-        }
-        /*!
         このプログラムが認識する色の中で最も近い色を返す
         @param[in] bgr BGR値
         @return 最も近い色
@@ -221,7 +204,6 @@ namespace {
             assert(3 == image_.channels());
             auto const contour = getBlockContour();
             blockInfo = getBlockInfo(contour);
-            showBlockInfo(blockInfo);
         }
     };
 }
@@ -232,4 +214,20 @@ void identifyBlock(
     std::vector<BlockInfo> & blockInfo)
 {
     IdentifyBlock(image, opt, blockInfo);
+}
+
+void showBlocks(
+    cv::Mat const & image,
+    std::vector<BlockInfo> const & blockInfo)
+{
+    cv::Mat canvas = cv::Mat::zeros(image.rows, image.cols + 640, CV_8UC3);
+    image.copyTo(canvas(cv::Rect(0, 0, image.cols, image.rows)));
+    for (auto info : blockInfo){
+        cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
+        cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
+        auto v = info.color.bgr;
+        auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
+        cv::putText(canvas, f.str(), cv::Point2f(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+    }
+    cv::imshow("blocks", canvas);
 }

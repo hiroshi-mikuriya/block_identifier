@@ -13,3 +13,5 @@ void identifyBlock(
     cv::Mat const & image,
     Option const & opt,
     std::vector<BlockInfo> & blockInfo);
+
+void showBlocks(cv::Mat const & image, std::vector<BlockInfo> const & blockInfo);

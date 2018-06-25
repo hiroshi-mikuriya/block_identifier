@@ -66,6 +66,7 @@ namespace {
             }
             std::vector<BlockInfo> blockInfo;
             identifyBlock(m, opt, blockInfo);
+            showBlocks(m, blockInfo);
             cv::waitKey(1);
             if(triggered){
                 triggered = false;
