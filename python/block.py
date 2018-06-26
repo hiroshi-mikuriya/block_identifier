@@ -13,6 +13,15 @@ def fillDividedBlocks(bin):
   dil = cv2.dilate(bin, kernel, iterations)
   return cv2.erode(dil, kernel, iterations)
 
+def getMaximumContour(contours):
+  contour = contours[0]
+  max_area = -1
+  for i in range(0, len(contours)):
+    area = cv2.contourArea(contours[i])
+    if max_area < area:
+      contour = contours[i]
+  return contour
+
 def getBlockContour(img):
   hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
   mixed = cv2.addWeighted(hsv[1], 0.6, hsv[2], 1.0, 0)
@@ -25,7 +34,7 @@ def getBlockContour(img):
   cv2.imshow("h", hsv[0])
   cv2.imshow("s", hsv[1])
   cv2.imshow("v", hsv[2])
-  return contours
+  return getMaximumContour(contours)
 
 getBlockContour(img)
 
