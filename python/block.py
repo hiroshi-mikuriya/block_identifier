@@ -36,6 +36,10 @@ def getBlockContour(img):
   cv2.imshow("v", hsv[2])
   return getMaximumContour(contours)
 
-getBlockContour(img)
+def getBlockInfo(contour, img):
+  return img
+
+contour = getBlockContour(img)
+info = getBlockInfo(contour, img)
 
 cv2.waitKey(0)
