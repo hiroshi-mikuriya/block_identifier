@@ -2,6 +2,9 @@ import sys
 import cv2
 import numpy as np
 
+"""
+認識したブロックの情報を持つ型
+"""
 class BlockInfo:
   def __init__(self):
     self.rgb = [0, 0, 0] # ブロックのRGB値
@@ -13,6 +16,9 @@ class BlockInfo:
   def __repr__(self):
     return "<rgb %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.rgb, self.hsv, self.rc, self.color_area, self.color, self.width)
 
+"""
+ブロック認識をするための設定パラメータ
+"""
 class Option:
   def __init__(self):
     self.block_height = 20
@@ -25,6 +31,9 @@ class Option:
   def __repr__(self):
     return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : ratio_s %s : ratio_v %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.ratio_s, self.ratio_v)    
 
+"""
+ブロック認識を行うクラス
+"""
 class BlockIdentifier:
 
   @staticmethod
