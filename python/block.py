@@ -2,14 +2,6 @@ import sys
 import cv2
 import numpy as np
 
-BLOCK_HEIGHT = 20
-BLOCK_WIDTH = 16
-STUB_TH = 20 # 最上段ブロックのぼっちを除去する閾値
-SIZE_TH = 190 # ブロック幅判定閾値
-BIN_TH = 200 # ２値化閾値
-RATIO_S = 0.6 # HSVのS要素の重み（ブロック認識で使用）
-RATIO_V = 1.0 # HSVのV要素の重み（ブロック認識で使用）
-
 class BlockInfo:
   def __init__(self):
     self.rgb = [0, 0, 0] # ブロックのRGB値
@@ -21,94 +13,120 @@ class BlockInfo:
   def __repr__(self):
     return "<rgb %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.rgb, self.hsv, self.rc, self.color_area, self.color, self.width)
 
-def fill_divided_blocks(bin):
-  kernel = np.array([[1], [1], [1]], np.uint8)
-  ite = 5
-  return cv2.erode(cv2.dilate(bin, kernel, ite), kernel, ite)
+class Option:
+  def __init__(self):
+    self.block_height = 20
+    self.block_width = 16
+    self.stub_th = 20 # 最上段ブロックのぼっちを除去する閾値
+    self.size_th = 190 # ブロック幅判定閾値
+    self.bin_th = 200 # ２値化閾値
+    self.ratio_s = 0.6 # HSVのS要素の重み（ブロック認識で使用）
+    self.ratio_v = 1.0 # HSVのV要素の重み（ブロック認識で使用）
+  def __repr__(self):
+    return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : ratio_s %s : ratio_v %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.ratio_s, self.ratio_v)    
 
-def get_maximum_contour(contours):
-  contour = contours[0]
-  max_area = -1
-  for i in range(0, len(contours)):
-    area = cv2.contourArea(contours[i])
-    if max_area < area:
-      contour = contours[i]
-      max_area = area
-  return contour
+class BlockIdentifier:
 
-def get_block_contour(img):
-  hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-  mixed = cv2.addWeighted(hsv[1], RATIO_S, hsv[2], RATIO_V, 0)
-  _, block = cv2.threshold(mixed, BIN_TH, 255, cv2.THRESH_BINARY)
-  # cv2.imshow("block", block)
-  filled = fill_divided_blocks(block)
-  _, contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-  # cv2.imshow("original", img)
-  # cv2.imshow("mixed", mixed)
-  # cv2.imshow("h", hsv[0])
-  # cv2.imshow("s", hsv[1])
-  # cv2.imshow("v", hsv[2])
-  return get_maximum_contour(contours)
+  @staticmethod
+  def __fill_divided_blocks(bin):
+    kernel = np.array([[1], [1], [1]], np.uint8)
+    ite = 5
+    return cv2.erode(cv2.dilate(bin, kernel, ite), kernel, ite)
+  
+  @staticmethod
+  def __get_maximum_contour(contours):
+    contour = contours[0]
+    max_area = -1
+    for i in range(0, len(contours)):
+      area = cv2.contourArea(contours[i])
+      if max_area < area:
+        contour = contours[i]
+        max_area = area
+    return contour
+  
+  @staticmethod
+  def __get_block_contour(img, opt):
+    hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+    mixed = cv2.addWeighted(hsv[1], opt.ratio_s, hsv[2], opt.ratio_v, 0)
+    _, block = cv2.threshold(mixed, opt.bin_th, 255, cv2.THRESH_BINARY)
+    # cv2.imshow("block", block)
+    filled = BlockIdentifier.__fill_divided_blocks(block)
+    _, contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # cv2.imshow("original", img)
+    # cv2.imshow("mixed", mixed)
+    # cv2.imshow("h", hsv[0])
+    # cv2.imshow("s", hsv[1])
+    # cv2.imshow("v", hsv[2])
+    return BlockIdentifier.__get_maximum_contour(contours)
+  
+  @staticmethod
+  def __get_first_border(m, th, rng):
+    for y in rng:
+      if(th <= m[y][0]):
+        return y
+    return rng[-1]
+  
+  @staticmethod
+  def __get_top_bottom(bin, opt):
+    m = cv2.reduce(bin, 1, cv2.REDUCE_AVG)
+    top = BlockIdentifier.__get_first_border(m, opt.stub_th, range(m.shape[0]))
+    bottom = BlockIdentifier.__get_first_border(m, opt.stub_th, list(reversed(range(m.shape[0]))))
+    return top, bottom
+  
+  @staticmethod
+  def __get_center_rect(rc, ratio):
+    x = int(rc[0] + rc[2] * (1 - ratio) / 2)
+    y = int(rc[1] + rc[3] * (1 - ratio) / 2)
+    w = int(rc[2] * ratio)
+    h = int(rc[3] * ratio)
+    return [x, y, w, h]
+  
+  @staticmethod
+  def __get_block_color(img, rc):
+    a = cv2.reduce(img, 0, cv2.REDUCE_AVG)
+    rgb = cv2.reduce(a, 1, cv2.REDUCE_AVG)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+    return rgb[0][0], hsv[0][0]
+  
+  @staticmethod
+  def __get_unit_block(img, bin, y, opt):
+    dst = BlockInfo()
+    trim = bin[y:y + opt.block_height, 0:bin.shape[1]]
+    avg = cv2.reduce(trim, 0, cv2.REDUCE_AVG).transpose()
+    left = BlockIdentifier.__get_first_border(avg, opt.size_th, range(avg.shape[0]))
+    right = BlockIdentifier.__get_first_border(avg, opt.size_th, list(reversed(range(avg.shape[0]))))
+    dst.rc = [left, y, right - left, opt.block_height]
+    dst.color_area = BlockIdentifier.__get_center_rect(dst.rc, 0.2)
+    dst.width = int((dst.rc[2] + opt.block_width / 2) / opt.block_width)
+    rgb, hsv = BlockIdentifier.__get_block_color(img, dst.rc)
+    dst.rgb = rgb
+    dst.hsv = hsv
+    return dst
+  
+  @staticmethod
+  def __get_block_info(contour, img, opt):
+    bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
+    cv2.drawContours(bin, [contour], 0, 255, -1)
+    cv2.imshow("bin", bin)
+    top, bottom = BlockIdentifier.__get_top_bottom(bin, opt)
+    blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
+    if blockCount < 0:
+      return
+    dst = []
+    for i in range(blockCount):
+      y = int((top * (blockCount - i) + bottom * i) / blockCount)
+      dst.append(BlockIdentifier.__get_unit_block(img, bin, y, opt))
+    return dst
 
-def get_first_border(m, r, th):
-  for y in r:
-    if(th <= m[y][0]):
-      return y
-  return r[-1]
-
-def get_top_bottom(bin):
-  m = cv2.reduce(bin, 1, cv2.REDUCE_AVG)
-  top = get_first_border(m, range(m.shape[0]), STUB_TH)
-  bottom = get_first_border(m, list(reversed(range(m.shape[0]))), STUB_TH)
-  return top, bottom
-
-def get_center_rect(rc, ratio):
-  x = int(rc[0] + rc[2] * (1 - ratio) / 2)
-  y = int(rc[1] + rc[3] * (1 - ratio) / 2)
-  w = int(rc[2] * ratio)
-  h = int(rc[3] * ratio)
-  return [x, y, w, h]
-
-def get_block_color(img, rc):
-  a = cv2.reduce(img, 0, cv2.REDUCE_AVG)
-  rgb = cv2.reduce(a, 1, cv2.REDUCE_AVG)
-  hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-  return rgb[0][0], hsv[0][0]
-
-def get_unit_block(img, bin, y):
-  dst = BlockInfo()
-  trim = bin[y:y + BLOCK_HEIGHT, 0:bin.shape[1]]
-  avg = cv2.reduce(trim, 0, cv2.REDUCE_AVG).transpose()
-  left = get_first_border(avg, range(avg.shape[0]), SIZE_TH)
-  right = get_first_border(avg, list(reversed(range(avg.shape[0]))), SIZE_TH)
-  dst.rc = [left, y, right - left, BLOCK_HEIGHT]
-  dst.color_area = get_center_rect(dst.rc, 0.2)
-  dst.width = int((dst.rc[2] + BLOCK_WIDTH / 2) / BLOCK_WIDTH)
-  rgb, hsv = get_block_color(img, dst.rc)
-  dst.rgb = rgb
-  dst.hsv = hsv
-  return dst
-
-def get_block_info(contour, img):
-  bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
-  cv2.drawContours(bin, [contour], 0, 255, -1)
-  cv2.imshow("bin", bin)
-  top, bottom = get_top_bottom(bin)
-  blockCount = int((bottom - top + BLOCK_HEIGHT / 2) / BLOCK_HEIGHT)
-  if blockCount < 0:
-    return
-  dst = []
-  for i in range(blockCount):
-    y = int((top * (blockCount - i) + bottom * i) / blockCount)
-    dst.append(get_unit_block(img, bin, y))
-  return dst
+  @staticmethod
+  def calc(img, opt):
+    contour = BlockIdentifier.__get_block_contour(img, opt)
+    return BlockIdentifier.__get_block_info(contour, img, opt)
 
 
-img = cv2.imread("../images/red2.png", 1)
-if img is None or img.shape[0] is 0:
-  print('failed to open image')
-  quit()
-
-contour = get_block_contour(img)
-info = get_block_info(contour, img)
-print(info)
+if __name__ == '__main__':
+  img = cv2.imread("../images/red2.png", 1)
+  if img is None or img.shape[0] is 0:
+    print('failed to open image')
+    quit()
+  print(BlockIdentifier().calc(img, Option()))
