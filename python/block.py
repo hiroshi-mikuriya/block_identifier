@@ -48,14 +48,25 @@ def getTopBottom(bin):
   bottom = getFirstBorder(m, reversed(range(m.shape[0])))
   return top, bottom
 
+def getUnitBlock(bin, y):
+  return [0, y, 0, 0] # TODO
+
 def getBlockInfo(contour, img):
   bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
   cv2.drawContours(bin, [contour], 0, 255, -1)
   cv2.imshow("bin", bin)
-  print(getTopBottom(bin))
-  return img
+  top, bottom = getTopBottom(bin)
+  blockCount = int((bottom - top + 20 / 2) / 20)
+  if blockCount < 0:
+    return
+  dst = []
+  for i in range(blockCount):
+    y = (top * (blockCount - i) + bottom * i) / blockCount
+    dst.append(getUnitBlock(bin, y))
+  return dst
 
 contour = getBlockContour(img)
 info = getBlockInfo(contour, img)
+print(info)
 
 cv2.waitKey(0)
