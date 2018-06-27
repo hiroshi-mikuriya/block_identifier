@@ -8,14 +8,15 @@ STUB_TH = 20 # 最上段ブロックのぼっちを除去する閾値
 SIZE_TH = 190 # ブロック幅判定閾値
 BIN_TH = 200 # ２値化閾値
 
-img = cv2.imread("../images/white1.png", 1)
+img = cv2.imread("../images/red2.png", 1)
 if img is None or img.shape[0] is 0:
   print('failed to open image')
   quit()
 
 class BlockInfo:
   def __init__(self):
-    self.color = [0, 0, 0] # ブロックの色
+    self.rgb = [0, 0, 0] # ブロックの色(RGB)
+    self.hsv = [0, 0, 0] # ブロックの色(HSV)
     self.rc = [0, 0, 0, 0] # ブロックの矩形
     self.color_area = [0, 0, 0, 0] # ブロック色判定領域
     self.ave = [0, 0, 0] # 平均色
@@ -62,14 +63,31 @@ def get_top_bottom(bin):
   bottom = get_first_border(m, list(reversed(range(m.shape[0]))), STUB_TH)
   return top, bottom
 
-def get_unit_block(bin, y):
+def get_center_rect(rc, ratio):
+  x = int(rc[0] + rc[2] * (1 - ratio) / 2)
+  y = int(rc[1] + rc[3] * (1 - ratio) / 2)
+  w = int(rc[2] * ratio)
+  h = int(rc[3] * ratio)
+  return [x, y, w, h]
+
+def get_block_color(img, rc):
+  a = cv2.reduce(img, 0, cv2.REDUCE_AVG)
+  rgb = cv2.reduce(a, 1, cv2.REDUCE_AVG)
+  hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+  return rgb[0][0], hsv[0][0]
+
+def get_unit_block(img, bin, y):
   dst = BlockInfo()
   trim = bin[y:y + BLOCK_HEIGHT, 0:bin.shape[1]]
   avg = cv2.reduce(trim, 0, cv2.REDUCE_AVG).transpose()
   left = get_first_border(avg, range(avg.shape[0]), SIZE_TH)
   right = get_first_border(avg, list(reversed(range(avg.shape[0]))), SIZE_TH)
   dst.rc = [left, y, right - left, BLOCK_HEIGHT]
+  dst.color_area = get_center_rect(dst.rc, 0.2)
   dst.width = int((dst.rc[2] + BLOCK_WIDTH / 2) / BLOCK_WIDTH)
+  rgb, hsv = get_block_color(img, dst.rc)
+  dst.rgb = rgb
+  dst.hsv = hsv
   return dst
 
 def get_block_info(contour, img):
@@ -83,11 +101,7 @@ def get_block_info(contour, img):
   dst = []
   for i in range(blockCount):
     y = int((top * (blockCount - i) + bottom * i) / blockCount)
-    dst.append(get_unit_block(bin, y))
-  for i in range(len(dst)):
-    rc = dst[i].rc
-    cv2.rectangle(bin, (rc[0], rc[1]), (rc[0] + rc[2], rc[1] + rc[3]), 128)
-  cv2.imshow("blocks", bin)
+    dst.append(get_unit_block(img, bin, y))
   return dst
 
 contour = get_block_contour(img)
