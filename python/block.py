@@ -7,20 +7,19 @@ BLOCK_WIDTH = 16
 STUB_TH = 20 # 最上段ブロックのぼっちを除去する閾値
 SIZE_TH = 190 # ブロック幅判定閾値
 BIN_TH = 200 # ２値化閾値
-
-img = cv2.imread("../images/red2.png", 1)
-if img is None or img.shape[0] is 0:
-  print('failed to open image')
-  quit()
+RATIO_S = 0.6 # HSVのS要素の重み（ブロック認識で使用）
+RATIO_V = 1.0 # HSVのV要素の重み（ブロック認識で使用）
 
 class BlockInfo:
   def __init__(self):
-    self.rgb = [0, 0, 0] # ブロックの色(RGB)
-    self.hsv = [0, 0, 0] # ブロックの色(HSV)
+    self.rgb = [0, 0, 0] # ブロックのRGB値
+    self.hsv = [0, 0, 0] # ブロックのHSV値
     self.rc = [0, 0, 0, 0] # ブロックの矩形
     self.color_area = [0, 0, 0, 0] # ブロック色判定領域
-    self.ave = [0, 0, 0] # 平均色
+    self.color = "" # 色名
     self.width = 0 # ブロック幅
+  def __repr__(self):
+    return "<rgb %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.rgb, self.hsv, self.rc, self.color_area, self.color, self.width)
 
 def fill_divided_blocks(bin):
   kernel = np.array([[1], [1], [1]], np.uint8)
@@ -39,16 +38,16 @@ def get_maximum_contour(contours):
 
 def get_block_contour(img):
   hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-  mixed = cv2.addWeighted(hsv[1], 0.6, hsv[2], 1.0, 0)
+  mixed = cv2.addWeighted(hsv[1], RATIO_S, hsv[2], RATIO_V, 0)
   _, block = cv2.threshold(mixed, BIN_TH, 255, cv2.THRESH_BINARY)
-  cv2.imshow("block", block)
+  # cv2.imshow("block", block)
   filled = fill_divided_blocks(block)
   _, contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-  cv2.imshow("original", img)
-  cv2.imshow("mixed", mixed)
-  cv2.imshow("h", hsv[0])
-  cv2.imshow("s", hsv[1])
-  cv2.imshow("v", hsv[2])
+  # cv2.imshow("original", img)
+  # cv2.imshow("mixed", mixed)
+  # cv2.imshow("h", hsv[0])
+  # cv2.imshow("s", hsv[1])
+  # cv2.imshow("v", hsv[2])
   return get_maximum_contour(contours)
 
 def get_first_border(m, r, th):
@@ -104,7 +103,12 @@ def get_block_info(contour, img):
     dst.append(get_unit_block(img, bin, y))
   return dst
 
+
+img = cv2.imread("../images/red2.png", 1)
+if img is None or img.shape[0] is 0:
+  print('failed to open image')
+  quit()
+
 contour = get_block_contour(img)
 info = get_block_info(contour, img)
-
-cv2.waitKey(0)
+print(info)
