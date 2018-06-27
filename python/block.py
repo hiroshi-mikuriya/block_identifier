@@ -67,11 +67,18 @@ class BlockIdentifier:
     return rng[-1]
   
   @staticmethod
-  def __get_top_bottom(bin, opt):
+  def __get_top_bottom(bin, th):
     m = cv2.reduce(bin, 1, cv2.REDUCE_AVG)
-    top = BlockIdentifier.__get_first_border(m, opt.stub_th, range(m.shape[0]))
-    bottom = BlockIdentifier.__get_first_border(m, opt.stub_th, list(reversed(range(m.shape[0]))))
+    top = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
+    bottom = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
     return top, bottom
+
+  @staticmethod
+  def __get_left_right(bin, th):
+    m = cv2.reduce(bin, 0, cv2.REDUCE_AVG).transpose()
+    left = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
+    right = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
+    return left, right
   
   @staticmethod
   def __get_center_rect(rc, ratio):
@@ -92,9 +99,7 @@ class BlockIdentifier:
   def __get_unit_block(img, bin, y, opt):
     dst = BlockInfo()
     trim = bin[y:y + opt.block_height, 0:bin.shape[1]]
-    avg = cv2.reduce(trim, 0, cv2.REDUCE_AVG).transpose()
-    left = BlockIdentifier.__get_first_border(avg, opt.size_th, range(avg.shape[0]))
-    right = BlockIdentifier.__get_first_border(avg, opt.size_th, list(reversed(range(avg.shape[0]))))
+    left, right = BlockIdentifier.__get_left_right(trim, opt.size_th)
     dst.rc = [left, y, right - left, opt.block_height]
     dst.color_area = BlockIdentifier.__get_center_rect(dst.rc, 0.2)
     dst.width = int((dst.rc[2] + opt.block_width / 2) / opt.block_width)
@@ -108,7 +113,7 @@ class BlockIdentifier:
     bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
     cv2.drawContours(bin, [contour], 0, 255, -1)
     cv2.imshow("bin", bin)
-    top, bottom = BlockIdentifier.__get_top_bottom(bin, opt)
+    top, bottom = BlockIdentifier.__get_top_bottom(bin, opt.stub_th)
     blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
     if blockCount < 0:
       return
@@ -129,4 +134,6 @@ if __name__ == '__main__':
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
-  print(BlockIdentifier().calc(img, Option()))
+  blocks = BlockIdentifier.calc(img, Option())
+  print(blocks)
+
