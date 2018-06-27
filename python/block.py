@@ -36,7 +36,27 @@ def getBlockContour(img):
   cv2.imshow("v", hsv[2])
   return getMaximumContour(contours)
 
+def getTopBottom(bin):
+  m = cv2.reduce(bin, 1, cv2.REDUCE_AVG)
+  print(bin.shape)
+  print(m.shape)
+  top = 0
+  bottom = 0
+  for y in range(m.shape[0]):
+    if(20 <= m[y][0]):
+      top = y
+      break
+  for y in reversed(range(m.shape[0])):
+    if(20 <= m[y][0]):
+      bottom = y
+      break
+  return top, bottom
+
 def getBlockInfo(contour, img):
+  bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
+  cv2.drawContours(bin, [contour], 0, 255, -1)
+  cv2.imshow("bin", bin)
+  print(getTopBottom(bin))
   return img
 
 contour = getBlockContour(img)
