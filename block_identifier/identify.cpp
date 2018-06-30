@@ -58,7 +58,7 @@ namespace {
         @param[in] bgr BGR値
         @return 最も近い色
         */
-        Color identifyColor(cv::Vec3b bgr)
+        Color identifyColor2(cv::Vec3b bgr)
         {
             double len2 = 100000;
             Color dst;
@@ -84,7 +84,7 @@ namespace {
          @param[in] hsv HSV値
          @return 最も近い色
          */
-        std::string identifyColor2(cv::Vec3b hsv)
+        std::string identifyColor(cv::Vec3b hsv)
         {
             if(hsv[1] < 0x40) return "white"; // Approximately 0x05
             if(hsv[0] < 0x07) return "brown"; // Approximately 0x04
@@ -108,7 +108,7 @@ namespace {
             auto s = splits[1]; // 彩度の画像には余計な部分も多く含まれる
             auto v = splits[2]; // 明るさの画像は彩度と違い正確
             cv::Mat tmp;
-            cv::threshold(cv::min(s, v), tmp, 80, 255, cv::THRESH_BINARY); // 彩度と明るさの最小値をとることで彩度の高い部分が正確に抽出される。彩度は明るさと比べ値が小さいので二値化して、次の行で明るさと比較可能にする。
+            cv::threshold(cv::min(s, v), tmp, 80, 255, cv::THRESH_BINARY); // 彩度と明るさの最小値をとることで彩度の高い部分が正確に抽出される。彩度は明るさと比べ値が小さいので、次の行で明るさと比較するため二値化する。
             auto mixed = cv::max(v, tmp); // 彩度と明るさの最大値をとることで白を抽出する。なお、白以外はtmpの時点で全て抽出されている。
             DEBUG_SHOW("mixed", mixed);
             cv::Mat block;
@@ -173,9 +173,9 @@ namespace {
             info.bgr = bgr_hsv[0];
             info.hsv = bgr_hsv[1];
 #if 0
-            info.color = identifyColor(info.bgr);
+            info.color = identifyColor2(info.bgr);
 #else
-            info.color.name = identifyColor2(info.hsv);
+            info.color.name = identifyColor(info.hsv);
             info.color.bgr = info.bgr;
 #endif
             info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
@@ -252,7 +252,10 @@ void showBlocks(
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
         auto v = info.color.bgr;
-        auto f = boost::format("%d:%-6s <RGB> %02X %02X %02X <HSV> %02X %02X %02X") % info.width % info.color.name % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0] % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
+        auto f = boost::format("%d:%-6s <RGB> %02X %02X %02X <HSV> %02X %02X %02X")
+            % info.width % info.color.name
+            % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0]
+            % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
         cv::putText(canvas, f.str(), cv::Point2f(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);
