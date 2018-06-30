@@ -87,6 +87,23 @@ namespace {
             }
             return dst;
         }
+        
+        /*!
+         HSV色値から色の種類を判別する.
+         @param[in] hsv HSV値
+         @return 最も近い色
+         */
+        std::string identifyColor2(cv::Vec3b hsv)
+        {
+            if(hsv[1] < 0x40) return "white"; // 実際のところ0x10未満
+            if(hsv[0] < 0x07) return "brown";
+            if(hsv[0] < 0x11) return "orange";
+            if(hsv[0] < 0x1E) return "yellow";
+            if(hsv[0] < 0x40) return "yellowgreen";
+            if(hsv[0] < 0x50) return "green";
+            if(hsv[0] < 0x80) return "blue";
+            return "red"; // 0xB0くらい
+        }
         /*!
         カメラの画像からブロックの輪郭を抽出する
         @return ブロックの輪郭
@@ -186,9 +203,14 @@ namespace {
                 info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
                 info.color_area = info.rc * 0.2;
                 auto avg = calcAveBgr(image_(info.color_area));
-                info.rgb = avg[0];
+                info.bgr = avg[0];
                 info.hsv = avg[1];
-                info.color = identifyColor(info.rgb);
+#if 0
+                info.color = identifyColor(info.bgr);
+#else
+                info.color.name = identifyColor2(info.hsv);
+                info.color.bgr = info.bgr;
+#endif
                 info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
@@ -231,7 +253,7 @@ void showBlocks(
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
         auto v = info.color.bgr;
-        auto f = boost::format("%d:%s %02X %02X %02X HSV: %02X%02X%02X") % info.width % info.color.name % (int)info.rgb[2] % (int)info.rgb[1] % (int)info.rgb[0] % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
+        auto f = boost::format("%d:%-6s <RGB> %02X %02X %02X <HSV> %02X %02X %02X") % info.width % info.color.name % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0] % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
         cv::putText(canvas, f.str(), cv::Point2f(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);

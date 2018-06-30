@@ -79,8 +79,8 @@
 		2868BA0A20DDCD70009F37BC = {
 			isa = PBXGroup;
 			children = (
-				2868BA2420DDCE60009F37BC /* block_identifier */,
 				2868BA1520DDCD70009F37BC /* test */,
+				2868BA2420DDCE60009F37BC /* block_identifier */,
 				2868BA1420DDCD70009F37BC /* Products */,
 				2868BA1D20DDCDFA009F37BC /* Frameworks */,
 			);
