@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07AF5F9A20E79AB900467082 /* option.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07AF5F9520E79AB900467082 /* option.cpp */; };
+		07AF5F9B20E79AB900467082 /* identify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07AF5F9720E79AB900467082 /* identify.cpp */; };
 		2868BA1720DDCD70009F37BC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2868BA1620DDCD70009F37BC /* main.cpp */; };
 		2868BA2120DDCDFA009F37BC /* libopencv_imgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA1E20DDCDFA009F37BC /* libopencv_imgproc.a */; };
 		2868BA2220DDCDFA009F37BC /* libopencv_highgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA1F20DDCDFA009F37BC /* libopencv_highgui.a */; };
 		2868BA2320DDCDFA009F37BC /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA2020DDCDFA009F37BC /* libopencv_core.a */; };
-		2868BA3220DDCE70009F37BC /* option.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2868BA2A20DDCE70009F37BC /* option.cpp */; };
-		2868BA3320DDCE70009F37BC /* identify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2868BA2B20DDCE70009F37BC /* identify.cpp */; };
 		2868BA3720DDCEA6009F37BC /* libboost_serialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA3620DDCEA6009F37BC /* libboost_serialization.a */; };
 		2868BA3920DDCEB5009F37BC /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA3820DDCEB5009F37BC /* libboost_system.a */; };
 		2868BA5520DDD3AB009F37BC /* libopencv_imgcodecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2868BA5420DDD3AB009F37BC /* libopencv_imgcodecs.a */; };
@@ -31,17 +31,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07AF5F9420E79AB900467082 /* identify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = identify.h; path = ../../block_identifier/identify.h; sourceTree = "<group>"; };
+		07AF5F9520E79AB900467082 /* option.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = option.cpp; path = ../../block_identifier/option.cpp; sourceTree = "<group>"; };
+		07AF5F9620E79AB900467082 /* default_colors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = default_colors.hpp; path = ../../block_identifier/default_colors.hpp; sourceTree = "<group>"; };
+		07AF5F9720E79AB900467082 /* identify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = identify.cpp; path = ../../block_identifier/identify.cpp; sourceTree = "<group>"; };
+		07AF5F9820E79AB900467082 /* picojson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = picojson.h; path = ../../block_identifier/picojson.h; sourceTree = "<group>"; };
+		07AF5F9920E79AB900467082 /* option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = option.h; path = ../../block_identifier/option.h; sourceTree = "<group>"; };
 		2868BA1320DDCD70009F37BC /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		2868BA1620DDCD70009F37BC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		2868BA1E20DDCDFA009F37BC /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_imgproc.a; path = ../../../../../usr/local/lib/libopencv_imgproc.a; sourceTree = "<group>"; };
 		2868BA1F20DDCDFA009F37BC /* libopencv_highgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_highgui.a; path = ../../../../../usr/local/lib/libopencv_highgui.a; sourceTree = "<group>"; };
 		2868BA2020DDCDFA009F37BC /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_core.a; path = ../../../../../usr/local/lib/libopencv_core.a; sourceTree = "<group>"; };
-		2868BA2520DDCE70009F37BC /* identify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = identify.h; path = ../../block_identifier/identify.h; sourceTree = "<group>"; };
-		2868BA2620DDCE70009F37BC /* option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = option.h; path = ../../block_identifier/option.h; sourceTree = "<group>"; };
-		2868BA2920DDCE70009F37BC /* picojson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = picojson.h; path = ../../block_identifier/picojson.h; sourceTree = "<group>"; };
-		2868BA2A20DDCE70009F37BC /* option.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = option.cpp; path = ../../block_identifier/option.cpp; sourceTree = "<group>"; };
-		2868BA2B20DDCE70009F37BC /* identify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = identify.cpp; path = ../../block_identifier/identify.cpp; sourceTree = "<group>"; };
-		2868BA2C20DDCE70009F37BC /* default_colors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = default_colors.hpp; path = ../../block_identifier/default_colors.hpp; sourceTree = "<group>"; };
 		2868BA3620DDCEA6009F37BC /* libboost_serialization.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_serialization.a; path = ../../../../../usr/local/lib/libboost_serialization.a; sourceTree = "<group>"; };
 		2868BA3820DDCEB5009F37BC /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../../../../usr/local/lib/libboost_system.a; sourceTree = "<group>"; };
 		2868BA3A20DDD24A009F37BC /* liblibjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibjpeg.a; path = ../../../../../usr/local/lib/liblibjpeg.a; sourceTree = "<group>"; };
@@ -130,12 +130,12 @@
 		2868BA2420DDCE60009F37BC /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
-				2868BA2C20DDCE70009F37BC /* default_colors.hpp */,
-				2868BA2B20DDCE70009F37BC /* identify.cpp */,
-				2868BA2520DDCE70009F37BC /* identify.h */,
-				2868BA2A20DDCE70009F37BC /* option.cpp */,
-				2868BA2620DDCE70009F37BC /* option.h */,
-				2868BA2920DDCE70009F37BC /* picojson.h */,
+				07AF5F9620E79AB900467082 /* default_colors.hpp */,
+				07AF5F9720E79AB900467082 /* identify.cpp */,
+				07AF5F9420E79AB900467082 /* identify.h */,
+				07AF5F9520E79AB900467082 /* option.cpp */,
+				07AF5F9920E79AB900467082 /* option.h */,
+				07AF5F9820E79AB900467082 /* picojson.h */,
 			);
 			path = block_identifier;
 			sourceTree = "<group>";
@@ -196,9 +196,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2868BA3320DDCE70009F37BC /* identify.cpp in Sources */,
+				07AF5F9A20E79AB900467082 /* option.cpp in Sources */,
+				07AF5F9B20E79AB900467082 /* identify.cpp in Sources */,
 				2868BA1720DDCD70009F37BC /* main.cpp in Sources */,
-				2868BA3220DDCE70009F37BC /* option.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

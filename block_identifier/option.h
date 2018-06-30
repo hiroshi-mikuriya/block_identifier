@@ -62,7 +62,8 @@ struct BlockInfo
     Color color; ///< ブロックの色
     cv::Rect rc; ///< ブロックの矩形
     cv::Rect color_area; ///< ブロック色判定領域
-    cv::Vec3b ave; ///< 平均色
+    cv::Vec3b rgb; ///< 平均色(RGB)
+    cv::Vec3b hsv; ///< 平均色(HSV)
     int width; ///< 横幅: 1, 2, 3
     Block to_block()const; ///< Block型へ変換する
 };

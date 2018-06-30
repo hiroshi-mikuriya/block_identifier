@@ -159,7 +159,11 @@ namespace {
                 cv::Mat tmp;
                 cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
                 cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
-                return tmp.at<cv::Vec3b>(0);
+                std::vector<cv::Vec3b> dst(2);
+                dst[0] = tmp.at<cv::Vec3b>(0);
+                cv::cvtColor(tmp, tmp, CV_BGR2HSV);
+                dst[1] = tmp.at<cv::Vec3b>(0);
+                return dst;
             };
             auto tb = getTopBottom(bin);
             std::vector<BlockInfo> dst;
@@ -182,8 +186,10 @@ namespace {
                 BlockInfo info;
                 info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
                 info.color_area = info.rc * 0.2;
-                info.ave = calcAveBgr(image_(info.color_area));
-                info.color = identifyColor(info.ave);
+                auto avg = calcAveBgr(image_(info.color_area));
+                info.rgb = avg[0];
+                info.hsv = avg[1];
+                info.color = identifyColor(info.rgb);
                 info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
                 dst.push_back(info);
             }
@@ -226,7 +232,7 @@ void showBlocks(
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
         auto v = info.color.bgr;
-        auto f = boost::format("%d:%s %02X %02X %02X") % info.width % info.color.name % (int)info.ave[2] % (int)info.ave[1] % (int)info.ave[0];
+        auto f = boost::format("%d:%s %02X %02X %02X HSV: %02X%02X%02X") % info.width % info.color.name % (int)info.rgb[2] % (int)info.rgb[1] % (int)info.rgb[0] % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
         cv::putText(canvas, f.str(), cv::Point2f(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);
