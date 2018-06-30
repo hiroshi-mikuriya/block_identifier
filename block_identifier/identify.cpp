@@ -1,5 +1,7 @@
 #include "identify.h"
 #include <boost/format.hpp>
+#include <boost/array.hpp>
+#include <boost/optional.hpp>
 
 #ifdef _DEBUG
 #define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
@@ -8,15 +10,6 @@
 #endif
 
 namespace {
-    /*!
-    上端、下端
-    */
-    struct TopBottom
-    {
-        int top;
-        int bottom;
-    };
-
     /*!
     矩形を縮尺率を変換する。中心は保つ。
     @param[in] rc 矩形
@@ -46,19 +39,17 @@ namespace {
         Option const opt_;
 
         /*!
-         輪郭2値画像の上端、下端を返す
-         ブロックの上ボッチをなるべく消す
+         輪郭2値画像の両端を返す
          @param[in] bin 輪郭2値画像
-         @return 上端、下端
+         @return 両端
          */
-        TopBottom getTopBottom(cv::Mat const & bin)
+        boost::array<int, 2> getBothEnds(cv::Mat const & bin, int th)
         {
             cv::Mat m;
-            cv::reduce(bin, m, 1, CV_REDUCE_AVG);
-            m = m.t();
-            TopBottom dst;
-            for (dst.top = 0; m.data[dst.top] < opt_.tune.stud_th; dst.top++);
-            for (dst.bottom = m.cols - 1; m.data[dst.bottom] < opt_.tune.stud_th; dst.bottom--);
+            cv::reduce(bin, m, 0, CV_REDUCE_AVG);
+            boost::array<int, 2> dst;
+            for (dst[0] = 0; m.data[dst[0]] < th; dst[0]++);
+            for (dst[1] = m.cols - 1; m.data[dst[1]] < th; dst[1]--);
             return dst;
         }
 
@@ -95,14 +86,14 @@ namespace {
          */
         std::string identifyColor2(cv::Vec3b hsv)
         {
-            if(hsv[1] < 0x40) return "white"; // 実際のところ0x10未満
-            if(hsv[0] < 0x07) return "brown";
-            if(hsv[0] < 0x11) return "orange";
-            if(hsv[0] < 0x1E) return "yellow";
-            if(hsv[0] < 0x40) return "yellowgreen";
-            if(hsv[0] < 0x50) return "green";
-            if(hsv[0] < 0x80) return "blue";
-            return "red"; // 0xB0くらい
+            if(hsv[1] < 0x40) return "white"; // Approximately 0x05
+            if(hsv[0] < 0x07) return "brown"; // Approximately 0x04
+            if(hsv[0] < 0x11) return "orange"; // Approximately 0x0B
+            if(hsv[0] < 0x1E) return "yellow"; // Approximately 0x1A
+            if(hsv[0] < 0x40) return "yellowgreen"; // Approximately 0x23
+            if(hsv[0] < 0x50) return "green"; // Approximately 0x45
+            if(hsv[0] < 0x80) return "blue"; // Approximately 0x6A
+            return "red"; // Approximately 0xB1
         }
         /*!
         カメラの画像からブロックの輪郭を抽出する
@@ -114,11 +105,11 @@ namespace {
             cv::cvtColor(image_, hsv, CV_BGR2HSV);
             std::vector<cv::Mat> splits;
             cv::split(hsv, splits);
-            auto s = splits[1];
-            auto v = splits[2];
+            auto s = splits[1]; // 彩度の画像には余計な部分も多く含まれる
+            auto v = splits[2]; // 明るさの画像は彩度と違い正確
             cv::Mat tmp;
-            cv::threshold(cv::min(s, v), tmp, 80, 255, cv::THRESH_BINARY);
-            auto mixed = cv::max(v, tmp);
+            cv::threshold(cv::min(s, v), tmp, 80, 255, cv::THRESH_BINARY); // 彩度と明るさの最小値をとることで彩度の高い部分が正確に抽出される。彩度は明るさと比べ値が小さいので二値化して、次の行で明るさと比較可能にする。
+            auto mixed = cv::max(v, tmp); // 彩度と明るさの最大値をとることで白を抽出する。なお、白以外はtmpの時点で全て抽出されている。
             DEBUG_SHOW("mixed", mixed);
             cv::Mat block;
             cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);
@@ -153,6 +144,43 @@ namespace {
             }
             return res;
         }
+        /*! 画像の平均色を返す */
+        boost::array<cv::Vec3b, 2> calcAvgColor(cv::Mat const & src)
+        {
+            cv::Mat tmp;
+            cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
+            cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
+            boost::array<cv::Vec3b, 2> dst;
+            dst[0] = tmp.at<cv::Vec3b>(0);
+            cv::cvtColor(tmp, tmp, CV_BGR2HSV);
+            dst[1] = tmp.at<cv::Vec3b>(0);
+            return dst;
+        }
+
+        boost::optional<BlockInfo> getBlockInfo(int y, cv::Mat const & bin)
+        {
+            cv::Mat const line = bin(cv::Rect(0, y, bin.cols, opt_.tune.get_block_height()));
+            auto const lr = getBothEnds(line, opt_.tune.size_th);
+            int const right = lr[1];
+            int const left = lr[0];
+            BlockInfo info;
+            if (right <= left){
+                return boost::none; // 計算できなかったので仕方ないからあきらめる
+            }
+            info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
+            info.color_area = info.rc * 0.2;
+            auto const bgr_hsv = calcAvgColor(image_(info.color_area));
+            info.bgr = bgr_hsv[0];
+            info.hsv = bgr_hsv[1];
+#if 0
+            info.color = identifyColor(info.bgr);
+#else
+            info.color.name = identifyColor2(info.hsv);
+            info.color.bgr = info.bgr;
+#endif
+            info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
+            return info;
+        }
         /*!
         画像内の指定した矩形の全ブロック情報を取得する
         @param[in] points ブロックの矩形
@@ -169,50 +197,21 @@ namespace {
             }();
             DEBUG_SHOW("original", image_);
             DEBUG_SHOW("bin", bin);
-
-            /*! 画像の平均色を返す */
-            auto calcAveBgr = [](cv::Mat const & src){
-                cv::Mat tmp;
-                cv::reduce(src, tmp, 1, CV_REDUCE_AVG);
-                cv::reduce(tmp, tmp, 0, CV_REDUCE_AVG);
-                std::vector<cv::Vec3b> dst(2);
-                dst[0] = tmp.at<cv::Vec3b>(0);
-                cv::cvtColor(tmp, tmp, CV_BGR2HSV);
-                dst[1] = tmp.at<cv::Vec3b>(0);
-                return dst;
-            };
-            auto tb = getTopBottom(bin);
+            auto tb = getBothEnds(bin.t(), opt_.tune.stud_th);
             std::vector<BlockInfo> dst;
-            if (tb.bottom <= tb.top){
+            if (tb[1] <= tb[0]){
                 return dst;
             }
-            int blockCount = (tb.bottom - tb.top + opt_.tune.get_block_height() / 2) / opt_.tune.get_block_height();
+            int blockCount = (tb[1] - tb[0] + opt_.tune.get_block_height() / 2) / opt_.tune.get_block_height();
             for (int i = 0; i < blockCount; ++i){
-                int y = (tb.top * (blockCount - i) + tb.bottom * i) / blockCount;
+                int y = (tb[0] * (blockCount - i) + tb[1] * i) / blockCount;
                 if (bin.rows - opt_.tune.get_block_height() < y){
                     continue;
                 }
-                cv::Mat ary;
-                cv::reduce(bin(cv::Rect(0, y, bin.cols, opt_.tune.get_block_height())), ary, 0, CV_REDUCE_AVG);
-                int left = 0;
-                for (; ary.data[left] < opt_.tune.size_th && left < ary.cols; ++left);
-                int right = bin.cols - 1;
-                for (; ary.data[right] < opt_.tune.size_th && 0 <= right; --right);
-                if (right <= left) continue; // 計算できなかったので仕方ないからあきらめる
-                BlockInfo info;
-                info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
-                info.color_area = info.rc * 0.2;
-                auto avg = calcAveBgr(image_(info.color_area));
-                info.bgr = avg[0];
-                info.hsv = avg[1];
-#if 0
-                info.color = identifyColor(info.bgr);
-#else
-                info.color.name = identifyColor2(info.hsv);
-                info.color.bgr = info.bgr;
-#endif
-                info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
-                dst.push_back(info);
+                auto info = getBlockInfo(y, bin);
+                if(info){
+                    dst.push_back(info.get());
+                }
             }
             for(auto block : dst){
                 cv::rectangle(bin, block.rc, 128);
