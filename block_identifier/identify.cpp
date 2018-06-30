@@ -4,7 +4,7 @@
 #ifdef _DEBUG
 #define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #else
-#define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
+#define DEBUG_SHOW(s, m)
 #endif
 
 namespace {
