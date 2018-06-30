@@ -4,7 +4,7 @@
 #ifdef _DEBUG
 #define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #else
-#define DEBUG_SHOW(s, m)
+#define DEBUG_SHOW(s, m)  cv::imshow((s), (m))
 #endif
 
 namespace {
@@ -99,10 +99,9 @@ namespace {
             cv::split(hsv, splits);
             auto s = splits[1];
             auto v = splits[2];
-            auto mixed = s * 0.6 + v;
-            DEBUG_SHOW("HSV[H]", splits[0]);
-            DEBUG_SHOW("HSV[S]", s);
-            DEBUG_SHOW("HSV[V]", v);
+            cv::Mat tmp;
+            cv::threshold(cv::min(s, v), tmp, 80, 255, cv::THRESH_BINARY);
+            auto mixed = cv::max(v, tmp);
             DEBUG_SHOW("mixed", mixed);
             cv::Mat block;
             cv::threshold(mixed, block, opt_.tune.bin_th, 255, cv::THRESH_BINARY);

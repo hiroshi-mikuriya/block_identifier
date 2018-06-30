@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include "identify.h"
 
-std::string const Data[] = {
+std::string const Data[] = {  
     "red1.png",
     "red2.png",
     "red3.png",
