@@ -163,10 +163,10 @@ namespace {
             auto const lr = getBothEnds(line, opt_.tune.size_th);
             int const right = lr[1];
             int const left = lr[0];
-            BlockInfo info;
             if (right <= left){
                 return boost::none; // 計算できなかったので仕方ないからあきらめる
             }
+            BlockInfo info;
             info.rc = cv::Rect(left, y, right - left, opt_.tune.get_block_height());
             info.color_area = info.rc * 0.2;
             auto const bgr_hsv = calcAvgColor(image_(info.color_area));
@@ -213,10 +213,6 @@ namespace {
                     dst.push_back(info.get());
                 }
             }
-            for(auto block : dst){
-                cv::rectangle(bin, block.rc, 128);
-            }
-            DEBUG_SHOW("block rects", bin);
             return dst;
         }
     public:
