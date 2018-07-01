@@ -226,7 +226,7 @@ void showBlocks(
     for (auto info : blockInfo){
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
-        auto f = boost::format("%-12s W:%d R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
+        auto f = boost::format("%-11s W:%d R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
             % info.color.name % info.width
             % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0]
             % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
