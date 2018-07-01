@@ -1,0 +1,28 @@
+@startuml
+title ブロック認識構成
+
+package "ブロック認識箱" as Box #eef {
+    package "Raspi" as RP1  #ddf {
+        object "ボタン通知" as ButtonSW #fcf
+        object BlockIdentifier #fcf
+        ButtonSW --> BlockIdentifier : ボタン押下（TCP ポート4123）
+    }
+    object "カメラ" as Camera #fdf
+    object "ボタン" as ButtonHW #fdf
+    ButtonHW --> ButtonSW : ボタン状態
+    Camera --> BlockIdentifier : 画像
+}
+
+package PC #dfd {
+    object Framework #afa
+}
+BlockIdentifier --> Framework : ブロック認識結果（HTTP ポート5001）
+
+package LED #fee {
+    package "Raspi" as RP2 #fdd {
+        object Receiver #fbb
+    }
+}
+Framework --> Receiver : LED点灯パターン（UDP ポート9001）
+
+@enduml
