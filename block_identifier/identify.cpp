@@ -25,6 +25,17 @@ namespace {
             std::max(1, static_cast<int>(rc.height * r))
             );
     }
+    
+    cv::Scalar brightColor(cv::Vec3b const & bgr)
+    {
+        cv::Mat m(1, 1, CV_8UC3);
+        m.at<cv::Vec3b>(0) = bgr;
+        cv::cvtColor(m, m, CV_BGR2HSV);
+        m.at<cv::Vec3b>(0)[2] = 255;
+        cv::cvtColor(m, m, CV_HSV2BGR);
+        auto v = m.at<cv::Vec3b>(0);
+        return cv::Scalar(v[0], v[1], v[2]);
+    }
 
     /*!
     画像からレゴブロックを認識するクラス
@@ -215,13 +226,12 @@ void showBlocks(
     for (auto info : blockInfo){
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
-        auto v = info.color.bgr;
-        auto f = boost::format("%d:%-12s R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
-            % info.width % info.color.name
+        auto f = boost::format("%-12s W:%d R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
+            % info.color.name % info.width
             % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0]
             % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
         cv::Point2f const pt(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f);
-        cv::putText(canvas, f.str(), pt, cv::FONT_HERSHEY_SIMPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+        cv::putText(canvas, f.str(), pt, cv::FONT_HERSHEY_SIMPLEX, 0.7, brightColor(info.color.bgr));
     }
     cv::imshow("blocks", canvas);
 }
