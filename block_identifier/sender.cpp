@@ -1,5 +1,6 @@
 #include "sender.h"
 #include "picojson.h"
+#include "myclient.hpp"
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
 
@@ -19,6 +20,8 @@ namespace
         root["orders"] = value(orders);
         return value(root).serialize();
     }
+    
+    
 
     void postJson(
         std::string host,
@@ -32,7 +35,8 @@ namespace
         boost::asio::ip::tcp::resolver::query query(host, "http");
         boost::asio::ip::tcp::socket sock(io_service);
         std::cout << "connecting... " << host << std::endl;
-        sock.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(host), port));
+        boost::asio::ip::tcp::endpoint const ep(boost::asio::ip::address::from_string(host), port);
+        sock.connect(ep);
         std::cout << "connected." << std::endl;
 
         // request
