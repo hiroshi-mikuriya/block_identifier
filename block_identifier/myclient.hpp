@@ -48,7 +48,7 @@ public:
         socket_.async_connect(ep, boost::bind(&MyClient::on_connect, this, _1));
         connect_timer_.expires_from_now(boost::posix_time::seconds(timeout_sec));
         connect_timer_.async_wait(boost::bind(&MyClient::on_connect_timeout, this, _1));
-        while(callbacked_){
+        while(!callbacked_){
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
         std::cout << connect_result_ << std::endl;
