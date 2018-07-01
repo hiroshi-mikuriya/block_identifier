@@ -8,6 +8,12 @@
 #include <chrono>
 #include <ctime>
 
+#ifdef ENABLE_RASPBERRY_PI_CAMERA
+#define PLAY_SOUND(wav) system("aplay " wav);
+#else
+#define PLAY_SOUND(wav)
+#endif
+
 namespace {
     void save_image(cv::Mat const & m) {
         auto const now = std::chrono::system_clock::now();
@@ -17,7 +23,7 @@ namespace {
         cv::imwrite(name + ".png", m);
     }
     bool is_atari(std::vector<BlockInfo> const & infos){
-        for (auto const info : infos){
+        for (auto const & info : infos){
             if (info.width == 2){ // オブジェクトブロックが１つでもあればOK
                 return true;
             }
@@ -71,11 +77,11 @@ namespace {
             if(triggered){
                 triggered = false;
                 if (is_atari(blockInfo)){
-                    system("aplay ../sound/atari.wav");
+                    PLAY_SOUND("../sound/atari.wav");
                     sendToServer(opt, blockInfo, address, port);
                 }
                 else{
-                    system("aplay ../sound/hazure.wav");
+                    PLAY_SOUND("../sound/hazure.wav");
                 }
             }
         }
