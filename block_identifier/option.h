@@ -50,7 +50,6 @@ bool operator<(Block const & lv, Block const & rv);
 */
 struct Option
 {
-    std::vector<Color> colors; ///< 色情報
     Tuning tune; ///< ブロック識別のチューニングパラメータ
 };
 

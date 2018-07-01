@@ -33,7 +33,6 @@
 /* Begin PBXFileReference section */
 		07AF5F9420E79AB900467082 /* identify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = identify.h; path = ../../block_identifier/identify.h; sourceTree = "<group>"; };
 		07AF5F9520E79AB900467082 /* option.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = option.cpp; path = ../../block_identifier/option.cpp; sourceTree = "<group>"; };
-		07AF5F9620E79AB900467082 /* default_colors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = default_colors.hpp; path = ../../block_identifier/default_colors.hpp; sourceTree = "<group>"; };
 		07AF5F9720E79AB900467082 /* identify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = identify.cpp; path = ../../block_identifier/identify.cpp; sourceTree = "<group>"; };
 		07AF5F9820E79AB900467082 /* picojson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = picojson.h; path = ../../block_identifier/picojson.h; sourceTree = "<group>"; };
 		07AF5F9920E79AB900467082 /* option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = option.h; path = ../../block_identifier/option.h; sourceTree = "<group>"; };
@@ -130,7 +129,6 @@
 		2868BA2420DDCE60009F37BC /* block_identifier */ = {
 			isa = PBXGroup;
 			children = (
-				07AF5F9620E79AB900467082 /* default_colors.hpp */,
 				07AF5F9720E79AB900467082 /* identify.cpp */,
 				07AF5F9420E79AB900467082 /* identify.h */,
 				07AF5F9520E79AB900467082 /* option.cpp */,

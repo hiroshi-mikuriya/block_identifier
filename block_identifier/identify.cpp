@@ -52,33 +52,6 @@ namespace {
             for (dst[1] = m.cols - 1; m.data[dst[1]] < th; dst[1]--);
             return dst;
         }
-
-        /*!
-        このプログラムが認識する色の中で最も近い色を返す
-        @param[in] bgr BGR値
-        @return 最も近い色
-        */
-        Color identifyColor2(cv::Vec3b bgr)
-        {
-            double len2 = 100000;
-            Color dst;
-            auto calcLen2 = [](cv::Vec3b v0, cv::Vec3b v1){
-                double d = 0;
-                for (int i = 0; i < 3; ++i){
-                    d += (v0[i] - v1[i]) * (v0[i] - v1[i]);
-                }
-                return d;
-            };
-            for (auto c : opt_.colors){
-                auto len = calcLen2(bgr, c.bgr);
-                if (len < len2){
-                    len2 = len;
-                    dst = c;
-                }
-            }
-            return dst;
-        }
-        
         /*!
          HSV色値から色の種類を判別する.
          @param[in] hsv HSV値

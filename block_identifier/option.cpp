@@ -48,7 +48,6 @@ namespace boost {
         template <class Archive>
         void serialize(Archive& ar, Option & v, const unsigned int version)
         {
-            ar & boost::serialization::make_nvp("color", v.colors);
             ar & boost::serialization::make_nvp("tuning", v.tune);
         }
     }
@@ -67,9 +66,6 @@ Block BlockInfo::to_block()const
 Option getDefaultOption()
 {
     Option opt;
-    opt.colors = {
-#include "default_colors.hpp"
-    };
     /*
     int stud_th; ///< 最上段ブロックのぼっちを除去する閾値
     int size_th; ///< ブロック幅判定閾値
