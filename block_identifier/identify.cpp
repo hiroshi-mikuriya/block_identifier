@@ -145,12 +145,7 @@ namespace {
             auto const bgr_hsv = calcAvgColor(image_(info.color_area));
             info.bgr = bgr_hsv[0];
             info.hsv = bgr_hsv[1];
-#if 0
-            info.color = identifyColor2(info.bgr);
-#else
-            info.color.name = identifyColor(info.hsv);
-            info.color.bgr = info.bgr;
-#endif
+            info.color = { identifyColor(info.hsv), info.bgr };
             info.width = (right - left + opt_.tune.get_block_width() / 2) / opt_.tune.get_block_width();
             return info;
         }
