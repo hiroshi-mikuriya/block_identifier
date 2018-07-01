@@ -125,13 +125,13 @@ namespace {
             DEBUG_SHOW("block dilate erode", block);
             std::vector<contour_t> contours;
             cv::findContours(block, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-            return getBiggestAreaContour(contours);
+            return largestContour(contours);
         }
         /**
         最も面積が広い輪郭を返す.
         ただし輪郭の面積が画像サイズ並みだった場合は除外する.
         */
-        contour_t getBiggestAreaContour(std::vector<contour_t> const & contours)
+        contour_t largestContour(std::vector<contour_t> const & contours)
         {
             contour_t res;
             double maxArea = -1;
@@ -191,7 +191,7 @@ namespace {
             /*! 背景：黒　輪郭内：白　の画像を作る*/
             auto bin = [this, &points](){
                 cv::Mat bin = cv::Mat::zeros(image_.size(), CV_8UC1);
-                std::vector<std::vector<cv::Point>> contours = { points };
+                std::vector<contour_t> contours = { points };
                 cv::drawContours(bin, contours, 0, 255, CV_FILLED);
                 return bin;
             }();
@@ -248,11 +248,12 @@ void showBlocks(
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
         cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
         auto v = info.color.bgr;
-        auto f = boost::format("%d:%-6s <RGB> %02X %02X %02X <HSV> %02X %02X %02X")
+        auto f = boost::format("%d:%-12s R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
             % info.width % info.color.name
             % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0]
             % (int)info.hsv[0] % (int)info.hsv[1] % (int)info.hsv[2];
-        cv::putText(canvas, f.str(), cv::Point2f(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
+        cv::Point2f const pt(image.cols * 1.1f, info.rc.y + info.rc.height * 0.4f);
+        cv::putText(canvas, f.str(), pt, cv::FONT_HERSHEY_SIMPLEX, 0.7, cv::Scalar(v[0], v[1], v[2]));
     }
     cv::imshow("blocks", canvas);
 }
