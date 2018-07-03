@@ -26,8 +26,6 @@ class Option:
     self.stub_th = 20 # 最上段ブロックのぼっちを除去する閾値
     self.size_th = 190 # ブロック幅判定閾値
     self.bin_th = 200 # ２値化閾値
-    self.ratio_s = 0.6 # HSVのS要素の重み（ブロック認識で使用）
-    self.ratio_v = 1.0 # HSVのV要素の重み（ブロック認識で使用）
   def __repr__(self):
     return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : ratio_s %s : ratio_v %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.ratio_s, self.ratio_v)    
 
@@ -156,7 +154,7 @@ class BlockIdentifier:
 
 
 if __name__ == '__main__':
-  img = cv2.imread("../images/white2.png", 1)
+  img = cv2.imread("../images/red2.png", 1)
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
