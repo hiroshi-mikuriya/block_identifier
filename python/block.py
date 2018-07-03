@@ -56,8 +56,8 @@ class BlockIdentifier:
   @staticmethod
   def __get_block_contour(img, opt):
     hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-    mixed = cv2.addWeighted(hsv[1], opt.ratio_s, hsv[2], opt.ratio_v, 0)
-    _, block = cv2.threshold(mixed, opt.bin_th, 255, cv2.THRESH_BINARY)
+    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), 80, 255, cv2.THRESH_BINARY)
+    _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th, 255, cv2.THRESH_BINARY)
     # cv2.imshow("block", block)
     filled = BlockIdentifier.__fill_divided_blocks(block)
     _, contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -105,6 +105,24 @@ class BlockIdentifier:
     return rgb[0][0], hsv[0][0]
   
   @staticmethod
+  def __get_color(hsv):
+    if hsv[1] < 0x40:
+      return "white"
+    if hsv[0] < 0x07:
+      return "brown"
+    if hsv[0] < 0x11:
+      return "orange"
+    if hsv[0] < 0x1E:
+      return "yellow"
+    if hsv[0] < 0x40:
+      return "yellowgreen"
+    if hsv[0] < 0x50:
+      return "green"
+    if hsv[0] < 0x80:
+      return "blue"
+    return "red"
+  
+  @staticmethod
   def __get_unit_block(img, bin, y, opt):
     dst = BlockInfo()
     trim = bin[y:y + opt.block_height, 0:bin.shape[1]]
@@ -112,9 +130,8 @@ class BlockIdentifier:
     dst.rc = [left, y, right - left, opt.block_height]
     dst.color_area = BlockIdentifier.__get_center_rect(dst.rc, 0.2)
     dst.width = int((dst.rc[2] + opt.block_width / 2) / opt.block_width)
-    rgb, hsv = BlockIdentifier.__get_block_color(img, dst.rc)
-    dst.rgb = rgb
-    dst.hsv = hsv
+    dst.rgb, dst.hsv = BlockIdentifier.__get_block_color(img, dst.rc)
+    dst.color = BlockIdentifier.__get_color(dst.hsv)
     return dst
   
   @staticmethod
@@ -139,7 +156,7 @@ class BlockIdentifier:
 
 
 if __name__ == '__main__':
-  img = cv2.imread("../images/red2.png", 1)
+  img = cv2.imread("../images/white2.png", 1)
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
