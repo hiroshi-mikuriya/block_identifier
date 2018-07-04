@@ -74,7 +74,7 @@ namespace {
             if(hsv[0] < 0x07) return "brown"; // Approximately 0x04
             if(hsv[0] < 0x11) return "orange"; // Approximately 0x0B
             if(hsv[0] < 0x1E) return "yellow"; // Approximately 0x1A
-            if(hsv[0] < 0x40) return "yellowgreen"; // Approximately 0x23
+            if(hsv[0] < 0x38) return "yellowgreen"; // Approximately 0x23
             if(hsv[0] < 0x50) return "green"; // Approximately 0x45
             if(hsv[0] < 0x80) return "blue"; // Approximately 0x6A
             return "red"; // Approximately 0xB1
@@ -224,8 +224,9 @@ void showBlocks(
     cv::Mat canvas = cv::Mat::zeros(image.rows, image.cols + 640, CV_8UC3);
     image.copyTo(canvas(cv::Rect(0, 0, image.cols, image.rows)));
     for (auto info : blockInfo){
+        cv::Scalar sc(255 - info.bgr[0], 255 - info.bgr[1], 255 - info.bgr[2]);
         cv::rectangle(canvas, info.rc, cv::Scalar(0, 255, 0), 1);
-        cv::rectangle(canvas, info.color_area, cv::Scalar(255, 0, 255), 1);
+        cv::rectangle(canvas, info.color_area, sc, 1);
         auto f = boost::format("%-11s W:%d R:%02X G:%02X B:%02X H:%02X S:%02X V:%02X")
             % info.color.name % info.width
             % (int)info.bgr[2] % (int)info.bgr[1] % (int)info.bgr[0]
