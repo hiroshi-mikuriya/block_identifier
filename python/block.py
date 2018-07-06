@@ -44,10 +44,10 @@ class BlockIdentifier:
   def __get_maximum_contour(contours):
     contour = contours[0]
     max_area = -1
-    for i in range(0, len(contours)):
-      area = cv2.contourArea(contours[i])
+    for c in contours:
+      area = cv2.contourArea(c)
       if max_area < area:
-        contour = contours[i]
+        contour = c
         max_area = area
     return contour
   
@@ -104,21 +104,14 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_color(hsv):
-    if hsv[1] < 0x40:
-      return "white"
-    if hsv[0] < 0x07:
-      return "brown"
-    if hsv[0] < 0x11:
-      return "orange"
-    if hsv[0] < 0x1E:
-      return "yellow"
-    if hsv[0] < 0x40:
-      return "yellowgreen"
-    if hsv[0] < 0x50:
-      return "green"
-    if hsv[0] < 0x80:
-      return "blue"
-    return "red"
+    return "white" if hsv[1] < 0x40 \
+      else "brown" if hsv[0] < 0x07 \
+      else "orange" if hsv[0] < 0x11 \
+      else "yellow" if hsv[0] < 0x1E \
+      else "yellowgreen" if hsv[0] < 0x38 \
+      else "green" if hsv[0] < 0x50 \
+      else "blue" if hsv[0] < 0x80 \
+      else "red"
   
   @staticmethod
   def __get_unit_block(img, bin, y, opt):
@@ -151,13 +144,35 @@ class BlockIdentifier:
   def calc(img, opt):
     contour = BlockIdentifier.__get_block_contour(img, opt)
     return BlockIdentifier.__get_block_info(contour, img, opt)
+  
+  @staticmethod
+  def __draw_rect(img, rc, color, thick):
+    pt1 = (rc[0], rc[1])
+    pt2 = (rc[0] + rc[2], rc[1] + rc[3])
+    cv2.rectangle(img, pt1, pt2, color, thick)
+
+  @staticmethod
+  def show_blocks(img, blocks):
+    canvas = np.zeros((img.shape[0], img.shape[1] + 640, 3), np.uint8)
+    canvas[0:img.shape[0], 0:img.shape[1], :] = img
+    for info in blocks:
+      BlockIdentifier.__draw_rect(canvas, info.rc, (0, 255, 0), 1)
+      BlockIdentifier.__draw_rect(canvas, info.color_area, (0, 255, 0), 1)
+      pt = (int(img.shape[1] * 1.1), int(info.rc[1] + info.rc[3] * 0.4))
+      str = "{:s} W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.color, info.width, info.rgb[2], info.rgb[1], info.rgb[0], info.hsv[0], info.hsv[1], info.hsv[2])
+      cv2.putText(canvas, str, pt, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255))
+
+    cv2.imshow("blocks", canvas)
+
 
 
 if __name__ == '__main__':
-  img = cv2.imread("../images/red2.png", 1)
+  img = cv2.imread("../images/colorful2.png", 1)
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
   blocks = BlockIdentifier.calc(img, Option())
   print(blocks)
+  BlockIdentifier.show_blocks(img, blocks)
+  cv2.waitKey()
 
