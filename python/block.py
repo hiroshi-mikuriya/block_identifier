@@ -1,37 +1,30 @@
 import sys
 import cv2
 import numpy as np
+import picamera
+import io
 
-"""
-認識したブロックの情報を持つ型
-"""
 class BlockInfo:
   def __init__(self):
-    self.rgb = [0, 0, 0] # ブロックのRGB値
-    self.hsv = [0, 0, 0] # ブロックのHSV値
-    self.rc = [0, 0, 0, 0] # ブロックの矩形
-    self.color_area = [0, 0, 0, 0] # ブロック色判定領域
-    self.color = "" # 色名
-    self.width = 0 # ブロック幅
+    self.bgr = [0, 0, 0] 
+    self.hsv = [0, 0, 0]
+    self.rc = [0, 0, 0, 0]
+    self.color_area = [0, 0, 0, 0]
+    self.color = ""
+    self.width = 0
   def __repr__(self):
-    return "<rgb %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.rgb, self.hsv, self.rc, self.color_area, self.color, self.width)
+    return "<bgr %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.bgr, self.hsv, self.rc, self.color_area, self.color, self.width)
 
-"""
-ブロック認識をするための設定パラメータ
-"""
 class Option:
   def __init__(self):
     self.block_height = 20
     self.block_width = 16
-    self.stub_th = 20 # 最上段ブロックのぼっちを除去する閾値
-    self.size_th = 190 # ブロック幅判定閾値
-    self.bin_th = 200 # ２値化閾値
+    self.stub_th = 20
+    self.size_th = 190
+    self.bin_th = 200
   def __repr__(self):
     return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : ratio_s %s : ratio_v %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.ratio_s, self.ratio_v)    
 
-"""
-ブロック認識を行うクラス
-"""
 class BlockIdentifier:
 
   @staticmethod
@@ -58,7 +51,7 @@ class BlockIdentifier:
     _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th, 255, cv2.THRESH_BINARY)
     # cv2.imshow("block", block)
     filled = BlockIdentifier.__fill_divided_blocks(block)
-    _, contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # cv2.imshow("original", img)
     # cv2.imshow("mixed", mixed)
     # cv2.imshow("h", hsv[0])
@@ -75,14 +68,14 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_top_bottom(bin, th):
-    m = cv2.reduce(bin, 1, cv2.REDUCE_AVG)
+    m = cv2.reduce(bin, 1, 1)
     top = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
     bottom = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
     return top, bottom
 
   @staticmethod
   def __get_left_right(bin, th):
-    m = cv2.reduce(bin, 0, cv2.REDUCE_AVG).transpose()
+    m = cv2.reduce(bin, 0, 1).transpose()
     left = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
     right = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
     return left, right
@@ -97,10 +90,11 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_block_color(img, rc):
-    a = cv2.reduce(img, 0, cv2.REDUCE_AVG)
-    rgb = cv2.reduce(a, 1, cv2.REDUCE_AVG)
-    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-    return rgb[0][0], hsv[0][0]
+    a = img[rc[1]:(rc[1] + rc[3]), rc[0]:(rc[0] + rc[2])]
+    a = cv2.reduce(a, 0, 1)
+    bgr = cv2.reduce(a, 1, 1)
+    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+    return bgr[0][0], hsv[0][0]
   
   @staticmethod
   def __get_color(hsv):
@@ -121,7 +115,7 @@ class BlockIdentifier:
     dst.rc = [left, y, right - left, opt.block_height]
     dst.color_area = BlockIdentifier.__get_center_rect(dst.rc, 0.2)
     dst.width = int((dst.rc[2] + opt.block_width / 2) / opt.block_width)
-    dst.rgb, dst.hsv = BlockIdentifier.__get_block_color(img, dst.rc)
+    dst.bgr, dst.hsv = BlockIdentifier.__get_block_color(img, dst.rc)
     dst.color = BlockIdentifier.__get_color(dst.hsv)
     return dst
   
@@ -159,15 +153,19 @@ class BlockIdentifier:
       BlockIdentifier.__draw_rect(canvas, info.rc, (0, 255, 0), 1)
       BlockIdentifier.__draw_rect(canvas, info.color_area, (0, 255, 0), 1)
       pt = (int(img.shape[1] * 1.1), int(info.rc[1] + info.rc[3] * 0.4))
-      str = "{:s} W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.color, info.width, info.rgb[2], info.rgb[1], info.rgb[0], info.hsv[0], info.hsv[1], info.hsv[2])
+      str = "{:12s} W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.color, info.width, info.bgr[2], info.bgr[1], info.bgr[0], info.hsv[0], info.hsv[1], info.hsv[2])
       cv2.putText(canvas, str, pt, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255))
-
     cv2.imshow("blocks", canvas)
 
 
 
 if __name__ == '__main__':
-  img = cv2.imread("../images/colorful2.png", 1)
+  camera = picamera.PiCamera()
+  stream = io.BytesIO()
+  camera.capture(stream, format='jpeg')
+  data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+  img = cv2.imdecode(data, 1)
+  # img = cv2.imread("../images/colorful2.png", 1)
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
