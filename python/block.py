@@ -161,6 +161,7 @@ class BlockIdentifier:
 
 if __name__ == '__main__':
   camera = picamera.PiCamera()
+  camera.resolution = (1280, 720)
   while(True):
     stream = io.BytesIO()
     camera.capture(stream, format='jpeg')
@@ -176,5 +177,5 @@ if __name__ == '__main__':
     blocks = BlockIdentifier.calc(img, Option())
     print(blocks)
     BlockIdentifier.show_blocks(img, blocks)
-    cv2.waitKey(100)
+    cv2.waitKey(10)
 
