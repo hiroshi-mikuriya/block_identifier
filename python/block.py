@@ -22,8 +22,11 @@ class Option:
     self.stub_th = 20
     self.size_th = 190
     self.bin_th = 200
+    self.camera_width = 1280
+    self.camera_height = 720
+    self.camera_ratio = 1.0
   def __repr__(self):
-    return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : ratio_s %s : ratio_v %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.ratio_s, self.ratio_v)    
+    return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : camera_width %s : camera_height %s : camera_ratio %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.camera_width, self.camera_height, self.camera_ratio)    
 
 class BlockIdentifier:
 
@@ -160,21 +163,22 @@ class BlockIdentifier:
 
 
 if __name__ == '__main__':
+  opt = Option()
   camera = picamera.PiCamera()
-  camera.resolution = (640, 360)
+  camera.resolution = (opt.camera_width, opt.camera_height)
   while(True):
     stream = io.BytesIO()
     camera.capture(stream, format='jpeg')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
-    # img = cv2.resize(img, None, fx = 1, fy = 1)
+    img = cv2.resize(img, None, fx = opt.camera_ratio, fy = opt.camera_ratio)
     img = cv2.flip(img, -1)
     img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
     # img = cv2.imread("../images/colorful2.png", 1)
     if img is None or img.shape[0] is 0:
       print('failed to open image')
       quit()
-    blocks = BlockIdentifier.calc(img, Option())
+    blocks = BlockIdentifier.calc(img, opt)
     print(blocks)
     BlockIdentifier.show_blocks(img, blocks)
     cv2.waitKey(10)
