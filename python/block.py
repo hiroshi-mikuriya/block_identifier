@@ -165,6 +165,10 @@ class BlockIdentifier:
 if __name__ == '__main__':
   opt = Option()
   camera = picamera.PiCamera()
+  camera.hflip = True
+  camera.vflip = True
+  camera.exposure_mode = 'off'
+  camera.awb_mode = 'off'
   # camera.resolution = (opt.camera_width, opt.camera_height)
   while(True):
     stream = io.BytesIO()
@@ -172,7 +176,7 @@ if __name__ == '__main__':
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
     img = cv2.resize(img, None, fx = opt.camera_ratio, fy = opt.camera_ratio)
-    img = cv2.flip(img, -1)
+    # img = cv2.flip(img, -1)
     img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
     # img = cv2.imread("../images/colorful2.png", 1)
     if img is None or img.shape[0] is 0:
