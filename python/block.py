@@ -170,6 +170,7 @@ if __name__ == '__main__':
   camera.start_preview()
   camera.exposure_mode = 'off'
   camera.awb_mode = 'off'
+  time.sleep(3) # initialize camera
   # camera.resolution = (opt.camera_width, opt.camera_height)
   while(True):
     stream = io.BytesIO()
