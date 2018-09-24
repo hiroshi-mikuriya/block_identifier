@@ -175,12 +175,13 @@ if __name__ == '__main__':
   camera.hflip = True
   camera.vflip = True
   camera.start_preview()
-  camera.exposure_mode = 'off'
-  camera.awb_mode = 'off'
+  #camera.exposure_mode = 'off'
+  #camera.awb_mode = 'off'
   time.sleep(3) # initialize camera
   # camera.resolution = (opt.camera_width, opt.camera_height)
   while(True):
     stream = io.BytesIO()
+    print([camera.ISO, camera.brightness, camera.exposure_compensation, camera,meter_mode, camera.resolution])
     camera.capture(stream, format='jpeg')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
