@@ -175,8 +175,9 @@ if __name__ == '__main__':
   camera.vflip = True
   camera.resolution = (opt.camera_width, opt.camera_height)
   camera.start_preview()
-  #camera.exposure_mode = 'off'
-  #camera.awb_mode = 'off'
+  camera.exposure_mode = 'off'
+  camera.awb_mode = 'off'
+  camera.brightness = 100
   time.sleep(3) # initialize camera
   while(True):
     stream = io.BytesIO()
