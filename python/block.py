@@ -17,16 +17,16 @@ class BlockInfo:
 
 class Option:
   def __init__(self):
-    self.block_height = 20
-    self.block_width = 16
     self.stub_th = 20
     self.size_th = 190
     self.bin_th = 200
     self.camera_width = 1280
     self.camera_height = 720
-    self.camera_ratio = 1.0
+    self.camera_ratio = 0.9
+    self.block_height = 20
+    self.block_width = 16
   def __repr__(self):
-    return "<block_height %s : block_width %s : stub_th %s : size_th %s : bin_th %s : camera_width %s : camera_height %s : camera_ratio %s>\n" % (self.block_height, self.block_width, self.stub_th, self.size_th, self.bin_th, self.camera_width, self.camera_height, self.camera_ratio)    
+    return "<stub_th %s : size_th %s : bin_th %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
 
 class BlockIdentifier:
 
@@ -165,7 +165,7 @@ class BlockIdentifier:
 if __name__ == '__main__':
   opt = Option()
   camera = picamera.PiCamera()
-  camera.resolution = (opt.camera_width, opt.camera_height)
+  # camera.resolution = (opt.camera_width, opt.camera_height)
   while(True):
     stream = io.BytesIO()
     camera.capture(stream, format='jpeg')
