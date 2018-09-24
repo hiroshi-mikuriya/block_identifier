@@ -161,8 +161,8 @@ class BlockIdentifier:
 
 if __name__ == '__main__':
   camera = picamera.PiCamera()
-  stream = io.BytesIO()
   while(True):
+    stream = io.BytesIO()
     camera.capture(stream, format='jpeg')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
