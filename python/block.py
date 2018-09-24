@@ -179,7 +179,7 @@ if __name__ == '__main__':
       print('failed to open image')
       quit()
     blocks = BlockIdentifier.calc(img, opt)
-    print(blocks)
+    # print(blocks)
     BlockIdentifier.show_blocks(img, blocks)
     cv2.waitKey(10)
 
