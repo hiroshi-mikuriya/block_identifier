@@ -23,8 +23,8 @@ class Option:
     self.stub_th = 20
     self.size_th = 190
     self.bin_th = 200
-    self.camera_width = 720 * 0.9
-    self.camera_height = 480 * 0.9
+    self.camera_width = int(720 * 0.9)
+    self.camera_height = int(480 * 0.9)
     self.block_height = 20
     self.block_width = 16
   def __repr__(self):
