@@ -2,15 +2,9 @@
 
 ## 開発環境構築
 
-python用のOpenCVをインストールする。
+pythonのライブラリをインストールする。
 
 ```
-brew install pyenv
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
-source ~/.bash_profile
-pyenv install anaconda3-4.2.0
-pyenv global anaconda3-4.2.0
-sudo conda install -c menpo opencv3
+sudo apt-get install libopencv-dev python-opencv python-dev python-picamera
 ```
+
