@@ -162,18 +162,19 @@ class BlockIdentifier:
 if __name__ == '__main__':
   camera = picamera.PiCamera()
   stream = io.BytesIO()
-  camera.capture(stream, format='jpeg')
-  data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-  img = cv2.imdecode(data, 1)
-  # img = cv2.resize(img, None, fx = 1, fy = 1)
-  img = cv2.flip(img, -1)
-  img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
-  # img = cv2.imread("../images/colorful2.png", 1)
-  if img is None or img.shape[0] is 0:
-    print('failed to open image')
-    quit()
-  blocks = BlockIdentifier.calc(img, Option())
-  print(blocks)
-  BlockIdentifier.show_blocks(img, blocks)
-  cv2.waitKey()
+  while true:
+    camera.capture(stream, format='jpeg')
+    data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+    img = cv2.imdecode(data, 1)
+    # img = cv2.resize(img, None, fx = 1, fy = 1)
+    img = cv2.flip(img, -1)
+    img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
+    # img = cv2.imread("../images/colorful2.png", 1)
+    if img is None or img.shape[0] is 0:
+      print('failed to open image')
+      quit()
+    blocks = BlockIdentifier.calc(img, Option())
+    print(blocks)
+    BlockIdentifier.show_blocks(img, blocks)
+    cv2.waitKey(100)
 
