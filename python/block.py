@@ -180,7 +180,7 @@ if __name__ == '__main__':
   time.sleep(3) # initialize camera
   while(True):
     stream = io.BytesIO()
-    print([camera.ISO, camera.brightness, camera.exposure_compensation, camera,meter_mode, camera.resolution])
+    print([camera.ISO, camera.brightness, camera.exposure_compensation, camera.meter_mode, camera.resolution])
     camera.capture(stream, format='jpeg')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
