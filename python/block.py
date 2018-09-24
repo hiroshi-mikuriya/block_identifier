@@ -161,7 +161,7 @@ class BlockIdentifier:
 
 if __name__ == '__main__':
   camera = picamera.PiCamera()
-  camera.resolution = (1280, 720)
+  camera.resolution = (640, 360)
   while(True):
     stream = io.BytesIO()
     camera.capture(stream, format='jpeg')
