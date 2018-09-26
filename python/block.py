@@ -41,9 +41,7 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_maximum_contour(contours):
-    if len(contours) is 0:
-      return []
-    contour = contours[0]
+    contour = []
     max_area = -1
     for c in contours:
       area = cv2.contourArea(c)
@@ -175,14 +173,14 @@ if __name__ == '__main__':
   camera.hflip = True
   camera.vflip = True
   camera.resolution = (opt.camera_width, opt.camera_height)
-  camera.start_preview()
   camera.awb_mode = 'off'
   camera.awb_gains = [Fraction(411, 256), Fraction(215, 128)]
+  camera.start_preview()
   time.sleep(3) # wait for adjusting exposure
   camera.exposure_mode = 'off'
   while(True):
     stream = io.BytesIO()
-    camera.capture(stream, format='jpeg')
+    camera.capture(stream, format='bmp')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
     img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
