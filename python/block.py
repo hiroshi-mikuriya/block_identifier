@@ -4,6 +4,7 @@ import numpy as np
 
 # for picamera
 import picamera
+from fractions import Fraction
 import io
 import time
 
@@ -175,17 +176,16 @@ if __name__ == '__main__':
   camera.vflip = True
   camera.resolution = (opt.camera_width, opt.camera_height)
   camera.start_preview()
-  camera.exposure_mode = 'off'
+  #camera.exposure_mode = 'off'
   camera.awb_mode = 'off'
-  camera.brightness = 100
+  camera.awb_gains = [Fraction(411, 256), Fraction(215, 128)]
   time.sleep(3) # initialize camera
   while(True):
     stream = io.BytesIO()
-    print([camera.ISO, camera.brightness, camera.exposure_compensation, camera.meter_mode, camera.resolution, camera.awb_gains])
+    print([camera.awb_gains, camera.analog_gain])
     camera.capture(stream, format='jpeg')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
     img = cv2.imdecode(data, 1)
-    #img = cv2.resize(img, None, fx = opt.camera_ratio, fy = opt.camera_ratio)
     img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
     if img is None or img.shape[0] is 0:
       print('failed to open image')
