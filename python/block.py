@@ -127,16 +127,16 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_block_info(contour, img, opt):
+    dst = []
     if len(contour) is 0:
-      return []
+      return dst
     bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
     cv2.drawContours(bin, [contour], 0, 255, -1)
     cv2.imshow("bin", bin)
     top, bottom = BlockIdentifier.__get_top_bottom(bin, opt.stub_th)
     blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
     if blockCount < 0:
-      return
-    dst = []
+      return dst
     for i in range(blockCount):
       y = int((top * (blockCount - i) + bottom * i) / blockCount)
       dst.append(BlockIdentifier.__get_unit_block(img, bin, y, opt))
@@ -187,8 +187,10 @@ if __name__ == '__main__':
     if img is None or img.shape[0] is 0:
       print('failed to open image')
       quit()
-    blocks = BlockIdentifier.calc(img, opt)
-    # print(blocks)
-    BlockIdentifier.show_blocks(img, blocks)
-    cv2.waitKey(10)
-
+    try:
+      blocks = BlockIdentifier.calc(img, opt)
+      # print(blocks)
+      BlockIdentifier.show_blocks(img, blocks)
+      cv2.waitKey(10)
+    except cv2.error as e:
+      print(e)
