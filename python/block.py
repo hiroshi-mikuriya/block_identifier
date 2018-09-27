@@ -132,7 +132,7 @@ class BlockIdentifier:
       return dst
     bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
     cv2.drawContours(bin, [contour], 0, 255, -1)
-    cv2.imshow("bin", bin)
+    # cv2.imshow("bin", bin)
     top, bottom = BlockIdentifier.__get_top_bottom(bin, opt.stub_th)
     blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
     if blockCount < 0:
