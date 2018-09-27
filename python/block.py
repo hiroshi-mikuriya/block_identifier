@@ -53,7 +53,7 @@ class BlockIdentifier:
   @staticmethod
   def __get_block_contour(img, opt):
     hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), 80, 255, cv2.THRESH_BINARY)
+    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), 70, 255, cv2.THRESH_BINARY)
     _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th, 255, cv2.THRESH_BINARY)
     # cv2.imshow("block", block)
     filled = BlockIdentifier.__fill_divided_blocks(block)
