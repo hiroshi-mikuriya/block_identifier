@@ -130,6 +130,7 @@ class block:
     if blockCount < 0:
       return dst
     top = bottom - blockCount * opt.block_height
+    while top < 0: top += opt.block_height
     for i in range(blockCount):
       y = int((top * (blockCount - i) + bottom * i) / blockCount)
       dst.append(block.__get_unit_block(img, bin, y, opt))
