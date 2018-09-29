@@ -1,4 +1,5 @@
 import json
+import requests
 from block import block
 
 class BlockInfoEncoder(json.JSONEncoder):
@@ -8,4 +9,7 @@ class BlockInfoEncoder(json.JSONEncoder):
     return super(BlockInfoEncoder, self).default(o)
 
 def post(blocks):
-  print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
+  d = json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder)
+  print(d)
+  res = requests.post('http://127.0.0.1:5001/api/show', d)
+  print(res.status_code)
