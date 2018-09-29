@@ -1,14 +1,8 @@
-import json
 import cv2
 from camera import camera
 from block import block
 from button import button
-
-class BlockInfoEncoder(json.JSONEncoder):
-  def default(self, o):
-    if isinstance(o, block.info):
-      return { 'color' : o.color, 'width' : o.width }
-    return super(BlockInfoEncoder, self).default(o)
+import sender
 
 btn = button(24)
 opt = block.option(0.9)
@@ -25,7 +19,7 @@ try:
     try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
-      print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
+      sender.post(blocks)
     except cv2.error as e:
       print(e)
 except KeyboardInterrupt:
