@@ -154,7 +154,9 @@ class BlockIdentifier:
       BlockIdentifier.__draw_rect(canvas, info.rc, (0, 255, 0), 1)
       BlockIdentifier.__draw_rect(canvas, info.color_area, (0, 255, 0), 1)
       pt = (int(img.shape[1] * 1.1), int(info.rc[1] + info.rc[3] * 0.4))
-      str = "{:12s} W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.color, info.width, info.bgr[2], info.bgr[1], info.bgr[0], info.hsv[0], info.hsv[1], info.hsv[2])
+      cv2.putText(canvas, info.color, pt, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255))
+      pt[0] += 100
+      str = "W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.width, info.bgr[2], info.bgr[1], info.bgr[0], info.hsv[0], info.hsv[1], info.hsv[2])
       cv2.putText(canvas, str, pt, cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255))
     cv2.imshow("blocks", canvas)
 
