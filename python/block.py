@@ -20,7 +20,7 @@ class Option:
     self.bin_th1 = 200
     self.camera_width = int(720 * ratio)
     self.camera_height = int(480 * ratio)
-    self.block_height = int(22.222 * ratio)
+    self.block_height = int(22.23 * ratio)
     self.block_width = int(17.78 * ratio)
   def __repr__(self):
     return "<stub_th %s : size_th %s : bin_th0 %s : bin_th1 %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th0, self.bin_th1, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
