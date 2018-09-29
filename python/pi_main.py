@@ -5,6 +5,7 @@ import time
 import json
 import cv2
 import numpy as np
+import RPi.GPIO as GPIO
 from block import block
 
 class BlockInfoEncoder(json.JSONEncoder):
@@ -12,6 +13,27 @@ class BlockInfoEncoder(json.JSONEncoder):
     if isinstance(o, block.info):
       return { 'color' : o.color, 'width' : o.width }
     return super(BlockInfoEncoder, self).default(o)
+
+BUTTON_GPIO = 24
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(BUTTON_GPIO, GPIO.IN, GPIO.PUD_DOWN)
+
+def wait_for_push_button():
+  def sampling(count):
+    dst = 0
+    for _ in range(count):
+      dst += 0 if GPIO.input(BUTTON_GPIO) is GPIO.LOW else 1
+      time.sleep(0.01)
+    return dst
+  COUNT = 5
+  print('waiting for release button')
+  while True:
+    if sampling(COUNT) is 0: break
+  print('waiting for push button')
+  while True:
+    if sampling(COUNT) is COUNT: break
+  print('pushed button')
+  return
 
 opt = block.option(0.9)
 camera = picamera.PiCamera()
@@ -23,19 +45,24 @@ camera.awb_gains = [Fraction(411, 256), Fraction(215, 128)]
 camera.start_preview()
 time.sleep(3) # wait for adjusting exposure
 camera.exposure_mode = 'off'
-while(True):
-  stream = io.BytesIO()
-  camera.capture(stream, format='bmp')
-  data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-  img = cv2.imdecode(data, 1)
-  img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
-  if img is None or img.shape[0] is 0:
-    print('failed to open image')
-    quit()
-  try:
-    blocks = block.calc(img, opt)
-    block.show_blocks(img, blocks)
-    print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
-    cv2.waitKey(10)
-  except cv2.error as e:
-    print(e)
+
+try:
+  while(True):
+    wait_for_push_button()
+    stream = io.BytesIO()
+    camera.capture(stream, format='bmp')
+    data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+    img = cv2.imdecode(data, 1)
+    img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
+    if img is None or img.shape[0] is 0:
+      print('failed to open image')
+      quit()
+    try:
+      blocks = block.calc(img, opt)
+      block.show_blocks(img, blocks)
+      print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
+      cv2.waitKey(1) # to show image
+    except cv2.error as e:
+      print(e)
+except KeyboardInterrupt:
+  camera.close()
