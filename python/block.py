@@ -46,13 +46,13 @@ class block:
   @staticmethod
   def __get_block_contour(img, opt):
     hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), opt.bin_th0, 255, cv2.THRESH_BINARY)
-    _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th1, 255, cv2.THRESH_BINARY)
-    # cv2.imshow("block", block)
-    filled = block.__fill_divided_blocks(block)
+    _, mix0 = cv2.threshold(cv2.min(hsv[1], hsv[2]), opt.bin_th0, 255, cv2.THRESH_BINARY)
+    _, mix1 = cv2.threshold(cv2.max(mix0, hsv[2]), opt.bin_th1, 255, cv2.THRESH_BINARY)
+    # cv2.imshow("mix1", mix1)
+    filled = block.__fill_divided_blocks(mix1)
     contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # cv2.imshow("original", img)
-    # cv2.imshow("mixed", mixed)
+    # cv2.imshow("mix0", mix0)
     # cv2.imshow("h", hsv[0])
     # cv2.imshow("s", hsv[1])
     # cv2.imshow("v", hsv[2])
@@ -107,7 +107,7 @@ class block:
   
   @staticmethod
   def __get_unit_block(img, bin, y, opt):
-    dst = info()
+    dst = block.info()
     trim = bin[y:y + opt.block_height, 0:bin.shape[1]]
     left, right = block.__get_left_right(trim, opt.size_th)
     dst.rc = [left, y, right - left, opt.block_height]
