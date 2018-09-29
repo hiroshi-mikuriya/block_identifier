@@ -47,7 +47,7 @@ time.sleep(3) # wait for adjusting exposure
 camera.exposure_mode = 'off'
 
 try:
-  while(True):
+  while True:
     wait_for_button_push()
     stream = io.BytesIO()
     camera.capture(stream, format='bmp')
@@ -61,7 +61,6 @@ try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
       print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
-      cv2.waitKey(1) # to show image
     except cv2.error as e:
       print(e)
 except KeyboardInterrupt:
