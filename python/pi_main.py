@@ -2,7 +2,15 @@ import picamera
 from fractions import Fraction
 import io
 import time
+import json
+import cv2
 from block import *
+
+class BlockInfoEncoder(json.JSONEncoder):
+  def default(self, o):
+    if isinstance(o, BlockInfo):
+      return { 'color' : o.color, 'width' : o.width }
+    return super(BlockInfoEncoder, self).default(o)
 
 opt = Option()
 camera = picamera.PiCamera()
@@ -25,8 +33,8 @@ while(True):
     quit()
   try:
     blocks = BlockIdentifier.calc(img, opt)
-    # print(blocks)
     BlockIdentifier.show_blocks(img, blocks)
+    print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
     cv2.waitKey(10)
   except cv2.error as e:
     print(e)

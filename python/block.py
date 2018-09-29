@@ -18,8 +18,9 @@ class Option:
     self.stub_th = 20
     self.size_th = 190
     self.bin_th = 200
-    self.camera_width = int(720 * 0.9)
-    self.camera_height = int(480 * 0.9)
+    self.__camera_ratio = 0.9
+    self.camera_width = int(720 * self.__camera_ratio)
+    self.camera_height = int(480 * self.__camera_ratio)
     self.block_height = 20
     self.block_width = 16
   def __repr__(self):
@@ -99,8 +100,7 @@ class BlockIdentifier:
   @staticmethod
   def __get_color(hsv):
     return "white" if hsv[1] < 0x40 \
-      else "brown" if hsv[0] < 0x07 \
-      else "orange" if hsv[0] < 0x11 \
+      else ("brown" if hsv[2] < 0xA0 else "orange") if hsv[0] < 0x11 \
       else "yellow" if hsv[0] < 0x1E \
       else "yellowgreen" if hsv[0] < 0x38 \
       else "green" if hsv[0] < 0x50 \
