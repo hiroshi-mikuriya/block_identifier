@@ -1,4 +1,3 @@
-import sys
 import cv2
 import numpy as np
 
@@ -14,17 +13,17 @@ class BlockInfo:
     return "<bgr %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.bgr, self.hsv, self.rc, self.color_area, self.color, self.width)
 
 class Option:
-  def __init__(self):
+  def __init__(self, ratio):
     self.stub_th = 20
     self.size_th = 190
-    self.bin_th = 200
-    self.__camera_ratio = 0.9
-    self.camera_width = int(720 * self.__camera_ratio)
-    self.camera_height = int(480 * self.__camera_ratio)
-    self.block_height = 20
-    self.block_width = 16
+    self.bin_th0 = 70
+    self.bin_th1 = 200
+    self.camera_width = int(720 * ratio)
+    self.camera_height = int(480 * ratio)
+    self.block_height = int(22.222 * ratio)
+    self.block_width = int(17.78 * ratio)
   def __repr__(self):
-    return "<stub_th %s : size_th %s : bin_th %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
+    return "<stub_th %s : size_th %s : bin_th0 %s : bin_th1 %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th0, self.bin_th1, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
 
 class BlockIdentifier:
 
@@ -48,8 +47,8 @@ class BlockIdentifier:
   @staticmethod
   def __get_block_contour(img, opt):
     hsv = cv2.split(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), 70, 255, cv2.THRESH_BINARY)
-    _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th, 255, cv2.THRESH_BINARY)
+    _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), opt.bin_th0, 255, cv2.THRESH_BINARY)
+    _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th1, 255, cv2.THRESH_BINARY)
     # cv2.imshow("block", block)
     filled = BlockIdentifier.__fill_divided_blocks(block)
     contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -162,33 +161,16 @@ class BlockIdentifier:
 
 
 if __name__ == '__main__':
-  import picamera
-  from fractions import Fraction
-  import io
-  import time
-  opt = Option()
-  camera = picamera.PiCamera()
-  camera.hflip = True
-  camera.vflip = True
-  camera.resolution = (opt.camera_width, opt.camera_height)
-  camera.awb_mode = 'off'
-  camera.awb_gains = [Fraction(411, 256), Fraction(215, 128)]
-  camera.start_preview()
-  time.sleep(3) # wait for adjusting exposure
-  camera.exposure_mode = 'off'
-  while(True):
-    stream = io.BytesIO()
-    camera.capture(stream, format='bmp')
-    data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-    img = cv2.imdecode(data, 1)
-    img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
-    if img is None or img.shape[0] is 0:
-      print('failed to open image')
-      quit()
-    try:
-      blocks = BlockIdentifier.calc(img, opt)
-      # print(blocks)
-      BlockIdentifier.show_blocks(img, blocks)
-      cv2.waitKey(10)
-    except cv2.error as e:
-      print(e)
+  import sys
+  img = cv2.imread(sys.argv[1], 1)
+  if img is None or img.shape[0] is 0:
+    print('failed to open image')
+    quit()
+  try:
+    opt = Option(0.9)
+    blocks = BlockIdentifier.calc(img, opt)
+    # print(blocks)
+    BlockIdentifier.show_blocks(img, blocks)
+    cv2.waitKey(10)
+  except cv2.error as e:
+    print(e)

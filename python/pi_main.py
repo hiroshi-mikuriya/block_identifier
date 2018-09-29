@@ -12,7 +12,7 @@ class BlockInfoEncoder(json.JSONEncoder):
       return { 'color' : o.color, 'width' : o.width }
     return super(BlockInfoEncoder, self).default(o)
 
-opt = Option()
+opt = Option(0.9)
 camera = picamera.PiCamera()
 camera.hflip = True
 camera.vflip = True
