@@ -105,7 +105,7 @@ class BlockIdentifier:
       else "yellowgreen" if hsv[0] < 0x38 \
       else "green" if hsv[0] < 0x50 \
       else "blue" if hsv[0] < 0x80 \
-      else "red"
+      else ("brown" if hsv[2] < 0xA0 else "red")
   
   @staticmethod
   def __get_unit_block(img, bin, y, opt):
