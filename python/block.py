@@ -126,9 +126,10 @@ class block:
     cv2.drawContours(bin, [contour], 0, 255, -1)
     # cv2.imshow("bin", bin)
     top, bottom = block.__get_top_bottom(bin, opt.stub_th)
-    blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
+    blockCount = int((bottom - top + opt.block_height / 10) / opt.block_height)
     if blockCount < 0:
       return dst
+    top = bottom - blockCount * opt.block_height
     for i in range(blockCount):
       y = int((top * (blockCount - i) + bottom * i) / blockCount)
       dst.append(block.__get_unit_block(img, bin, y, opt))
