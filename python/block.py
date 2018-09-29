@@ -166,11 +166,8 @@ if __name__ == '__main__':
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
-  try:
-    opt = Option(0.9)
-    blocks = BlockIdentifier.calc(img, opt)
-    # print(blocks)
-    BlockIdentifier.show_blocks(img, blocks)
-    cv2.waitKey(10)
-  except cv2.error as e:
-    print(e)
+  opt = Option(0.9)
+  blocks = BlockIdentifier.calc(img, opt)
+  print(blocks)
+  BlockIdentifier.show_blocks(img, blocks)
+  cv2.waitKey(0)
