@@ -18,7 +18,7 @@ BUTTON_GPIO = 24
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON_GPIO, GPIO.IN, GPIO.PUD_DOWN)
 
-def wait_for_push_button():
+def wait_for_button_push():
   def sampling(count):
     dst = 0
     for _ in range(count):
@@ -26,13 +26,13 @@ def wait_for_push_button():
       time.sleep(0.01)
     return dst
   COUNT = 5
-  print('waiting for release button')
+  print('waiting for button release')
   while True:
     if sampling(COUNT) is 0: break
-  print('waiting for push button')
+  print('waiting for button push')
   while True:
     if sampling(COUNT) is COUNT: break
-  print('pushed button')
+  print('button pushed')
   return
 
 opt = block.option(0.9)
@@ -48,7 +48,7 @@ camera.exposure_mode = 'off'
 
 try:
   while(True):
-    wait_for_push_button()
+    wait_for_button_push()
     stream = io.BytesIO()
     camera.capture(stream, format='bmp')
     data = np.fromstring(stream.getvalue(), dtype=np.uint8)
@@ -66,3 +66,4 @@ try:
       print(e)
 except KeyboardInterrupt:
   camera.close()
+  GPIO.cleanup()
