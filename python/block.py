@@ -1,32 +1,31 @@
 import cv2
 import numpy as np
 
-class BlockInfo:
-  def __init__(self):
-    self.bgr = [0, 0, 0] 
-    self.hsv = [0, 0, 0]
-    self.rc = [0, 0, 0, 0]
-    self.color_area = [0, 0, 0, 0]
-    self.color = ""
-    self.width = 0
-  def __repr__(self):
-    return "<bgr %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.bgr, self.hsv, self.rc, self.color_area, self.color, self.width)
-
-class Option:
-  def __init__(self, ratio):
-    self.stub_th = 20
-    self.size_th = 190
-    self.bin_th0 = 70
-    self.bin_th1 = 200
-    self.camera_width = int(720 * ratio)
-    self.camera_height = int(480 * ratio)
-    self.block_height = int(22.23 * ratio)
-    self.block_width = int(17.78 * ratio)
-  def __repr__(self):
-    return "<stub_th %s : size_th %s : bin_th0 %s : bin_th1 %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th0, self.bin_th1, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
-
-class BlockIdentifier:
-
+class block:
+  class info:
+    def __init__(self):
+      self.bgr = [0, 0, 0] 
+      self.hsv = [0, 0, 0]
+      self.rc = [0, 0, 0, 0]
+      self.color_area = [0, 0, 0, 0]
+      self.color = ""
+      self.width = 0
+    def __repr__(self):
+      return "<bgr %s : hsv %s : rc %s : color_area %s : color %s : width %s>\n" % (self.bgr, self.hsv, self.rc, self.color_area, self.color, self.width)
+  
+  class option:
+    def __init__(self, ratio):
+      self.stub_th = 20
+      self.size_th = 190
+      self.bin_th0 = 70
+      self.bin_th1 = 200
+      self.camera_width = int(720 * ratio)
+      self.camera_height = int(480 * ratio)
+      self.block_height = int(22.23 * ratio)
+      self.block_width = int(17.78 * ratio)
+    def __repr__(self):
+      return "<stub_th %s : size_th %s : bin_th0 %s : bin_th1 %s : camera_width %s : camera_height %s : camera_ratio %s : block_height %s : block_width %s>\n" % (self.stub_th, self.size_th, self.bin_th0, self.bin_th1, self.camera_width, self.camera_height, self.camera_ratio, self.block_height, self.block_width)    
+  
   @staticmethod
   def __fill_divided_blocks(bin):
     kernel = np.array([[1], [1], [1]], np.uint8)
@@ -50,14 +49,14 @@ class BlockIdentifier:
     _, mixed = cv2.threshold(cv2.min(hsv[1], hsv[2]), opt.bin_th0, 255, cv2.THRESH_BINARY)
     _, block = cv2.threshold(cv2.max(mixed, hsv[2]), opt.bin_th1, 255, cv2.THRESH_BINARY)
     # cv2.imshow("block", block)
-    filled = BlockIdentifier.__fill_divided_blocks(block)
+    filled = block.__fill_divided_blocks(block)
     contours, _ = cv2.findContours(filled, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # cv2.imshow("original", img)
     # cv2.imshow("mixed", mixed)
     # cv2.imshow("h", hsv[0])
     # cv2.imshow("s", hsv[1])
     # cv2.imshow("v", hsv[2])
-    return BlockIdentifier.__get_maximum_contour(contours)
+    return block.__get_maximum_contour(contours)
   
   @staticmethod
   def __get_first_border(m, th, rng):
@@ -69,15 +68,15 @@ class BlockIdentifier:
   @staticmethod
   def __get_top_bottom(bin, th):
     m = cv2.reduce(bin, 1, 1)
-    top = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
-    bottom = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
+    top = block.__get_first_border(m, th, range(m.shape[0]))
+    bottom = block.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
     return top, bottom
 
   @staticmethod
   def __get_left_right(bin, th):
     m = cv2.reduce(bin, 0, 1).transpose()
-    left = BlockIdentifier.__get_first_border(m, th, range(m.shape[0]))
-    right = BlockIdentifier.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
+    left = block.__get_first_border(m, th, range(m.shape[0]))
+    right = block.__get_first_border(m, th, list(reversed(range(m.shape[0]))))
     return left, right
   
   @staticmethod
@@ -108,14 +107,14 @@ class BlockIdentifier:
   
   @staticmethod
   def __get_unit_block(img, bin, y, opt):
-    dst = BlockInfo()
+    dst = info()
     trim = bin[y:y + opt.block_height, 0:bin.shape[1]]
-    left, right = BlockIdentifier.__get_left_right(trim, opt.size_th)
+    left, right = block.__get_left_right(trim, opt.size_th)
     dst.rc = [left, y, right - left, opt.block_height]
-    dst.color_area = BlockIdentifier.__get_center_rect(dst.rc, 0.2)
+    dst.color_area = block.__get_center_rect(dst.rc, 0.2)
     dst.width = int((dst.rc[2] + opt.block_width / 2) / opt.block_width)
-    dst.bgr, dst.hsv = BlockIdentifier.__get_block_color(img, dst.rc)
-    dst.color = BlockIdentifier.__get_color(dst.hsv)
+    dst.bgr, dst.hsv = block.__get_block_color(img, dst.rc)
+    dst.color = block.__get_color(dst.hsv)
     return dst
   
   @staticmethod
@@ -126,19 +125,19 @@ class BlockIdentifier:
     bin = np.zeros((img.shape[0], img.shape[1], 1), np.uint8)
     cv2.drawContours(bin, [contour], 0, 255, -1)
     # cv2.imshow("bin", bin)
-    top, bottom = BlockIdentifier.__get_top_bottom(bin, opt.stub_th)
+    top, bottom = block.__get_top_bottom(bin, opt.stub_th)
     blockCount = int((bottom - top + opt.block_height / 2) / opt.block_height)
     if blockCount < 0:
       return dst
     for i in range(blockCount):
       y = int((top * (blockCount - i) + bottom * i) / blockCount)
-      dst.append(BlockIdentifier.__get_unit_block(img, bin, y, opt))
+      dst.append(block.__get_unit_block(img, bin, y, opt))
     return dst
 
   @staticmethod
   def calc(img, opt):
-    contour = BlockIdentifier.__get_block_contour(img, opt)
-    return BlockIdentifier.__get_block_info(contour, img, opt)
+    contour = block.__get_block_contour(img, opt)
+    return block.__get_block_info(contour, img, opt)
   
   @staticmethod
   def __draw_rect(img, rc, color, thick):
@@ -151,8 +150,8 @@ class BlockIdentifier:
     canvas = np.zeros((img.shape[0], img.shape[1] + 640, 3), np.uint8)
     canvas[0:img.shape[0], 0:img.shape[1], :] = img
     for info in blocks:
-      BlockIdentifier.__draw_rect(canvas, info.rc, (0, 255, 0), 1)
-      BlockIdentifier.__draw_rect(canvas, info.color_area, (0, 255, 0), 1)
+      block.__draw_rect(canvas, info.rc, (0, 255, 0), 1)
+      block.__draw_rect(canvas, info.color_area, (0, 255, 0), 1)
       color = (255, 255, 255)
       pt0 = (int(img.shape[1] * 1.1), int(info.rc[1] + info.rc[3] * 0.4))
       cv2.putText(canvas, info.color, pt0, cv2.FONT_HERSHEY_SIMPLEX, 0.7, color)
@@ -161,16 +160,14 @@ class BlockIdentifier:
       cv2.putText(canvas, str, pt1, cv2.FONT_HERSHEY_SIMPLEX, 0.7, color)
     cv2.imshow("blocks", canvas)
 
-
-
 if __name__ == '__main__':
   import sys
   img = cv2.imread(sys.argv[1], 1)
   if img is None or img.shape[0] is 0:
     print('failed to open image')
     quit()
-  opt = Option(0.9)
-  blocks = BlockIdentifier.calc(img, opt)
+  opt = block.option(0.9)
+  blocks = block.calc(img, opt)
   print(blocks)
-  BlockIdentifier.show_blocks(img, blocks)
+  block.show_blocks(img, blocks)
   cv2.waitKey(0)

@@ -4,15 +4,16 @@ import io
 import time
 import json
 import cv2
-from block import *
+import numpy as np
+from block import block
 
 class BlockInfoEncoder(json.JSONEncoder):
   def default(self, o):
-    if isinstance(o, BlockInfo):
+    if isinstance(o, block.info):
       return { 'color' : o.color, 'width' : o.width }
     return super(BlockInfoEncoder, self).default(o)
 
-opt = Option(0.9)
+opt = block.option(0.9)
 camera = picamera.PiCamera()
 camera.hflip = True
 camera.vflip = True
@@ -32,8 +33,8 @@ while(True):
     print('failed to open image')
     quit()
   try:
-    blocks = BlockIdentifier.calc(img, opt)
-    BlockIdentifier.show_blocks(img, blocks)
+    blocks = block.calc(img, opt)
+    block.show_blocks(img, blocks)
     print(json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder))
     cv2.waitKey(10)
   except cv2.error as e:
