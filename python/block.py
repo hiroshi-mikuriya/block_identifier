@@ -156,7 +156,7 @@ class BlockIdentifier:
       color = (255, 255, 255)
       pt0 = (int(img.shape[1] * 1.1), int(info.rc[1] + info.rc[3] * 0.4))
       cv2.putText(canvas, info.color, pt0, cv2.FONT_HERSHEY_SIMPLEX, 0.7, color)
-      pt1 = (pt0[0] + 100, pt0[1])
+      pt1 = (pt0[0] + 150, pt0[1])
       str = "W:{:d} R:{:02X} G:{:02X} B:{:02X} H:{:02X} S:{:02X} V:{:02X}".format(info.width, info.bgr[2], info.bgr[1], info.bgr[0], info.hsv[0], info.hsv[1], info.hsv[2])
       cv2.putText(canvas, str, pt1, cv2.FONT_HERSHEY_SIMPLEX, 0.7, color)
     cv2.imshow("blocks", canvas)
