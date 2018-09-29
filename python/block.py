@@ -2,12 +2,6 @@ import sys
 import cv2
 import numpy as np
 
-# for picamera
-import picamera
-from fractions import Fraction
-import io
-import time
-
 class BlockInfo:
   def __init__(self):
     self.bgr = [0, 0, 0] 
@@ -168,6 +162,10 @@ class BlockIdentifier:
 
 
 if __name__ == '__main__':
+  import picamera
+  from fractions import Fraction
+  import io
+  import time
   opt = Option()
   camera = picamera.PiCamera()
   camera.hflip = True
