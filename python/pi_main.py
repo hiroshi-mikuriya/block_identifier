@@ -1,9 +1,17 @@
 import cv2
+import pygame.mixer
 from camera import camera
 from block import block
 from button import button
 import sender
 
+def exist_object(blocks):
+  for b in blocks:
+    if b.width is 2:
+      return True
+  return False    
+
+pygame.mixer.init()
 btn = button(24)
 opt = block.option(0.9)
 cam = camera((opt.camera_width, opt.camera_height))
@@ -19,7 +27,13 @@ try:
     try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
-      sender.post(blocks)
+      if exist_object(blocks):
+        pygame.mixer.music.load('../sound/atari.wav')
+        pygame.mixer.music.play(1)
+        sender.post(blocks)
+      else:
+        pygame.mixer.music.load('../sound/hazure.wav')
+        pygame.mixer.music.play(1)
     except cv2.error as e:
       print(e)
 except KeyboardInterrupt:
