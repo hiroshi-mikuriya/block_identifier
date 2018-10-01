@@ -9,10 +9,12 @@ class BlockInfoEncoder(json.JSONEncoder):
     return super(BlockInfoEncoder, self).default(o)
 
 def post(blocks):
-  d = json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder)
-  print(d)
   try:
-    res = requests.post('http://127.0.0.1:5001/api/show', d)
+    url = 'http://127.0.0.1:5001/api/show'
+    d = json.dumps({ "orders" : blocks }, cls = BlockInfoEncoder)
+    h = { 'content-type': 'application/json' }
+    print(d)
+    res = requests.post(url, d, headers = h)
     print(res.status_code)
   except requests.exceptions.ConnectionError as e:
     print e
