@@ -5,7 +5,7 @@ from block import block
 from button import button
 import sender
 
-def exist_object(blocks):
+def has_object(blocks):
   for b in blocks:
     if b.width is 2:
       return True
@@ -27,7 +27,7 @@ try:
     try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
-      if exist_object(blocks):
+      if has_object(blocks):
         pygame.mixer.music.load('../sound/atari.wav')
         pygame.mixer.music.play(1)
         sender.post(blocks)
