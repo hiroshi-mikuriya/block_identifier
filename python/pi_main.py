@@ -32,7 +32,7 @@ try:
     img = img[0:img.shape[0], img.shape[1]/3:img.shape[1]*2/3]
     try:
       blocks = block.calc(img, opt)
-      block.show_blocks(img, blocks)
+      # block.show_blocks(img, blocks)
       if has_object(blocks):
         pygame.mixer.music.load('../sound/atari.wav')
         pygame.mixer.music.play(1)
