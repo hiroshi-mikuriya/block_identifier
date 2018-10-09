@@ -9,12 +9,18 @@ def has_object(blocks):
   for b in blocks:
     if b.width is 2:
       return True
-  return False    
+  return False
 
 pygame.mixer.init()
+pygame.mixer.music.load('../sound/info-girl1_info-girl1-datawoyomikondeimasu1.mp3')
+pygame.mixer.music.play(1)
+
 btn = button(24)
 opt = block.option(0.9)
 cam = camera((opt.camera_width, opt.camera_height))
+
+pygame.mixer.music.load('../sound/info-girl1_info-girl1-kidoushimashita1.mp3')
+pygame.mixer.music.play(1)
 
 try:
   while True:
@@ -28,11 +34,11 @@ try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
       if has_object(blocks):
-        pygame.mixer.music.load('../sound/atari.wav')
+        pygame.mixer.music.load('../sound/info-girl1_info-girl1-atari1.mp3')
         pygame.mixer.music.play(1)
         sender.post(blocks)
       else:
-        pygame.mixer.music.load('../sound/hazure.wav')
+        pygame.mixer.music.load('../sound/info-girl1_info-girl1-hazure1.mp3')
         pygame.mixer.music.play(1)
     except cv2.error as e:
       print(e)
