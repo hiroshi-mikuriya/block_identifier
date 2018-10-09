@@ -34,11 +34,11 @@ try:
       blocks = block.calc(img, opt)
       block.show_blocks(img, blocks)
       if has_object(blocks):
-        pygame.mixer.music.load('../sound/info-girl1_info-girl1-atari1.mp3')
+        pygame.mixer.music.load('../sound/atari.wav')
         pygame.mixer.music.play(1)
         sender.post(blocks)
       else:
-        pygame.mixer.music.load('../sound/info-girl1_info-girl1-hazure1.mp3')
+        pygame.mixer.music.load('../sound/hazure.wav')
         pygame.mixer.music.play(1)
     except cv2.error as e:
       print(e)
