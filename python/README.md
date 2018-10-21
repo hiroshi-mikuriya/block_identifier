@@ -45,7 +45,7 @@ P1 Camera
 `sudo apt-get upgrade`
 * vimインストール  
 `sudo apt-get install vim`
-* FTP有効  
+* FTP有効(PCとファイル交換するのに便利)  
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
 `sudo apt-get install xrdp`
