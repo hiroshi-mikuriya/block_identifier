@@ -12,10 +12,30 @@ https://github.com/YGFYHD2018/3d_led_cube_go
 
 ## 環境構築
 
+* SDカードイメージ  
+2018-04-18-raspbian-stretch.zip
 * SSH有効  
 sshという名称の空ファイルを作る
+* sshアクセス  
+ラズパイをイーサネットケーブルでPCと同じネットワークに接続する  
+ラズパイを起動する  
+１分後くらいにPCのターミナルからsshアクセスする  
+`ssh pi@raspberrypi.local`  
+パスワードは`raspberry`
 * パスワード変更（to 警告消す）  
-`sudo raspi-config`
+`sudo raspi-config`  
+1 Change Your Password  
+rootを入力
+* ホスト名変更  
+`sudo raspi-config`  
+2 Network Options  
+N1 Hostname  
+block-identifier を入力
+* カメラ有効（注：カメラ繋がないと起動しなくなる）
+`sudo raspi-config`  
+5 Interfacing Options  
+P1 Camera  
+<Yes>
 * apt-getアップデート  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
@@ -25,11 +45,6 @@ sshという名称の空ファイルを作る
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
 `sudo apt-get install xrdp`
-* ホスト名変更  
-`sudo raspi-config`  
-Network  
-Host name  
-block-identifier
 * 本プログラム取得  
 `git clone https://github.com/hiroshi-mikuriya/block_identifier`
 * pythonのライブラリをインストール  
