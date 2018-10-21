@@ -32,7 +32,7 @@ rootを入力
   * ホスト名変更  
 2 Network Options  
 N1 Hostname  
-block-identifier を入力
+block-identifier を入力
   * カメラ有効（注：カメラ繋がないと起動しなくなる）  
 5 Interfacing Options  
 P1 Camera  
@@ -41,16 +41,14 @@ P1 Camera
 * 再びsshでアクセス（ホスト名が変更されている）  
 `ssh pi@block-identifier.local`
 * apt-getアップデート  
-`sudo apt-get update`  
-`sudo apt-get upgrade`
+`sudo apt-get update && sudo apt-get upgrade`
 * vimインストール  
 `sudo apt-get install vim`
 * FTP有効  
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
 `sudo apt-get install xrdp`
-* 本プログラム取得  
-`git clone https://github.com/hiroshi-mikuriya/block_identifier`
 * pythonのライブラリをインストール  
 `sudo apt-get install libopencv-dev python-opencv python-dev python-picamera`
-
+* 本プログラム取得  
+`git clone https://github.com/hiroshi-mikuriya/block_identifier`
