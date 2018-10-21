@@ -58,3 +58,10 @@ http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 以下、追記  
 `cd /home/pi/block_identifier`  
 `python pi_main.py`
+* GOフレームワークインストール  
+[3d_led_cube_go](https://github.com/YGFYHD2018/3d_led_cube_go)のインストール手順を実施する。
+
+## リンク
+
+* [効果音ラボ](https://soundeffect-lab.info)  
+音声ファイルを使用させていただいております。s
