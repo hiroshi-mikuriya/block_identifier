@@ -17,7 +17,7 @@ https://github.com/YGFYHD2018/3d_led_cube_go
 * SSH有効  
 sshという名称の空ファイルを作る
 * sshアクセス  
-ラズパイをイーサネットケーブルでPCと同じネットワークに接続する  
+ラズパイをイーサネットケーブルでPCと同じネットワークに接続する  
 ラズパイを起動する  
 １分後くらいにPCのターミナルからsshアクセスする  
 `ssh pi@raspberrypi.local`  
@@ -37,6 +37,7 @@ block-identifier を入力
 5 Interfacing Options  
 P1 Camera  
 <Yes>
+
 * 再びsshでアクセス（ホスト名が変更されている）  
 `ssh pi@block-identifier.local`
 * apt-getアップデート  
