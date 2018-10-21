@@ -28,11 +28,11 @@ sshという名称の空ファイルを作る
 （以下設定後、自動的に再起動）
   * パスワード変更（to 警告消す）  
 1 Change Your Password  
-rootを入力
+`root` を入力
   * ホスト名変更  
 2 Network Options  
 N1 Hostname  
-block-identifier を入力
+`block-identifier` を入力
   * カメラ有効（注：カメラ繋がないと起動しなくなる）  
 5 Interfacing Options  
 P1 Camera  
@@ -40,7 +40,7 @@ P1 Camera
 
 * 再びsshでアクセス（ホスト名が変更されている）  
 `ssh pi@block-identifier.local`
-* apt-getアップデート  
+* apt-getアップデート（時間かかる）  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
 * vimインストール  
