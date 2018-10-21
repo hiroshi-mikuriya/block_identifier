@@ -45,7 +45,7 @@ P1 Camera
 `sudo apt-get upgrade`
 * vimインストール  
 `sudo apt-get install vim`
-* FTP有効(PCとファイル交換するのに便利)  
+* FTP有効（PCとファイル交換するのに便利）  
 http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 * リモートデスクトップ有効  
 `sudo apt-get install xrdp`
@@ -53,3 +53,8 @@ http://yamaryu0508.hatenablog.com/entry/2014/12/02/102648
 `sudo apt-get install libopencv-dev python-opencv python-dev python-picamera`
 * 本プログラム取得  
 `git clone https://github.com/hiroshi-mikuriya/block_identifier`
+* 自動起動設定  
+`sudo vim /etc/rc.local`  
+以下、追記  
+`cd /home/pi/block_identifier`  
+`python pi_main.py`
