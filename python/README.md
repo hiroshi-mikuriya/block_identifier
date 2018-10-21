@@ -22,20 +22,23 @@ sshという名称の空ファイルを作る
 １分後くらいにPCのターミナルからsshアクセスする  
 `ssh pi@raspberrypi.local`  
 パスワードは`raspberry`
-* パスワード変更（to 警告消す）  
+* コンフィグ設定  
+コンフィグ画面起動  
 `sudo raspi-config`  
+（以下設定後、自動的に再起動）
+  * パスワード変更（to 警告消す）  
 1 Change Your Password  
 rootを入力
-* ホスト名変更  
-`sudo raspi-config`  
+  * ホスト名変更  
 2 Network Options  
 N1 Hostname  
 block-identifier を入力
-* カメラ有効（注：カメラ繋がないと起動しなくなる）
-`sudo raspi-config`  
+  * カメラ有効（注：カメラ繋がないと起動しなくなる）  
 5 Interfacing Options  
 P1 Camera  
 <Yes>
+* 再びsshでアクセス（ホスト名が変更されている）  
+`ssh pi@block-identifier.local`
 * apt-getアップデート  
 `sudo apt-get update`  
 `sudo apt-get upgrade`
