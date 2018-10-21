@@ -38,7 +38,7 @@ N1 Hostname
 P1 Camera  
 <Yes>
 
-* 再びsshでアクセス（ホスト名が変更されている）  
+* 再びsshでアクセス（ホスト名、パスワードが変更されている）  
 `ssh pi@block-identifier.local`
 * apt-getアップデート（時間かかる）  
 `sudo apt-get update`  
