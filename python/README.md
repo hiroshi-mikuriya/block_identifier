@@ -17,7 +17,7 @@ https://github.com/YGFYHD2018/3d_led_cube_go
 * SSH有効  
 sshという名称の空ファイルを作る
 * sshアクセス  
-ラズパイをイーサネットケーブルでPCと同じネットワークに接続する  
+ラズパイをイーサネットケーブルでPCと同じネットワークに接続する(DHCPサーバー必要)  
 ラズパイを起動する  
 １分後くらいにPCのターミナルからsshアクセスする  
 `ssh pi@raspberrypi.local`  
@@ -41,7 +41,8 @@ P1 Camera
 * 再びsshでアクセス（ホスト名が変更されている）  
 `ssh pi@block-identifier.local`
 * apt-getアップデート  
-`sudo apt-get update && sudo apt-get upgrade`
+`sudo apt-get update`  
+`sudo apt-get upgrade`
 * vimインストール  
 `sudo apt-get install vim`
 * FTP有効  
